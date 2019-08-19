@@ -1,0 +1,83 @@
+<?php
+/**
+*    这是自动化生成showdoc api文档的demo
+*/
+class ClassName extends AnotherClass
+{
+	
+
+	/**
+	* showdoc
+	* @catalog 测试文档/用户相关
+	* @title 用户注册
+	* @description 用户注册的接口
+	* @method post
+	* @url https://www.showdoc.cc/home/user/login
+	* @param username 必选 string 用户名  
+	* @param password 必选 string 密码  
+	* @param name 可选 string 用户昵称  
+	* @return {"error_code":0,"data":{"uid":"1","username":"12154545","name":"吴系挂","groupid":2,"reg_time":"1436864169","last_login_time":"0"}}
+	* @return_param groupid int 用户组id
+	* @return_param name string 用户昵称
+	* @remark 这里是备注信息
+	* @number 99
+	*/
+	public function register(){
+		//
+		//
+		//
+		//
+		//
+	}
+
+	/**
+	* showdoc
+	* @catalog 测试文档/用户相关
+	* @title 用户登录
+	* @description 用户登录的接口
+	* @method post
+	* @url https://www.showdoc.cc/home/user/login
+	* @param username 必选 string 用户名  
+	* @param password 必选 string 密码  
+	* @param name 可选 string 用户昵称  
+	* @return {"error_code":0,"data":{"uid":"1","username":"12154545","name":"吴系挂","groupid":2,"reg_time":"1436864169","last_login_time":"0"}}
+	* @return_param groupid int 用户组id
+	* @return_param name string 用户昵称
+	* @remark 这里是备注信息
+	* @number 99
+	*/
+	public function login(){
+		//
+		//
+		//
+		//
+		//
+	}
+
+	/**
+	* showdoc
+	* @catalog 测试文档/用户相关
+	* @title 用户登录2
+	* @description 用户登录的接口（参数以纯json的方式提交）
+	* @method post
+	* @url https://www.showdoc.cc/home/user/login2
+	* @json_param {"username":"test","password":"test"} 
+	* @param username 必选 string 用户名  
+	* @param password 必选 string 密码  
+	* @return {"error_code":0,"data":{"uid":"1","username":"12154545","name":"吴系挂","groupid":2,"reg_time":"1436864169","last_login_time":"0"}}
+	* @return_param groupid int 用户组id
+	* @return_param name string 用户昵称
+	* @remark 这里是备注信息
+	* @number 99
+	*/
+	public function login2(){
+		//
+		//
+		//
+		//
+		//
+	}
+
+}
+
+?>
