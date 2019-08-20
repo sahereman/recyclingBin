@@ -214,7 +214,7 @@ config/app.php
 
 ###### 安装 jwt-auth 
 ```
-composer require tymon/jwt-auth:1.0.0-rc.2
+composer require tymon/jwt-auth:1.0.0-rc.3
 php artisan jwt:secret
 //配置 https://laravel-china.org/courses/laravel-advance-training-5.5/793/mobile-login-api
 
