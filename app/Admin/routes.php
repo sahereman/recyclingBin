@@ -26,4 +26,13 @@ Route::group([
     $router->put('users/{id}', 'UsersController@update')->name('admin.users.update');
     $router->delete('users/{id}', 'UsersController@destroy')->name('admin.users.destroy');
 
+
+    //    $router->resource('example', ExampleController::class)->names('admin.example');
+    //    $router->get('example', 'ExampleController@index')->name('admin.example.index');
+    //    $router->get('example/create', 'ExampleController@create')->name('admin.example.create');
+    //    $router->get('example/{id}', 'ExampleController@show')->name('admin.example.show');
+    //    $router->get('example/{id}/edit', 'ExampleController@edit')->name('admin.example.edit');
+    //    $router->post('example', 'ExampleController@store')->name('admin.example.store');
+    //    $router->put('example/{id}', 'ExampleController@update')->name('admin.example.update');
+    //    $router->delete('example/{id}', 'ExampleController@destroy')->name('admin.example.destroy');
 });
