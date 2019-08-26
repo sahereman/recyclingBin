@@ -49,7 +49,7 @@ php artisan db:seed --class=ConfigsSeeder
   
   or (二选一)
   
-  ./bin/laravels start  help: {start|stop|restart|reload|publish}
+  php ./bin/laravels start {start|stop|restart|reload|info|help}
   ```
 
 ## 常用 artisan 命令

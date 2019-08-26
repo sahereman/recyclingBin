@@ -13,6 +13,7 @@
         "dingo/api": "^2.3",
         "encore/laravel-admin": "^1.7",
         "fideloper/proxy": "^4.0",
+        "hhxsv5/laravel-s": "~3.5.0",
         "intervention/image": "^2.5",
         "laravel-admin-ext/file-browser": "^0.0.2",
         "laravel-admin-ext/log-viewer": "^1.0",
