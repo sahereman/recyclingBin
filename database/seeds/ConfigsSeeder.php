@@ -30,24 +30,24 @@ class ConfigsSeeder extends Seeder
             ],
 
             //订单通知
-            [
-                'name' => '订单通知',
-                'type' => "group",
-                'sort' => 2000,
-                'configs' =>
-                    [
-                        ['name' => '第一次通知司机', 'code' => 'order_notify_1', 'type' => "number", 'sort' => 10, 'value' => '500',
-                            'help' => '第一次通知订单距离最近的司机(单位:米)'],
-                        ['name' => '第二次通知司机', 'code' => 'order_notify_2', 'type' => "number", 'sort' => 20, 'value' => '1000',
-                            'help' => '第二次通知距离第一次通知之后的司机(单位:米)'],
-                        ['name' => '第三次通知司机', 'code' => 'order_notify_3', 'type' => "number", 'sort' => 30, 'value' => '2000',
-                            'help' => '第三次通知距离第二次通知之后的司机(单位:米)'],
-                        ['name' => '最后次通知司机', 'code' => 'order_notify_4', 'type' => "number", 'sort' => 40, 'value' => '9999',
-                            'help' => '最后次通知距离第三次通知之后的司机(单位:米)'],
-                        ['name' => '通知间隔时间', 'code' => 'order_notify_interval', 'type' => "number", 'sort' => 50, 'value' => '5',
-                            'help' => '每一次通知距上一次通知的延迟时间,首次通知无延迟(单位:秒)'],
-                    ]
-            ],
+            //            [
+            //                'name' => '订单通知',
+            //                'type' => "group",
+            //                'sort' => 2000,
+            //                'configs' =>
+            //                    [
+            //                        ['name' => '第一次通知司机', 'code' => 'order_notify_1', 'type' => "number", 'sort' => 10, 'value' => '500',
+            //                            'help' => '第一次通知订单距离最近的司机(单位:米)'],
+            //                        ['name' => '第二次通知司机', 'code' => 'order_notify_2', 'type' => "number", 'sort' => 20, 'value' => '1000',
+            //                            'help' => '第二次通知距离第一次通知之后的司机(单位:米)'],
+            //                        ['name' => '第三次通知司机', 'code' => 'order_notify_3', 'type' => "number", 'sort' => 30, 'value' => '2000',
+            //                            'help' => '第三次通知距离第二次通知之后的司机(单位:米)'],
+            //                        ['name' => '最后次通知司机', 'code' => 'order_notify_4', 'type' => "number", 'sort' => 40, 'value' => '9999',
+            //                            'help' => '最后次通知距离第三次通知之后的司机(单位:米)'],
+            //                        ['name' => '通知间隔时间', 'code' => 'order_notify_interval', 'type' => "number", 'sort' => 50, 'value' => '5',
+            //                            'help' => '每一次通知距上一次通知的延迟时间,首次通知无延迟(单位:秒)'],
+            //                    ]
+            //            ],
 
 
             //站点设置2

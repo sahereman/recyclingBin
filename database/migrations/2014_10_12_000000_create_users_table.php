@@ -16,13 +16,21 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('wx_openid')->nullable()->comment('微信授权id');
-            $table->string('name');
+            $table->string('name')->comment('昵称');
+            $table->string('gender')->default('')->comment('性别');
+            $table->string('phone')->default('')->comment('手机');
             $table->string('avatar')->nullable()->comment('头像');
             $table->decimal('money')->default(0)->comment('奖励金');
-            $table->string('email')->unique();
+
+
+            $table->string('country')->default('')->comment('国家');
+            $table->string('province')->default('')->comment('省');
+            $table->string('city')->default('')->comment('市');
+
+
+            $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('password')->nullable();
             $table->timestamps();
         });
     }

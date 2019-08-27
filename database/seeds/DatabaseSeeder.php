@@ -14,5 +14,8 @@ class DatabaseSeeder extends Seeder
         //系统
         $this->call(AdminTablesSeeder::class);
         $this->call(ConfigsSeeder::class);
+
+        //用户
+        $this->call(UsersSeeder::class);
     }
 }
