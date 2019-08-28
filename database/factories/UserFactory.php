@@ -29,9 +29,9 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'avatar' => $faker->imageUrl(),
         'money' => 0,
 
-        'country' => $faker->country,
-        'province' => $faker->country,
-        'city' => $faker->city,
+        'wx_country' => $faker->country,
+        'wx_province' => $faker->country,
+        'wx_city' => $faker->city,
 
         'created_at' => $created_at,
         'updated_at' => $updated_at,

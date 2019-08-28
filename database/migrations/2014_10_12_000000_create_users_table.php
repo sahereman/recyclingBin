@@ -23,9 +23,9 @@ class CreateUsersTable extends Migration
             $table->decimal('money')->default(0)->comment('奖励金');
 
 
-            $table->string('country')->default('')->comment('国家');
-            $table->string('province')->default('')->comment('省');
-            $table->string('city')->default('')->comment('市');
+            $table->string('wx_country')->default('')->comment('WX国家');
+            $table->string('wx_province')->default('')->comment('WX省');
+            $table->string('wx_city')->default('')->comment('WX市');
 
 
             $table->string('email')->nullable();

@@ -18,10 +18,6 @@ class UserTransformer extends TransformerAbstract
             'avatar_url' => $user->avatar_url,
             'money' => $user->money,
 
-            'country' => $user->country,
-            'province' => $user->province,
-            'city' => $user->city,
-
             'created_at' => $user->created_at->toDateTimeString(),
             'updated_at' => $user->updated_at->toDateTimeString(),
         ];
