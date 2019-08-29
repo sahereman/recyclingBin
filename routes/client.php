@@ -45,7 +45,7 @@ $api->version('v1', [
             $api->put('users/bindPhone', 'UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/
         });
 
-        //        $api->get('test', 'Controller@test')->name('client.test');/*测试*/
+                $api->get('test', 'Controller@test')->name('client.test');/*测试*/
 
         //        // 用户注册
         //        $api->post('users', 'UsersController@store')->name('client.users.store');/*注册*/
