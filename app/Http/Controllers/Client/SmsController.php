@@ -11,7 +11,21 @@ class SmsController extends Controller
 {
     public $verification_template_code = 'SMS_151996714';
 
-
+    /**
+     * showdoc
+     * @catalog 客户端/用户相关
+     * @title POST 发送短信验证码
+     * @method POST
+     * @url sms/verification
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @param phone 必选 string 手机号
+     * @return {"verification_key":"SmsVerification_tGH5UZhHnlb9rAn","expired_at":"2019-08-29 11:03:54"}
+     * @return_param HTTP.Status int 成功时HTTP状态码:201
+     * @return_param verification_key string 短信验证码key
+     * @return_param expired_at string 短信验证码过期时间
+     * @number 40
+     * @throws \Exception
+     */
     public function verification(SmsVerificationRequest $request)
     {
         $phone = $request->phone;
@@ -37,7 +51,7 @@ class SmsController extends Controller
         \Cache::put($key, ['phone' => $phone, 'code' => $code], $expiredAt);
 
         return $this->response->array([
-            'key' => $key,
+            'verification_key' => $key,
             'expired_at' => $expiredAt->toDateTimeString(),
         ])->setStatusCode(201);
     }
