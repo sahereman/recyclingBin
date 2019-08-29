@@ -42,14 +42,12 @@ class AuthorizationsController extends Controller
 
         $decryptData = $app->encryptor->decryptData($wx_session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
-        info($decryptData);
-
-        $user = User::where('wx_openid', $decryptData['openid'])->first();
+        $user = User::where('wx_openid', $decryptData['openId'])->first();
 
         if (!$user)
         {
             $user = User::create([
-                'wx_openid' => $decryptData['openid'],
+                'wx_openid' => $decryptData['openId'],
                 'name' => $decryptData['nickName'],
                 'gender' => $decryptData['gender'] == 2 ? '女' : '男',
                 'avatar' => $decryptData['avatarUrl'],
