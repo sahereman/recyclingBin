@@ -17,19 +17,8 @@ $api->version('v1', [
     'prefix' => 'api/client',
     'namespace' => 'App\Http\Controllers\Client',
     'middleware' => ['bindings']
-//    'middleware' => ['serializer:array', 'bindings']
+    //    'middleware' => ['serializer:array', 'bindings']
 ], function ($api) {
-
-    /*短信接口调用频率 1分钟 2次*/
-    $api->group([
-        'middleware' => 'api.throttle',
-        'limit' => 20,
-        'expires' => 1,
-    ], function ($api) {
-        // 短信
-        //        $api->post('sms/verification', 'SmsController@verification')->name('client.sms.verification');/*获取短信验证码*/
-
-    });
 
     /*常规接口调用频率 1分钟 60次*/
     $api->group([
@@ -44,12 +33,17 @@ $api->version('v1', [
         $api->put('authorizations', 'AuthorizationsController@update')->name('client.authorizations.update');/*刷新授权token*/
         $api->delete('authorizations', 'AuthorizationsController@destroy')->name('client.authorizations.destroy');/*删除授权token*/
 
-        // 用户
-        $api->get('users/show', 'UsersController@show')->name('client.users.show');/*获取用户信息*/
+
 
         /*需要 token 验证的接口*/
         $api->group(['middleware' => 'api.auth:client'], function ($api) {
 
+
+
+            // 用户
+            $api->get('users/show', 'UsersController@show')->name('client.users.show');/*获取用户信息*/
+            $api->post('sms/verification', 'SmsController@verification')->name('client.sms.verification');/*获取短信验证码*/
+            $api->put('users/bindPhone','UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/
         });
 
         //        $api->get('test', 'Controller@test')->name('client.test');/*测试*/

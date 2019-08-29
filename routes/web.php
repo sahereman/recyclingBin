@@ -15,4 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Horizon::auth(function ($request) {
+    return Auth::guard('admin')->check();
+});
+
 Route::post('github/webhook', 'Controller@githubWebhook');

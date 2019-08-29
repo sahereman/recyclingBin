@@ -15,7 +15,7 @@ class AuthorizationsController extends Controller
         $app = app('wechat.mini_program');
 
         /*测试模式*/
-        if (!app()->environment('production'))
+        if (app()->environment('production'))
         {
             $user = User::find($request->user_id);
             $token = Auth::guard('client')->login($user);
