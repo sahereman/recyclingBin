@@ -23,7 +23,7 @@ class AuthorizationsController extends Controller
      * @return_param access_token string 用户凭证
      * @return_param token_type string 凭证类型
      * @return_param expires_in string 有效时间(单位:秒)
-     * @remark token的使用规则 : HTTP请求头(Headers) 中加入Authorization的key ,  Value为 : {token_type}(此处有空格){access_token} ------ 到期时间的计算方式 : 现在时间+有效时间(单位:秒),之后会失效,有效时间内调用刷新授权接口,将换取新的token授权重新计算时间,原有的token将失效
+     * @remark token的使用规则 : HTTP请求头(Headers) 中加入Authorization的key ,  Value为 : {token_type}(此处有空格){access_token} ------ 到期时间的计算方式 : 现在时间➕有效时间(单位:秒),之后会失效,有效时间内调用刷新授权接口,将换取新的token授权重新计算时间,原有的token将失效
      * @number 10
      */
     public function store(AuthorizationRequest $request)
@@ -41,6 +41,8 @@ class AuthorizationsController extends Controller
         $wx_session = $app->auth->session($request->input('jsCode'));
 
         $decryptData = $app->encryptor->decryptData($wx_session['session_key'], $request->input('iv'), $request->input('encryptedData'));
+
+        info($decryptData);
 
         $user = User::where('wx_openid', $decryptData['openid'])->first();
 
@@ -76,7 +78,7 @@ class AuthorizationsController extends Controller
      * @return_param access_token string 用户凭证
      * @return_param token_type string 凭证类型
      * @return_param expires_in string 有效时间(单位:秒)
-     * @remark token的使用规则 : HTTP请求头(Headers) 中加入Authorization的key ,  Value为 : {token_type}(此处有空格){access_token} ------ 到期时间的计算方式 : 现在时间+有效时间(单位:秒),之后会失效,有效时间内调用刷新授权接口,将换取新的token授权重新计算时间,原有的token将失效
+     * @remark token的使用规则 : HTTP请求头(Headers) 中加入Authorization的key ,  Value为 : {token_type}(此处有空格){access_token} ------ 到期时间的计算方式 : 现在时间➕有效时间(单位:秒),之后会失效,有效时间内调用刷新授权接口,将换取新的token授权重新计算时间,原有的token将失效
      * @number 20
      */
     public function update()
