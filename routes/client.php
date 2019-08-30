@@ -43,9 +43,20 @@ $api->version('v1', [
             $api->get('users/show', 'UsersController@show')->name('client.users.show');/*获取用户信息*/
             $api->post('sms/verification', 'SmsController@verification')->name('client.sms.verification');/*获取短信验证码*/
             $api->put('users/bindPhone', 'UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/
+
+            //回收箱
+            $api->get('bins', 'BinsController@index')->name('client.bins.index');/*获取回收箱列表*/
+
+            //话题
+            $api->get('topic_categories', 'TopicCategoriesController@index')->name('client.topic_categories.index');/*获取话题分类*/
+            $api->get('topics', 'TopicsController@index')->name('client.topics.index');/*获取话题列表*/
+            $api->get('topics/show', 'TopicsController@show')->name('client.topics.show');/*获取话题详情*/
+
+
+
         });
 
-                $api->get('test', 'Controller@test')->name('client.test');/*测试*/
+        $api->get('test', 'Controller@test')->name('client.test');/*测试*/
 
         //        // 用户注册
         //        $api->post('users', 'UsersController@store')->name('client.users.store');/*注册*/

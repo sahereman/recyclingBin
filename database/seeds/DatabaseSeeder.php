@@ -26,5 +26,8 @@ class DatabaseSeeder extends Seeder
 
         //箱
         $this->call(BinsSeeder::class);
+
+        //话题
+        $this->call(TopicsSeeder::class);
     }
 }
