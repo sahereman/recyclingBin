@@ -15,9 +15,6 @@ class Controller extends BaseController
 
     public function githubWebhook(Request $request)
     {
-        if (!app()->environment('production'))
-        {
-            GithubUpdate::dispatch();
-        }
+        GithubUpdate::dispatch();
     }
 }
