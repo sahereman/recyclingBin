@@ -15,4 +15,9 @@ class TopicCategory extends Model
 
     protected $dates = [
     ];
+
+    public function topics()
+    {
+        return $this->hasMany(Topic::class, 'category_id');
+    }
 }

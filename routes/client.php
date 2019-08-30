@@ -49,8 +49,9 @@ $api->version('v1', [
 
             //话题
             $api->get('topic_categories', 'TopicCategoriesController@index')->name('client.topic_categories.index');/*获取话题分类*/
-            $api->get('topics', 'TopicsController@index')->name('client.topics.index');/*获取话题列表*/
-            $api->get('topics/show', 'TopicsController@show')->name('client.topics.show');/*获取话题详情*/
+            $api->get('topic_categories/{category}', 'TopicCategoriesController@topic')->name('client.topic_categories.topic');/*获取话题列表*/
+            $api->get('topics/{topic}', 'TopicsController@show')->name('client.topics.show');/*获取话题详情*/
+
 
 
 
