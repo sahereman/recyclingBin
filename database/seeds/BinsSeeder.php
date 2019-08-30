@@ -5,7 +5,6 @@ use App\Models\Bin;
 use App\Models\ServiceSite;
 use App\Models\BinTypePaper;
 use App\Models\BinTypeFabric;
-use App\Models\BinTypeHarmful;
 use App\Models\ClientPrice;
 use App\Models\RecyclePrice;
 
@@ -53,11 +52,6 @@ class BinsSeeder extends Seeder
                 'client_price_id' => $client_fabric_price->id,
                 'recycle_price_id' => $recyc_fabric_price->id,
             ]);
-            factory(BinTypeHarmful::class)->create([
-                'bin_id' => $bin->id,
-                'client_price_id' => $client_harmful_price->id,
-                'recycle_price_id' => $recyc_harmful_price->id,
-            ]);
 
         }
 
@@ -87,12 +81,7 @@ class BinsSeeder extends Seeder
                 'client_price_id' => $client_fabric_price->id,
                 'recycle_price_id' => $recyc_fabric_price->id,
             ]);
-            factory(BinTypeHarmful::class)->create([
-                'bin_id' => $bin->id,
-                'client_price_id' => $client_harmful_price->id,
-                'recycle_price_id' => $recyc_harmful_price->id,
-            ]);
-            
+
         }
     }
 }

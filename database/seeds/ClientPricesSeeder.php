@@ -22,10 +22,5 @@ class ClientPricesSeeder extends Seeder
             'slug' => 'fabric',
             'price' => '0.10'
         ]);
-
-        ClientPrice::create([
-            'slug' => 'harmful',
-            'price' => '0.00'
-        ]);
     }
 }

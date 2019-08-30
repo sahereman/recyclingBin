@@ -21,10 +21,5 @@ class RecyclePricesSeeder extends Seeder
             'slug' => 'fabric',
             'price' => '0.40'
         ]);
-
-        RecyclePrice::create([
-            'slug' => 'harmful',
-            'price' => '0.00'
-        ]);
     }
 }
