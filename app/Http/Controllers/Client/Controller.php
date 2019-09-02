@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Models\Bin;
 use App\Models\User;
 use Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Controller as BaseController;
@@ -13,6 +14,16 @@ class Controller extends BaseController
 
     public function test()
     {
+        $bin = Bin::find(1);
+
+//        $type_fabric = $bin->type_fabric()->with(['client_price', 'recycle_price'])->first();
+////        $type_fabric = $bin->type_fabric;
+//
+        $type_fabric = $bin->type_fabric()->with(['client_price', 'recycle_price'])->first()->toArray();
+        $type_paper = $bin->type_paper()->with(['client_price', 'recycle_price'])->first()->toArray();
+        $a =  ['type_fabric' => $type_fabric, 'type_paper' => $type_paper];
+
+        dd($a);
         return '666';
         //        $swoole = app('swoole');
         //        dd($swoole->stats());

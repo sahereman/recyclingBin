@@ -7,6 +7,7 @@ use App\Models\BinTypePaper;
 use App\Models\BinTypeFabric;
 use App\Models\ClientPrice;
 use App\Models\RecyclePrice;
+use App\Jobs\GenerateBinTypeSnapshot;
 
 class BinsSeeder extends Seeder
 {
@@ -19,12 +20,10 @@ class BinsSeeder extends Seeder
         //客户端价格
         $client_paper_price = ClientPrice::where('slug', 'paper')->first();
         $client_fabric_price = ClientPrice::where('slug', 'fabric')->first();
-        $client_harmful_price = ClientPrice::where('slug', 'harmful')->first();
 
         //回收端价格
         $recyc_paper_price = RecyclePrice::where('slug', 'paper')->first();
         $recyc_fabric_price = RecyclePrice::where('slug', 'fabric')->first();
-        $recyc_harmful_price = RecyclePrice::where('slug', 'harmful')->first();
 
 
         // 青岛站
@@ -33,7 +32,7 @@ class BinsSeeder extends Seeder
         $qd_lng = '120.381420';
         for ($i = 1; $i <= 20; $i++)
         {
-            $bin = factory(Bin::class)->create([
+            $qd_bin = factory(Bin::class)->create([
                 'site_id' => $qd_site->id,
                 'no' => '053200' . $i,
                 'lat' => $qd_lat,
@@ -43,16 +42,17 @@ class BinsSeeder extends Seeder
             $qd_lng = bcadd($qd_lng, '0.001', 6);
 
             factory(BinTypePaper::class)->create([
-                'bin_id' => $bin->id,
+                'bin_id' => $qd_bin->id,
                 'client_price_id' => $client_paper_price->id,
                 'recycle_price_id' => $recyc_paper_price->id,
             ]);
             factory(BinTypeFabric::class)->create([
-                'bin_id' => $bin->id,
+                'bin_id' => $qd_bin->id,
                 'client_price_id' => $client_fabric_price->id,
                 'recycle_price_id' => $recyc_fabric_price->id,
             ]);
 
+            GenerateBinTypeSnapshot::dispatch($qd_bin);
         }
 
 
@@ -62,7 +62,7 @@ class BinsSeeder extends Seeder
         $jn_lng = '117.016158';
         for ($i = 1; $i <= 5; $i++)
         {
-            factory(Bin::class)->create([
+            $jn_bin = factory(Bin::class)->create([
                 'site_id' => $jn_site->id,
                 'no' => '053100' . $i,
                 'lat' => $jn_lat,
@@ -72,16 +72,17 @@ class BinsSeeder extends Seeder
             $jn_lng = bcadd($jn_lng, '0.001', 6);
 
             factory(BinTypePaper::class)->create([
-                'bin_id' => $bin->id,
+                'bin_id' => $jn_bin->id,
                 'client_price_id' => $client_paper_price->id,
                 'recycle_price_id' => $recyc_paper_price->id,
             ]);
             factory(BinTypeFabric::class)->create([
-                'bin_id' => $bin->id,
+                'bin_id' => $jn_bin->id,
                 'client_price_id' => $client_fabric_price->id,
                 'recycle_price_id' => $recyc_fabric_price->id,
             ]);
 
+            GenerateBinTypeSnapshot::dispatch($jn_bin);
         }
     }
 }

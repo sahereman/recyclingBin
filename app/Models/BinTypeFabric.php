@@ -26,7 +26,32 @@ class BinTypeFabric extends Model
     ];
 
     protected $dates = [
+
+    ];
+
+    protected $appends = [
+        'status_text'
     ];
 
     public $timestamps = false;
+
+    public function getStatusTextAttribute()
+    {
+        return self::$StatusMap[$this->attributes['status']];
+    }
+
+    public function client_price()
+    {
+        return $this->belongsTo(ClientPrice::class);
+    }
+
+    public function recycle_price()
+    {
+        return $this->belongsTo(RecyclePrice::class);
+    }
+
+    public function bin()
+    {
+        return $this->belongsTo(Bin::class);
+    }
 }

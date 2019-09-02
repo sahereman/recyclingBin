@@ -8,6 +8,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\DB;
+
 
 class GenerateBinTypeSnapshot implements ShouldQueue
 {
@@ -17,12 +19,19 @@ class GenerateBinTypeSnapshot implements ShouldQueue
 
     public function __construct(Bin $bin)
     {
-        $this->bin  = $bin;
+        $this->bin = $bin;
     }
 
     public function handle()
     {
 
+        $bin = $this->bin;
+        $bin->types_snapshot = DB::transaction(function () use ($bin) {
+            $type_fabric = $bin->type_fabric()->with(['client_price', 'recycle_price'])->first();
+            $type_paper = $bin->type_paper()->with(['client_price', 'recycle_price'])->first();
+            return ['type_fabric' => $type_fabric, 'type_paper' => $type_paper];
+        });
+        $bin->save();
 
     }
 }

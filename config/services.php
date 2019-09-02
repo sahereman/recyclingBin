@@ -40,4 +40,6 @@ return [
         ],
     ],
 
+    'tencentMapKey' => env('TENCENT_MAP_KEY'),
+
 ];

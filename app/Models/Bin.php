@@ -16,5 +16,17 @@ class Bin extends Model
     ];
 
     protected $dates = [
+
     ];
+
+    public function type_paper()
+    {
+        return $this->hasOne(BinTypePaper::class);
+    }
+
+    public function type_fabric()
+    {
+        return $this->hasOne(BinTypeFabric::class);
+    }
+
 }
