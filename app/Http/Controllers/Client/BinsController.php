@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Handlers\Tools\Coordinate;
-use App\Http\Requests\Client\BinsIndexRequest;
+use App\Http\Requests\Client\BinRequest;
 use App\Models\Bin;
 use App\Transformers\Client\BinSimpleTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -27,9 +27,9 @@ class BinsController extends Controller
      * @return_param mata.pagination json 分页信息 (使用links.next前往下一页数据)
      * @number 20
      */
-    public function index(BinsIndexRequest $request)
+    public function index(BinRequest $request)
     {
-        $bins = Bin::all();
+        $bins = Bin::where('is_run',true)->get();
         $location_coor = new Coordinate($request->get('lat'), $request->get('lng'));
 
 
@@ -64,5 +64,36 @@ class BinsController extends Controller
         $paginator->appends($request->except('page'));
 
         return $this->response->paginator($paginator, new BinSimpleTransformer());
+    }
+
+    /**
+     * showdoc
+     * @catalog 客户端/回收箱相关
+     * @title GET 获取距离最近的回收箱
+     * @method GET
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @param lat 必选 string 纬度
+     * @param lng 必选 string 经度
+     * @url bins/nearby
+     * @return {"id":1,"site_id":1,"name":"香港兴山区","no":"0532001","address":"10 张 Street","distance":824,"types_snapshot":{"type_paper":{"id":1,"name":"纸类、塑料、金属","unit":"公斤","bin_id":1,"number":"67.12","status":"full","status_text":"满箱","client_price":{"id":1,"slug":"paper","price":"0.50"},"recycle_price":{"id":1,"slug":"paper","price":"0.70"},"client_price_id":1,"recycle_price_id":1},"type_fabric":{"id":1,"name":"纺织物","unit":"公斤","bin_id":1,"number":"86.43","status":"normal","status_text":"正常","client_price":{"id":2,"slug":"fabric","price":"0.10"},"recycle_price":{"id":2,"slug":"fabric","price":"0.40"},"client_price_id":2,"recycle_price_id":2}}}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @return_param data json 回收箱信息
+     * @number 10
+     */
+    public function nearby(BinRequest $request)
+    {
+        $bins = Bin::where('is_run',true)->get();
+        $location_coor = new Coordinate($request->get('lat'), $request->get('lng'));
+
+
+        $bins->transform(function ($bin) use ($location_coor) {
+            $bin_coor = new Coordinate($bin->lat, $bin->lng);
+            $distance = calcDistance($location_coor, $bin_coor);
+            $bin->distance = $distance;
+            return $bin;
+        });
+        $bins = $bins->sortBy('distance');//按距离排序
+
+        return $this->response->item($bins->first(),new BinSimpleTransformer());
     }
 }

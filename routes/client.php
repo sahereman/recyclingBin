@@ -30,6 +30,8 @@ $api->version('v1', [
         // 授权
         $api->post('authorizations', 'AuthorizationsController@store')->name('client.authorizations.store');/*小程序授权token*/
 
+        // Banner
+        $api->get('banners/{slug}', 'BannersController@index')->name('client.banners.index');/*获取Banner图列表*/
 
         /*需要 token 验证的接口*/
         $api->group(['middleware' => 'api.auth:client'], function ($api) {
@@ -45,6 +47,7 @@ $api->version('v1', [
             $api->put('users/bindPhone', 'UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/
 
             //回收箱
+            $api->get('bins/nearby', 'BinsController@nearby')->name('client.bins.nearby');/*获取距离最近的回收箱*/
             $api->get('bins', 'BinsController@index')->name('client.bins.index');/*获取回收箱列表*/
 
             //话题

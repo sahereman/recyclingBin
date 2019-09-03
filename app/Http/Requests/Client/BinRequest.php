@@ -4,7 +4,7 @@ namespace App\Http\Requests\Client;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BinsIndexRequest extends FormRequest
+class BinRequest extends FormRequest
 {
     public function rules()
     {

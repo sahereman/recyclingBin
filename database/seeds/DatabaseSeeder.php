@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
         //用户
         $this->call(UsersSeeder::class);
 
+        //Banner
+        $this->call(BannersSeeder::class);
+
         //服务站点
         $this->call(ServiceSitesSeeder::class);
 
