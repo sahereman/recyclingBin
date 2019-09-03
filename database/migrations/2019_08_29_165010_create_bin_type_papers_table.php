@@ -15,6 +15,7 @@ class CreateBinTypePapersTable extends Migration
     {
         Schema::create('bin_type_papers', function (Blueprint $table) {
             $table->increments('id');
+
             $table->unsignedInteger('bin_id')->comment('所属箱');
             $table->foreign('bin_id')->references('id')->on('bins')->onDelete('cascade');
 

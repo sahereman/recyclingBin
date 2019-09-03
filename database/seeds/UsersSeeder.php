@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class UsersSeeder extends Seeder
@@ -12,19 +13,16 @@ class UsersSeeder extends Seeder
     public function run()
     {
         // 通过 factory 方法生成 x 个数据并保存到数据库中
-        factory(\App\Models\User::class, 5)->create();
-
+        factory(User::class, 5)->create();
 
         //单独处理第一个用户的数据
-//        $user = \App\Models\User::find(1);
-//        $user->phone = '18600982820';
-//        $user->save();
-
+        // $user = \App\Models\User::find(1);
+        // $user->phone = '18600982820';
+        // $user->save();
 
         //单独处理第二个用户的数据
-//        $user = \App\Models\User::find(2);
-//        $user->phone = '17863972036';
-//        $user->save();
-
+        // $user = \App\Models\User::find(2);
+        // $user->phone = '17863972036';
+        // $user->save();
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use Encore\Admin\Auth\Database\Administrator;
-use Encore\Admin\Auth\Database\Role;
-use Encore\Admin\Auth\Database\Permission;
 use Encore\Admin\Auth\Database\Menu;
+use Encore\Admin\Auth\Database\Permission;
+use Encore\Admin\Auth\Database\Role;
+use Illuminate\Database\Seeder;
 
 /**
  * Class AdminTablesSeeder
@@ -22,16 +21,16 @@ class AdminTablesSeeder extends Seeder
                 'http_path' => "/users",
             ],
             [
-                'name' => '司机管理',
-                'slug' => 'drivers',
+                'name' => 'Service Site Management',
+                'slug' => 'service_sites',
                 'http_method' => '',
-                'http_path' => "/drivers",
+                'http_path' => "/service_sites",
             ],
             [
-                'name' => '文章管理',
-                'slug' => 'articles',
+                'name' => 'Bin Management',
+                'slug' => 'bins',
                 'http_method' => '',
-                'http_path' => "/articles",
+                'http_path' => "/bins",
             ],
             [
                 'name' => '订单管理',
@@ -60,16 +59,16 @@ class AdminTablesSeeder extends Seeder
             [
                 'parent_id' => 0,
                 'order' => 2,
-                'title' => '司机管理',
+                'title' => 'Service Site Management',
                 'icon' => 'fa-list',
-                'uri' => '/drivers',
+                'uri' => '/service_sites',
             ],
             [
                 'parent_id' => 0,
                 'order' => 5,
-                'title' => '文章管理',
+                'title' => 'Bin Management',
                 'icon' => 'fa-list',
-                'uri' => 'articles',
+                'uri' => 'bins',
             ],
             [
                 'parent_id' => 0,
@@ -86,7 +85,6 @@ class AdminTablesSeeder extends Seeder
                 'uri' => 'city_hot_addresses',
             ],
 
-
             [
                 'parent_id' => 0,
                 'order' => 11,
@@ -94,7 +92,6 @@ class AdminTablesSeeder extends Seeder
                 'icon' => 'fa-list',
                 'uri' => '',
             ],
-
 
             [
                 'parent_id' => 19,
@@ -111,8 +108,6 @@ class AdminTablesSeeder extends Seeder
                 'icon' => 'fa-list',
                 'uri' => 'img',
             ],
-
-
         ];
 
     /**
@@ -285,6 +280,5 @@ class AdminTablesSeeder extends Seeder
         // add role to menu.
         Menu::find(2)->roles()->save(Role::first());
         Menu::find(15)->roles()->save(Role::first());/*文章管理*/
-
     }
 }

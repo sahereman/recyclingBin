@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Models\RecyclePrice;
+use Illuminate\Database\Seeder;
 
 class RecyclePricesSeeder extends Seeder
 {

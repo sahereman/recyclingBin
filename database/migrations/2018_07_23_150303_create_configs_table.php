@@ -23,7 +23,6 @@ class CreateConfigsTable extends Migration
             //radio : [['value' => 0, 'name' => '开启'], ['value' => 1, 'name' => '关闭']]
             $table->string('select_range')->default('')->comment('设置在表单中的选项范围');
 
-
             $table->string('value')->default('')->comment('配置的值');
             $table->string('help')->default('')->comment('帮助提示');
             $table->smallInteger('sort')->default(0)->comment('排序');

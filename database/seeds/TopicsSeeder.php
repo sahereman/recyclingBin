@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use App\Models\TopicCategory;
 use App\Models\Topic;
+use App\Models\TopicCategory;
+use Illuminate\Database\Seeder;
 
 class TopicsSeeder extends Seeder
 {
@@ -13,17 +13,12 @@ class TopicsSeeder extends Seeder
      */
     public function run()
     {
+        factory(TopicCategory::class, 4)->create();
 
-        factory(TopicCategory::class,4)->create();
-
-        TopicCategory::all()->each(function (TopicCategory $category)
-        {
-
-            factory(Topic::class,20)->create([
+        TopicCategory::all()->each(function (TopicCategory $category) {
+            factory(Topic::class, 20)->create([
                 'category_id' => $category->id
             ]);
-
         });
-
     }
 }

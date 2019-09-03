@@ -14,6 +14,7 @@ class CreateTopicsTable extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->increments('id');
+
             $table->unsignedInteger('category_id')->comment('所属分类');
             $table->foreign('category_id')->references('id')->on('topic_categories')->onDelete('cascade');
 

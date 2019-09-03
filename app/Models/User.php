@@ -12,11 +12,21 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
     public function getJWTCustomClaims()
     {
         return [];
@@ -28,7 +38,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -37,7 +49,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -49,15 +62,28 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['avatar_url'];
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'avatar_url',
+    ];
 
+    /* Accessors */
     public function getAvatarUrlAttribute()
     {
         // 如果 image 字段本身就已经是完整的 url 就直接返回
-        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://']))
-        {
+        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://'])) {
             return $this->attributes['avatar'];
         }
         return \Storage::disk('public')->url($this->attributes['avatar']);
+    }
+
+    /* Mutators */
+    public function setAvatarUrlAttribute($value)
+    {
+        unset($this->attributes['avatar_url']);
     }
 }

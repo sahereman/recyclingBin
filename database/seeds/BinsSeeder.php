@@ -1,13 +1,13 @@
 <?php
 
-use Illuminate\Database\Seeder;
+use App\Jobs\GenerateBinTypeSnapshot;
 use App\Models\Bin;
-use App\Models\ServiceSite;
-use App\Models\BinTypePaper;
 use App\Models\BinTypeFabric;
+use App\Models\BinTypePaper;
 use App\Models\ClientPrice;
 use App\Models\RecyclePrice;
-use App\Jobs\GenerateBinTypeSnapshot;
+use App\Models\ServiceSite;
+use Illuminate\Database\Seeder;
 
 class BinsSeeder extends Seeder
 {
@@ -25,13 +25,11 @@ class BinsSeeder extends Seeder
         $recyc_paper_price = RecyclePrice::where('slug', 'paper')->first();
         $recyc_fabric_price = RecyclePrice::where('slug', 'fabric')->first();
 
-
         // 青岛站
         $qd_site = ServiceSite::where('city', '青岛市')->first();
         $qd_lat = '36.092550';
         $qd_lng = '120.381420';
-        for ($i = 1; $i <= 20; $i++)
-        {
+        for ($i = 1; $i <= 20; $i++) {
             $qd_bin = factory(Bin::class)->create([
                 'site_id' => $qd_site->id,
                 'no' => '053200' . $i,
@@ -55,13 +53,11 @@ class BinsSeeder extends Seeder
             GenerateBinTypeSnapshot::dispatch($qd_bin);
         }
 
-
         // 济南站
         $jn_site = ServiceSite::where('city', '济南市')->first();
         $jn_lat = '36.660958';
         $jn_lng = '117.016158';
-        for ($i = 1; $i <= 5; $i++)
-        {
+        for ($i = 1; $i <= 5; $i++) {
             $jn_bin = factory(Bin::class)->create([
                 'site_id' => $jn_site->id,
                 'no' => '053100' . $i,

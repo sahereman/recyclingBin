@@ -14,6 +14,7 @@ class CreateBinsTable extends Migration
     {
         Schema::create('bins', function (Blueprint $table) {
             $table->increments('id');
+
             $table->unsignedInteger('site_id')->comment('站点id');
             $table->foreign('site_id')->references('id')->on('service_sites')->onDelete('cascade');
 
@@ -25,7 +26,6 @@ class CreateBinsTable extends Migration
 
             $table->string('address')->comment('地址');
             $table->json('types_snapshot')->comment('回收种类快照');
-
 
             $table->timestamps();
         });

@@ -22,11 +22,9 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->nullable()->comment('头像');
             $table->decimal('money')->default(0)->comment('奖励金');
 
-
             $table->string('wx_country')->default('')->comment('WX国家');
             $table->string('wx_province')->default('')->comment('WX省');
             $table->string('wx_city')->default('')->comment('WX市');
-
 
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();

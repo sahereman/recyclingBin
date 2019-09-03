@@ -10,27 +10,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //系统
+        // 系统
         $this->call(AdminTablesSeeder::class);
         $this->call(ConfigsSeeder::class);
 
-        //用户
+        // 用户
         $this->call(UsersSeeder::class);
 
-        //Banner
+        // Banner
         $this->call(BannersSeeder::class);
 
-        //服务站点
+        // 服务站点
         $this->call(ServiceSitesSeeder::class);
 
-        //回收价格
+        // 回收价格
         $this->call(ClientPricesSeeder::class);
         $this->call(RecyclePricesSeeder::class);
 
-        //箱
+        // 箱
         $this->call(BinsSeeder::class);
 
-        //话题
+        // 话题
         $this->call(TopicsSeeder::class);
     }
 }

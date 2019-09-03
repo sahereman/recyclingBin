@@ -18,26 +18,68 @@ class BinTypePaper extends Model
         self::STATUS_REPAIR => '维护',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-
+        'bin_id',
+        'name',
+        'status',
+        'number',
+        'unit',
+        'client_price_id',
+        'recycle_price_id',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
+        //
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
+        //
     ];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
     protected $appends = [
-        'status_text'
+        'status_text',
     ];
 
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
     public $timestamps = false;
 
+    /* Accessors */
     public function getStatusTextAttribute()
     {
         return self::$StatusMap[$this->attributes['status']];
     }
+
+    /* Mutators */
+    public function setStatusTextAttribute($value)
+    {
+        unset($this->attributes['status_text']);
+    }
+
+    /* Eloquent Relationships */
     public function client_price()
     {
         return $this->belongsTo(ClientPrice::class);

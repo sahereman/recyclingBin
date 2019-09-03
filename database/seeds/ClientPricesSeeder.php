@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Models\ClientPrice;
+use Illuminate\Database\Seeder;
 
 class ClientPricesSeeder extends Seeder
 {
@@ -12,7 +12,6 @@ class ClientPricesSeeder extends Seeder
      */
     public function run()
     {
-
         ClientPrice::create([
             'slug' => 'paper',
             'price' => '0.50'

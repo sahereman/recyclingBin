@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Banner;
 use Illuminate\Database\Seeder;
 
 class BannersSeeder extends Seeder
@@ -11,6 +12,6 @@ class BannersSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Models\Banner::class,3)->create();
+        factory(Banner::class, 3)->create();
     }
 }
