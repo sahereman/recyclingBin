@@ -12,7 +12,7 @@ $factory->define(App\Models\Topic::class, function (Faker $faker) {
         'title' => $faker->company,
         'thumb' => $faker->imageUrl(200),
         'image' => $faker->imageUrl(640),
-        'content' => $faker->randomHtml(),
+        'content' => $faker->sentences(7, true),
         'is_index' => false,
 
         'created_at' => $created_at,

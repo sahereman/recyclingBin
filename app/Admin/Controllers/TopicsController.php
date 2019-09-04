@@ -80,7 +80,6 @@ class TopicsController extends AdminController
      */
     protected function form()
     {
-        Form::extend('editor', \Encore\WangEditor\Editor::class);
         $form = new Form(new Topic);
 
         // $form->number('category_id', 'Category id');
