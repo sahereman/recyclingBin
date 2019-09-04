@@ -19,6 +19,7 @@
         "laravel-admin-ext/file-browser": "^0.0.2",
         "laravel-admin-ext/log-viewer": "^1.0",
         "laravel-admin-ext/redis-manager": "^1.1",
+        "laravel-admin-ext/wang-editor": "~1.0",
         "laravel/framework": "5.7.*",
         "laravel/horizon": "~1.0",
         "laravel/tinker": "^1.0",

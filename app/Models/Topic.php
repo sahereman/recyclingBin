@@ -45,11 +45,18 @@ class Topic extends Model
      * @var array
      */
     protected $appends = [
+        'category_name',
         'thumb_url',
         'image_url',
+        // 'content_simple',
     ];
 
     /* Accessors */
+    public function getCategoryNameAttribute()
+    {
+        return $this->category->name;
+    }
+
     public function getThumbUrlAttribute()
     {
         // 如果 image 字段本身就已经是完整的 url 就直接返回
@@ -80,6 +87,11 @@ class Topic extends Model
     }
 
     /* Mutators */
+    public function setCategoryNameAttribute($value)
+    {
+        unset($this->attributes['category_name']);
+    }
+
     public function setThumbUrlAttribute($value)
     {
         unset($this->attributes['thumb_url']);
