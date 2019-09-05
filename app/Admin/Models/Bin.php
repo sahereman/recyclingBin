@@ -15,4 +15,13 @@ class Bin extends BinModel
         'is_run' => 'boolean',
         // 'types_snapshot' => 'json',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        // 'site_name',
+    ];
 }

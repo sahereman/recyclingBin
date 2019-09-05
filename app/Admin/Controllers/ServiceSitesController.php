@@ -15,7 +15,7 @@ class ServiceSitesController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Service Site';
+    protected $title = '回收站点';
 
     /**
      * Make a grid builder.

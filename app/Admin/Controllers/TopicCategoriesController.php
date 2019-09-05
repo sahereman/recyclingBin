@@ -15,7 +15,7 @@ class TopicCategoriesController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Topic Category';
+    protected $title = '话题分类';
 
     /**
      * Make a grid builder.
@@ -25,7 +25,7 @@ class TopicCategoriesController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new TopicCategory);
-        $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->model()->orderBy('sort', 'desc'); // 设置初始排序条件
 
         $grid->column('id', 'Id')->sortable();
         $grid->column('name', 'Name')->sortable();

@@ -47,7 +47,7 @@ class Bin extends Model
      * @var array
      */
     protected $appends = [
-        'site_name',
+        //
     ];
 
     /* Accessors */

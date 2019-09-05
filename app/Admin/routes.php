@@ -34,6 +34,12 @@ Route::group([
     /*Bin*/
     $router->resource('bins', 'BinsController');
 
+    /*ClientPrice*/
+    $router->resource('client_prices', 'ClientPricesController');
+
+    /*RecyclePrice*/
+    $router->resource('recycle_prices', 'RecyclePricesController');
+
     /*TopicCategory*/
     $router->resource('topic_categories', 'TopicCategoriesController');
 

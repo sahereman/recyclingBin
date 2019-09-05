@@ -2,14 +2,12 @@
 
 namespace App\Admin\Controllers;
 
-// use App\Admin\Models\Bin;
 use App\Models\Bin;
 use App\Models\ServiceSite;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-// use Encore\Admin\Widgets\Table;
 
 class BinsController extends AdminController
 {
@@ -18,7 +16,7 @@ class BinsController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Bin';
+    protected $title = '回收垃圾桶';
 
     /**
      * Make a grid builder.
@@ -32,10 +30,7 @@ class BinsController extends AdminController
 
         $grid->column('id', 'Id')->sortable();
         // $grid->column('site_id', 'Site id');
-        /*$grid->column('site', 'Site')->display(function ($site) {
-            return $site['name'];
-        });*/
-        $grid->column('site_name', 'Site');
+        $grid->site()->name('Site');
         $grid->column('is_run', 'Is Run')->switch([
             'on' => ['value' => 1, 'text' => 'YES', 'color' => 'primary'],
             'off' => ['value' => 0, 'text' => 'NO', 'color' => 'default'],

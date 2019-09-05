@@ -16,7 +16,7 @@ class TopicsController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Topic';
+    protected $title = '话题';
 
     /**
      * Make a grid builder.
