@@ -66,6 +66,8 @@ class UsersController extends Controller
         return $this->response->item($user, new UserTransformer());
     }
 
+
+
     //    public function update(UserRequest $request, ImageUploadHandler $handler)
     //    {
     //        $user = Auth::guard('client')->user();

@@ -4,13 +4,16 @@ use Illuminate\Database\Seeder;
 use App\Models\ClientOrder;
 use App\Models\ClientOrderItem;
 use App\Admin\Models\Bin;
+use App\Models\UserMoneyBill;
+use App\Models\User;
+use App\Jobs\GenerateClientOrderSnapshot;
 
 class ClientOrdersSeeder extends Seeder
 {
     public function run()
     {
-        $user = \App\Models\User::find(1);
-        $bins = \App\Models\Bin::all();
+        $user = User::find(1);
+        $bins = Bin::all();
 
         for ($i = 1; $i <= 20; $i++)
         {
@@ -22,7 +25,8 @@ class ClientOrdersSeeder extends Seeder
                 'order_id' => $order,
             ]);
 
-            \App\Jobs\GenerateClientOrderSnapshot::dispatch($order,$bins->random());
+            GenerateClientOrderSnapshot::dispatch($order, $bins->random());
+            UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
         }
     }
 }
