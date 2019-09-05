@@ -18,8 +18,7 @@ class Bin extends Model
         'no',
         'lat',
         'lng',
-        'address',
-        'types_snapshot',
+        'address'
     ];
 
     /**
