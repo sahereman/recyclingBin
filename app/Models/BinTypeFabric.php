@@ -24,7 +24,13 @@ class BinTypeFabric extends Model
      * @var array
      */
     protected $fillable = [
-
+        'bin_id',
+        'name',
+        'status',
+        'number',
+        'unit',
+        'client_price_id',
+        'recycle_price_id',
     ];
 
     /**
@@ -67,10 +73,30 @@ class BinTypeFabric extends Model
         return self::$StatusMap[$this->attributes['status']];
     }
 
+    public function getClientPriceValueAttribute()
+    {
+        return $this->client_price->price;
+    }
+
+    public function getRecyclePriceValueAttribute()
+    {
+        return $this->recycle_price->price;
+    }
+
     /* Mutators */
     public function setStatusTextAttribute($value)
     {
         unset($this->attributes['status_text']);
+    }
+
+    public function setClientPriceValueAttribute($value)
+    {
+        unset($this->attributes['client_price_value']);
+    }
+
+    public function setRecyclePriceValueAttribute($value)
+    {
+        unset($this->attributes['recycle_price_value']);
     }
 
     /* Eloquent Relationships */
