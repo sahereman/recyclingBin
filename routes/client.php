@@ -55,7 +55,8 @@ $api->version('v1', [
             $api->get('topic_categories/{category}', 'TopicCategoriesController@topic')->name('client.topic_categories.topic');/*获取话题列表*/
             $api->get('topics/{topic}', 'TopicsController@show')->name('client.topics.show');/*获取话题详情*/
 
-
+            //订单
+            $api->get('orders', 'OrdersController@index')->name('client.orders.index');/*获取订单列表*/
 
 
         });

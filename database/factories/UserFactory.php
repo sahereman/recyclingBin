@@ -26,7 +26,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'gender' => $faker->randomElement(['男', '女']),
         'phone' => $faker->phoneNumber,
         'avatar' => $faker->imageUrl(),
-        'money' => 0,
+        'money' => $faker->randomFloat(2, 100, 1000),
 
         'wx_country' => $faker->country,
         'wx_province' => $faker->country,

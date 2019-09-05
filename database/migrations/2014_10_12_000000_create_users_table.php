@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->default('')->comment('手机');
             $table->string('avatar')->nullable()->comment('头像');
             $table->decimal('money')->default(0)->comment('奖励金');
+            $table->decimal('frozen_money')->default(0)->comment('冻结的奖励金,用于提现中金额');
 
             $table->string('wx_country')->default('')->comment('WX国家');
             $table->string('wx_province')->default('')->comment('WX省');
