@@ -14,7 +14,6 @@ class ClientOrder extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -23,7 +22,6 @@ class ClientOrder extends Model
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
@@ -32,7 +30,6 @@ class ClientOrder extends Model
 
     /**
      * The attributes that should be mutated to dates.
-     *
      * @var array
      */
     protected $dates = [
@@ -41,10 +38,27 @@ class ClientOrder extends Model
 
     /**
      * The accessors to append to the model's array form.
-     *
      * @var array
      */
     protected $appends = [
+        'status_text',
     ];
+
+    /* Accessors */
+    public function getStatusTextAttribute()
+    {
+        return self::$StatusMap[$this->attributes['status']];
+    }
+
+    /* Mutators */
+    public function setStatusTextAttribute($value)
+    {
+        unset($this->attributes['status_text']);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(ClientOrderItem::class, 'order_id');
+    }
 
 }

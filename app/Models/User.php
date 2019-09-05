@@ -86,4 +86,9 @@ class User extends Authenticatable implements JWTSubject
     {
         unset($this->attributes['avatar_url']);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(ClientOrder::class);
+    }
 }
