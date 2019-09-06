@@ -29,7 +29,7 @@ class UsersSeeder extends Seeder
                 case UserWithdraw::TYPE_UNION_PAY :
                     $withdraw->update([
                         'info' => [
-                            'name' => '钟凯',
+                            'name' => '张三',
                             'bank' => '中国农业银行',
                             'account' => '62223078323174632',
                         ]

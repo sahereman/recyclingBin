@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class UserWithdraw extends Model
 {
     const TYPE_UNION_PAY = 'unionPay';
-//    const TYPE_WECHAT = 'wechat';
+    //    const TYPE_WECHAT = 'wechat';
 
     public static $TypeMap = [
         self::TYPE_UNION_PAY => '银联',
-//        self::TYPE_WECHAT => '微信',
+        //        self::TYPE_WECHAT => '微信',
     ];
 
     const STATUS_WAIT = 'wait';
@@ -30,7 +30,11 @@ class UserWithdraw extends Model
      */
     protected $fillable = [
         'user_id',
+        'type',
         'status',
+        'money',
+        'info',
+        'reason',
     ];
 
     /**
