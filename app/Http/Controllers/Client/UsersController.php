@@ -90,7 +90,7 @@ class UsersController extends Controller
         return $this->response->paginator($bills, new UserMoneyBillTransformer());
     }
 
-    
+
 
 
     //    public function update(UserRequest $request, ImageUploadHandler $handler)

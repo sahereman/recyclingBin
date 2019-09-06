@@ -44,6 +44,8 @@ class AuthorizationsController extends Controller
 
         $user = User::where('wx_openid', $decryptData['openId'])->first();
 
+        info($decryptData);
+
         if (!$user)
         {
             $user = User::create([
