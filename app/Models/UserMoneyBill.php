@@ -14,10 +14,19 @@ class UserMoneyBill extends Model
         self::TYPE_USER_WITHDRAW => '用户提现',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-        'user_id', 'type', 'description',
-        'operator', 'number',
-        'related_model', 'related_id'
+        'user_id',
+        'type',
+        'description',
+        'operator',
+        'number',
+        'related_model',
+        'related_id'
     ];
 
     /**
@@ -41,20 +50,33 @@ class UserMoneyBill extends Model
      * @var array
      */
     protected $appends = [
-        'type_text'
+        'type_text',
+        'operator_number'
     ];
 
+    /* Accessors */
     public function getTypeTextAttribute()
     {
         return self::$TypeMap[$this->attributes['type']];
     }
 
+    public function getOperatorNumberAttribute()
+    {
+        return $this->attributes['operator'] . ' ' . $this->attributes['number'];
+    }
+
+    /* Mutators */
     public function setTypeTextAttribute($value)
     {
         unset($this->attributes['type_text']);
     }
 
+    public function setOperatorNumberAttribute($value)
+    {
+        unset($this->attributes['operator_number']);
+    }
 
+    /* Eloquent Relationships */
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -68,21 +90,17 @@ class UserMoneyBill extends Model
 
     public static function change(User $user, $type, $number, Model $related = null)
     {
-        if (!in_array($type, array_keys(self::$TypeMap)))
-        {
+        if (!in_array($type, array_keys(self::$TypeMap))) {
             throw new \Exception('账单类型异常');
         }
 
-        if ($number < 0)
-        {
+        if ($number < 0) {
             throw new \Exception('账单数额异常');
         }
 
-        switch ($type)
-        {
+        switch ($type) {
             case self::TYPE_CLIENT_ORDER :
-                if (!$related instanceof ClientOrder || !$related->exists)
-                {
+                if (!$related instanceof ClientOrder || !$related->exists) {
                     throw new \Exception('关联模型异常');
                 }
                 $operator = '+';
@@ -102,8 +120,7 @@ class UserMoneyBill extends Model
             'number' => $number,
         ];
 
-        if ($related != null && $related->exists)
-        {
+        if ($related != null && $related->exists) {
             $data = array_merge($data, [
                 'related_model' => $related->getMorphClass(),
                 'related_id' => $related->id,
@@ -112,5 +129,4 @@ class UserMoneyBill extends Model
 
         self::create($data);
     }
-
 }

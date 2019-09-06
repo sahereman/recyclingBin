@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class UserWithdraw extends Model
 {
     const TYPE_UNION_PAY = 'unionPay';
-    //    const TYPE_WECHAT = 'wechat';
+    // const TYPE_WECHAT = 'wechat';
 
     public static $TypeMap = [
         self::TYPE_UNION_PAY => '银联',
-        //        self::TYPE_WECHAT => '微信',
+        // self::TYPE_WECHAT => '微信',
     ];
 
     const STATUS_WAIT = 'wait';
@@ -62,6 +62,7 @@ class UserWithdraw extends Model
         'status_text',
     ];
 
+    /* Accessors */
     public function getTypeTextAttribute()
     {
         return self::$TypeMap[$this->attributes['type']];
@@ -72,6 +73,18 @@ class UserWithdraw extends Model
         return self::$StatusMap[$this->attributes['status']];
     }
 
+    /* Mutators */
+    public function setTypeTextAttribute($value)
+    {
+        unset($this->attributes['type_text']);
+    }
+
+    public function setStatusTextAttribute($value)
+    {
+        unset($this->attributes['status_text']);
+    }
+
+    /* Eloquent Relationships */
     public function user()
     {
         return $this->belongsTo(User::class);

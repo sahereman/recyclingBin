@@ -51,6 +51,7 @@ class UsersController extends AdminController
         // $grid->column('updated_at', 'Updated at');
 
         // 不在页面显示 `新建` 按钮，因为我们不需要在后台新建用户
+        // $grid->disableCreation(); // Deprecated
         $grid->disableCreateButton();
 
         return $grid;
@@ -86,6 +87,90 @@ class UsersController extends AdminController
         // $show->field('password', 'Password');
         // $show->field('created_at', 'Created at');
         // $show->field('updated_at', 'Updated at');
+
+        $show->moneyBills('账单记录', function ($moneyBill) {
+            $moneyBill->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+
+            /*禁用*/
+            // $moneyBill->disableCreation(); // Deprecated
+            $moneyBill->disableCreateButton();
+
+            // 禁用筛选
+            $moneyBill->disableFilter();
+
+            // 禁用导出数据按钮
+            // $moneyBill->disableExport();
+
+            /*自定义筛选框*/
+            /*$moneyBill->filter(function ($filter) {
+                $filter->disableIdFilter(); // 去掉默认的id过滤器
+                $filter->like('description', 'Description');
+            });*/
+
+            // 关闭全部操作
+            /*$moneyBill->actions(function ($actions) {
+                // 去掉删除
+                $actions->disableDelete();
+                // 去掉编辑
+                $actions->disableEdit();
+                // 去掉查看
+                $actions->disableView();
+            });*/
+            $moneyBill->disableActions();
+
+            // 去掉批量操作
+            /*$moneyBill->batchActions(function ($batch) {
+                $batch->disableDelete();
+            });*/
+            $moneyBill->disableBatchActions();
+
+            $moneyBill->type_text('Type');
+            $moneyBill->description('Description');
+            $moneyBill->operator_number('流水金额');
+        });
+
+        $show->withdraws('提现记录', function ($withdraw) {
+            $withdraw->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+
+            /*禁用*/
+            // $withdraw->disableCreation(); // Deprecated
+            $withdraw->disableCreateButton();
+
+            // 禁用筛选
+            $withdraw->disableFilter();
+
+            // 禁用导出数据按钮
+            // $withdraw->disableExport();
+
+            /*自定义筛选框*/
+            /*$withdraw->filter(function ($filter) {
+                $filter->disableIdFilter(); // 去掉默认的id过滤器
+                $filter->like('description', 'Description');
+            });*/
+
+            // 关闭全部操作
+            /*$withdraw->actions(function ($actions) {
+                // 去掉删除
+                $actions->disableDelete();
+                // 去掉编辑
+                $actions->disableEdit();
+                // 去掉查看
+                $actions->disableView();
+            });*/
+            $withdraw->disableActions();
+
+            // 去掉批量操作
+            /*$withdraw->batchActions(function ($batch) {
+                $batch->disableDelete();
+            });*/
+            $withdraw->disableBatchActions();
+
+            $withdraw->type_text('Type');
+            $withdraw->status_text('Status');
+            $withdraw->money('金额');
+            $withdraw->info('提现预留信息');
+            $withdraw->reason('回复拒绝原因等信息');
+        });
 
         return $show;
     }

@@ -147,19 +147,19 @@ class UsersController extends Controller
 
 
 
-    //    public function update(UserRequest $request, ImageUploadHandler $handler)
-    //    {
-    //        $user = Auth::guard('client')->user();
+    // public function update(UserRequest $request, ImageUploadHandler $handler)
+    // {
+    //     $user = Auth::guard('client')->user();
     //
-    //        $attributes = $request->only(['avatar']);
+    //     $attributes = $request->only(['avatar']);
     //
-    //        if ($request->avatar)
-    //        {
-    //            $attributes['avatar'] = $handler->uploadOriginal($request->avatar, 'avatar/' . date('Ym', now()->timestamp), $request->avatar->hashName());
-    //        }
+    //     if ($request->avatar)
+    //     {
+    //         $attributes['avatar'] = $handler->uploadOriginal($request->avatar, 'avatar/' . date('Ym', now()->timestamp), $request->avatar->hashName());
+    //     }
     //
-    //        $user->update($attributes);
+    //     $user->update($attributes);
     //
-    //        return $this->response->item($user, new UserTransformer());
-    //    }
+    //     return $this->response->item($user, new UserTransformer());
+    // }
 }

@@ -50,7 +50,6 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at',
     ];
 
-
     /**
      * The attributes that should be hidden for arrays.
      * @var array
@@ -80,8 +79,7 @@ class User extends Authenticatable implements JWTSubject
     public function getAvatarUrlAttribute()
     {
         // 如果 image 字段本身就已经是完整的 url 就直接返回
-        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://']))
-        {
+        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://'])) {
             return $this->attributes['avatar'];
         }
         return \Storage::disk('public')->url($this->attributes['avatar']);
@@ -102,6 +100,10 @@ class User extends Authenticatable implements JWTSubject
     public function moneyBills()
     {
         return $this->hasMany(UserMoneyBill::class);
+    }
 
+    public function withdraws()
+    {
+        return $this->hasMany(UserWithdraw::class);
     }
 }

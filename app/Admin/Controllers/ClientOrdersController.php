@@ -29,6 +29,18 @@ class ClientOrdersController extends AdminController
         $grid = new Grid(new ClientOrder);
         $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
 
+        // 关闭全部操作
+        $grid->actions(function ($actions) {
+            // 去掉删除
+            $actions->disableDelete();
+            // 去掉编辑
+            // $actions->disableEdit();
+            // 去掉查看
+            // $actions->disableView();
+        });
+        // 关闭全部操作
+        // $grid->disableActions();
+
         $grid->column('id', 'Id')->sortable();
         // $grid->column('user_id', 'User id')->sortable();
         $grid->user()->name('User')->sortable();
@@ -57,7 +69,7 @@ class ClientOrdersController extends AdminController
 
         $show->panel()->tools(function ($tools) {
             $tools->disableDelete();
-        });;
+        });
 
         // $show->field('id', 'Id');
         // $show->field('user_id', 'User id');
@@ -76,11 +88,32 @@ class ClientOrdersController extends AdminController
 
         $show->items('订单详情', function ($item) {
             /*禁用*/
-            $item->panel()->tools(function ($tools) {
-                $tools->disableList();
-                $tools->disableEdit();
-                $tools->disableDelete();
-            });
+            // $item->disableCreation(); // Deprecated
+            $item->disableCreateButton();
+
+            // 禁用筛选
+            $item->disableFilter();
+
+            // 禁用导出数据按钮
+            // $item->disableExport();
+
+            // 关闭全部操作
+            /*$item->actions(function ($actions) {
+                // 去掉删除
+                $actions->disableDelete();
+                // 去掉编辑
+                $actions->disableEdit();
+                // 去掉查看
+                $actions->disableView();
+            });*/
+            $item->disableActions();
+
+            // 去掉批量操作
+            /*$item->batchActions(function ($batch) {
+                $batch->disableDelete();
+            });*/
+            $item->disableBatchActions();
+
             $item->type_name('Type');
             $item->number('Number');
             $item->unit('Unit');

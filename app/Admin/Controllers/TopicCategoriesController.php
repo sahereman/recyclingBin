@@ -30,6 +30,9 @@ class TopicCategoriesController extends AdminController
         $grid->column('id', 'Id')->sortable();
         $grid->column('name', 'Name')->sortable();
         $grid->column('sort', 'Sort')->sortable();
+        $grid->column('topics', '话题数目')->display(function ($topics) {
+            return count($topics);
+        });
         // $grid->column('created_at', 'Created at');
         // $grid->column('updated_at', 'Updated at');
 
