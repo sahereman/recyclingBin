@@ -55,11 +55,22 @@ class AuthorizationsController extends Controller
                 'avatar' => $decryptData['avatarUrl'],
                 'money' => 0,
 
-                'country' => $decryptData['country'],
-                'province' => $decryptData['province'],
-                'city' => $decryptData['city'],
+                'wx_country' => $decryptData['country'],
+                'wx_province' => $decryptData['province'],
+                'wx_city' => $decryptData['city'],
+            ]);
+        } else
+        {
+            $user->update([
+                'name' => $decryptData['nickName'],
+                'gender' => $decryptData['gender'] == 2 ? '女' : '男',
+                'avatar' => $decryptData['avatarUrl'],
+                'wx_country' => $decryptData['country'],
+                'wx_province' => $decryptData['province'],
+                'wx_city' => $decryptData['city'],
             ]);
         }
+
 
         $token = Auth::guard('client')->login($user);
 
