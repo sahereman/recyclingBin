@@ -29,16 +29,14 @@ $api->version('v1', [
 
         // 授权
         $api->post('authorizations', 'AuthorizationsController@store')->name('client.authorizations.store');/*小程序授权token*/
+        $api->put('authorizations', 'AuthorizationsController@update')->name('client.authorizations.update');/*刷新授权token*/
+        $api->delete('authorizations', 'AuthorizationsController@destroy')->middleware('api.auth:check')->name('client.authorizations.destroy');/*删除授权token*/
 
         // Banner
         $api->get('banners/{slug}', 'BannersController@index')->name('client.banners.index');/*获取Banner图列表*/
 
         /*需要 token 验证的接口*/
         $api->group(['middleware' => 'api.auth:client'], function ($api) {
-
-            //授权
-            $api->put('authorizations', 'AuthorizationsController@update')->name('client.authorizations.update');/*刷新授权token*/
-            $api->delete('authorizations', 'AuthorizationsController@destroy')->name('client.authorizations.destroy');/*删除授权token*/
 
 
             // 用户
