@@ -14,7 +14,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
-     *
      * @return mixed
      */
     public function getJWTIdentifier()
@@ -24,7 +23,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
-     *
      * @return array
      */
     public function getJWTCustomClaims()
@@ -34,7 +32,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -45,7 +42,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * The attributes that should be hidden for arrays.
-     *
      * @var array
      */
     protected $hidden = [
@@ -55,7 +51,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
@@ -64,7 +59,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * The accessors to append to the model's array form.
-     *
      * @var array
      */
     protected $appends = [
@@ -75,7 +69,8 @@ class User extends Authenticatable implements JWTSubject
     public function getAvatarUrlAttribute()
     {
         // 如果 image 字段本身就已经是完整的 url 就直接返回
-        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://'])) {
+        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://']))
+        {
             return $this->attributes['avatar'];
         }
         return \Storage::disk('public')->url($this->attributes['avatar']);
@@ -91,5 +86,11 @@ class User extends Authenticatable implements JWTSubject
     public function orders()
     {
         return $this->hasMany(ClientOrder::class);
+    }
+
+    public function moneyBills()
+    {
+        return $this->hasMany(UserMoneyBill::class);
+
     }
 }

@@ -45,6 +45,8 @@ $api->version('v1', [
             $api->get('users/show', 'UsersController@show')->name('client.users.show');/*获取用户信息*/
             $api->post('sms/verification', 'SmsController@verification')->name('client.sms.verification');/*获取短信验证码*/
             $api->put('users/bindPhone', 'UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/
+            $api->get('users/moneyBill', 'UsersController@moneyBill')->name('client.users.moneyBill');/*获取金钱账单列表*/
+
 
             //回收箱
             $api->get('bins/nearby', 'BinsController@nearby')->name('client.bins.nearby');/*获取距离最近的回收箱*/

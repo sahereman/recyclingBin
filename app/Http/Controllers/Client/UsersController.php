@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 
 use App\Http\Requests\Client\BindPhoneRequest;
+use App\Transformers\Client\UserMoneyBillTransformer;
 use App\Transformers\Client\UserTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +67,30 @@ class UsersController extends Controller
         return $this->response->item($user, new UserTransformer());
     }
 
+    /**
+     * showdoc
+     * @catalog 客户端/用户相关
+     * @title GET 获取金钱账单列表
+     * @method GET
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @url users/moneyBill
+     * @return {"data":[{"id":1,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"24.02","created_at":"2019-09-05 15:23:14"},{"id":2,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"90.43","created_at":"2019-09-05 15:23:14"}],"meta":{"pagination":{"total":20,"count":5,"per_page":5,"current_page":1,"total_pages":4,"links":{"previous":null,"next":"http://bin.test/api/client/users/moneyBill?page=2"}}}}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @return_param data.* json 账单列表信息
+     * @return_param mata.pagination json 分页信息 (使用links.next前往下一页数据)
+     * @number 70
+     */
+    public function moneyBill()
+    {
+        $user = Auth::guard('client')->user();
+
+
+        $bills = $user->moneyBills()->paginate(5);
+
+        return $this->response->paginator($bills, new UserMoneyBillTransformer());
+    }
+
+    
 
 
     //    public function update(UserRequest $request, ImageUploadHandler $handler)
