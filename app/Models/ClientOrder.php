@@ -17,7 +17,10 @@ class ClientOrder extends Model
      * @var array
      */
     protected $fillable = [
-
+        'user_id',
+        'status',
+        'bin_snapshot',
+        'total'
     ];
 
     /**
@@ -56,9 +59,14 @@ class ClientOrder extends Model
         unset($this->attributes['status_text']);
     }
 
+    /* Eloquent Relationships */
     public function items()
     {
         return $this->hasMany(ClientOrderItem::class, 'order_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

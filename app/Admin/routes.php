@@ -46,6 +46,9 @@ Route::group([
     /*Topic*/
     $router->resource('topics', 'TopicsController');
 
+    /*ClientOrder*/
+    $router->resource('client_orders', 'ClientOrdersController');
+
     // $router->resource('example', ExampleController::class)->names('admin.example');
     // $router->get('example', 'ExampleController@index')->name('admin.example.index');
     // $router->get('example/create', 'ExampleController@create')->name('admin.example.create');

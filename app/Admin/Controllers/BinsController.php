@@ -141,7 +141,7 @@ class BinsController extends AdminController
         $form->display('type_fabric.name', 'Type')->default('纺织物');
         $form->hidden('type_fabric.name', 'Type')->default('纺织物')->rules('required|string');
         $form->select('type_fabric.status', 'Status')->options(BinTypeFabric::$StatusMap)->default(BinTypeFabric::STATUS_NORMAL);
-        $form->number('type_fabric.number', 'Number')->setWidth(2)->default(0.00)->rules('required|numeric|min:0');
+        $form->decimal('type_fabric.number', 'Number')->setWidth(2)->default(0.00)->rules('required|numeric|min:0');
         $form->display('type_fabric.unit', 'Unit')->setWidth(2)->default('公斤');
         $form->hidden('type_fabric.unit', 'Unit')->setWidth(2)->default('公斤')->rules('required|string');
         $fabric_client_prices = ClientPrice::where('slug', 'fabric')->get()->pluck('price', 'id')->toArray();
@@ -153,7 +153,7 @@ class BinsController extends AdminController
         $form->display('type_paper.name', 'Type')->default('纸类、塑料、金属');
         $form->hidden('type_paper.name', 'Type')->default('纸类、塑料、金属')->rules('required|string');
         $form->select('type_paper.status', 'Status')->options(BinTypePaper::$StatusMap)->default(BinTypePaper::STATUS_NORMAL);
-        $form->number('type_paper.number', 'Number')->setWidth(2)->default(0.00)->rules('required|numeric|min:0');
+        $form->decimal('type_paper.number', 'Number')->setWidth(2)->default(0.00)->rules('required|numeric|min:0');
         $form->display('type_paper.unit', 'Unit')->setWidth(2)->default('公斤');
         $form->hidden('type_paper.unit', 'Unit')->setWidth(2)->default('公斤')->rules('required|string');
         $paper_client_prices = ClientPrice::where('slug', 'paper')->get()->pluck('price', 'id')->toArray();

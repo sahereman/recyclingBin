@@ -58,9 +58,9 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'name' => '订单管理',
-                'slug' => 'orders',
+                'slug' => 'client_orders',
                 'http_method' => '',
-                'http_path' => "/orders",
+                'http_path' => "/client_orders",
             ],
             [
                 'name' => '城市热门地点管理',
@@ -138,10 +138,10 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 0,
-                'order' => 8,
+                'order' => 5,
                 'title' => '订单管理',
                 'icon' => 'fa-list',
-                'uri' => 'orders',
+                'uri' => 'client_orders',
             ],
             [
                 'parent_id' => 0,

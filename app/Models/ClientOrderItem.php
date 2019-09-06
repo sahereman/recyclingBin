@@ -12,7 +12,11 @@ class ClientOrderItem extends Model
      * @var array
      */
     protected $fillable = [
-
+        'order_id',
+        'type_name',
+        'number',
+        'unit',
+        'sub_total'
     ];
 
     /**
@@ -21,6 +25,7 @@ class ClientOrderItem extends Model
      * @var array
      */
     protected $casts = [
+        //
     ];
 
     /**
@@ -47,4 +52,9 @@ class ClientOrderItem extends Model
      */
     public $timestamps = false;
 
+    /* Eloquent Relationships */
+    public function order()
+    {
+        return $this->belongsTo(ClientOrder::class);
+    }
 }
