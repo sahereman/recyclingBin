@@ -28,7 +28,7 @@ $api->version('v1', [
         /*游客可以访问的接口*/
 
         // 授权
-        $api->post('authorizations', 'AuthorizationsController@store')->name('client.authorizations.store');/*小程序授权token*/
+        $api->post('authorizations', 'AuthorizationsController@store')->name('client.authorizations.store');/*微信授权token*/
         $api->put('authorizations', 'AuthorizationsController@update')->name('client.authorizations.update');/*刷新授权token*/
         $api->delete('authorizations', 'AuthorizationsController@destroy')->name('client.authorizations.destroy');/*删除授权token*/
 

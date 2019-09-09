@@ -28,8 +28,11 @@ $api->version('v1', [
         /*游客可以访问的接口*/
 
 
-//        // 登录
-//        $api->post('authorizations', 'AuthorizationsController@store')->name('driver.authorizations.store');/*登录授权token*/
+        // 登录
+        // 授权
+        $api->post('authorizations', 'AuthorizationsController@store')->name('recycle.authorizations.store');/*登录授权token*/
+        $api->put('authorizations', 'AuthorizationsController@update')->name('recycle.authorizations.update');/*刷新授权token*/
+        $api->delete('authorizations', 'AuthorizationsController@destroy')->name('recycle.authorizations.destroy');/*删除授权token*/
 //
 //        /*需要 token 验证的接口*/
 //        $api->group(['middleware' => 'api.auth:driver'], function ($api) {

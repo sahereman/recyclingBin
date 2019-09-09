@@ -46,9 +46,9 @@ return [
             'provider' => 'users',
         ],
 
-        'driver' => [
+        'recycle' => [
             'driver' => 'jwt',
-            'provider' => 'drivers',
+            'provider' => 'recyclers',
         ],
     ],
 
@@ -75,10 +75,10 @@ return [
             'model' => \App\Models\User::class,
         ],
 
-//        'drivers' => [
-//            'driver' => 'eloquent',
-//            'model' => \App\Models\Driver::class,
-//        ],
+        'recyclers' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Recycler::class,
+        ],
     ],
 
     /*
@@ -101,7 +101,7 @@ return [
             'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,
-        ],
+        ]
     ],
 
 ];
