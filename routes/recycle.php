@@ -36,8 +36,8 @@ $api->version('v1', [
         /*需要 token 验证的接口*/
         $api->group(['middleware' => 'api.auth:recycle'], function ($api) {
 
-            // 用户
-            $api->get('recyclers/show', 'RecyclersController@show')->name('recycle.recyclers.show');/*获取用户信息*/
+            // 回收员
+            $api->get('recyclers/show', 'RecyclersController@show')->name('recycle.recyclers.show');/*获取回收员信息*/
 
             //
             //            // 首页

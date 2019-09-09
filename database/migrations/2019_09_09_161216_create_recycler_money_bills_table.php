@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserMoneyBillsTable extends Migration
+class CreateRecyclerMoneyBillsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateUserMoneyBillsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_money_bills', function (Blueprint $table) {
+        Schema::create('recycler_money_bills', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->unsignedInteger('user_id')->comment('user-id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('recycler_id')->comment('user-id');
+            $table->foreign('recycler_id')->references('id')->on('recyclers')->onDelete('cascade');
 
-            $table->string('type')->comment('账单类型 clientOrder | userWithdraw');
+            $table->string('type')->comment('账单类型 orderPayment | distributionIncome | orderRefund');
 
             $table->string('description')->default('')->comment('描述');
 
@@ -40,6 +40,6 @@ class CreateUserMoneyBillsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_money_bills');
+        Schema::dropIfExists('recycler_money_bills');
     }
 }

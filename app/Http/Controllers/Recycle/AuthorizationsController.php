@@ -16,7 +16,7 @@ class AuthorizationsController extends Controller
 {
     /**
      * showdoc
-     * @catalog 回收端/用户相关
+     * @catalog 回收端/回收员相关
      * @title POST 登录授权token
      * @method POST
      * @url authorizations
@@ -50,7 +50,7 @@ class AuthorizationsController extends Controller
 
     /**
      * showdoc
-     * @catalog 回收端/用户相关
+     * @catalog 回收端/回收员相关
      * @title PUT 刷新授权token
      * @method PUT
      * @url authorizations
@@ -92,7 +92,7 @@ class AuthorizationsController extends Controller
 
     /**
      * showdoc
-     * @catalog 回收端/用户相关
+     * @catalog 回收端/回收员相关
      * @title PUT 删除授权token
      * @method DELETE
      * @url authorizations

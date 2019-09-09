@@ -19,8 +19,8 @@ class RecyclersController extends Controller
 
     /**
      * showdoc
-     * @catalog 回收端/用户相关
-     * @title GET 获取用户信息
+     * @catalog 回收端/回收员相关
+     * @title GET 获取回收员信息
      * @method GET
      * @url recyclers/show
      * @param Headers.Authorization 必选 headers 用户凭证
@@ -38,7 +38,7 @@ class RecyclersController extends Controller
 
 
     /**
-     * @catalog 回收端/用户相关
+     * @catalog 回收端/回收员相关
      * @title GET 获取金钱账单列表
      * @method GET
      * @url users/moneyBill
@@ -51,8 +51,7 @@ class RecyclersController extends Controller
      */
     public function moneyBill()
     {
-        $user = Auth::guard('client')->user();
-
+        $user = Auth::guard('recycle')->user();
 
         $bills = $user->moneyBills()->paginate(5);
 
@@ -60,7 +59,7 @@ class RecyclersController extends Controller
     }
 
     /**
-     * @catalog 回收端/用户相关
+     * @catalog 回收端/回收员相关
      * @title POST 用户银联提现
      * @method POST
      * @url users/withdraw/unionPay
