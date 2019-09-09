@@ -30,7 +30,7 @@ $api->version('v1', [
         // 授权
         $api->post('authorizations', 'AuthorizationsController@store')->name('client.authorizations.store');/*小程序授权token*/
         $api->put('authorizations', 'AuthorizationsController@update')->name('client.authorizations.update');/*刷新授权token*/
-        $api->delete('authorizations', 'AuthorizationsController@destroy')->middleware('api.auth:check')->name('client.authorizations.destroy');/*删除授权token*/
+        $api->delete('authorizations', 'AuthorizationsController@destroy')->name('client.authorizations.destroy');/*删除授权token*/
 
         // Banner
         $api->get('banners/{slug}', 'BannersController@index')->name('client.banners.index');/*获取Banner图列表*/
@@ -41,6 +41,7 @@ $api->version('v1', [
 
             // 用户
             $api->get('users/show', 'UsersController@show')->name('client.users.show');/*获取用户信息*/
+            $api->put('users/real_authentication', 'UsersController@realAuthentication')->name('client.users.real_authentication');/*用户实名认证*/
             $api->post('sms/verification', 'SmsController@verification')->name('client.sms.verification');/*获取短信验证码*/
             $api->put('users/bindPhone', 'UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/
             $api->get('users/moneyBill', 'UsersController@moneyBill')->name('client.users.moneyBill');/*获取金钱账单列表*/

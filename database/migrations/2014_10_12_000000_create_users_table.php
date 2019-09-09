@@ -8,7 +8,6 @@ class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
@@ -27,6 +26,10 @@ class CreateUsersTable extends Migration
             $table->string('wx_province')->default('')->comment('WX省');
             $table->string('wx_city')->default('')->comment('WX市');
 
+            $table->timestamp('real_authenticated_at')->nullable()->comment('实名认证时间');
+            $table->string('real_name')->default('')->comment('真实姓名');
+            $table->string('real_id')->default('')->comment('身份证号');
+
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
@@ -36,7 +39,6 @@ class CreateUsersTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

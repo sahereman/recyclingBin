@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Client;
 
 
 use App\Http\Requests\Client\BindPhoneRequest;
+use App\Http\Requests\Client\UserRequest;
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
 use App\Models\User;
 use App\Models\UserWithdraw;
 use App\Transformers\Client\UserMoneyBillTransformer;
 use App\Transformers\Client\UserTransformer;
+use Carbon\Carbon;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -100,7 +102,7 @@ class UsersController extends Controller
      * @catalog 客户端/用户相关
      * @title POST 用户银联提现
      * @method POST
-     * @url susers/withdraw/unionPay
+     * @url users/withdraw/unionPay
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param name 必选 string 持卡人姓名
      * @param bank 必选 string 银行
@@ -145,21 +147,36 @@ class UsersController extends Controller
         return $this->response->created();
     }
 
+    /**
+     * showdoc
+     * @catalog 客户端/用户相关
+     * @title PUT 用户实名认证
+     * @method PUT
+     * @url users/real_authentication
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @param real_name 必选 string 真实姓名
+     * @param real_id 必选 string 身份证号码
+     * @return {"id":1,"wx_openid":"Tc9qpK2GhLspffwP","name":"屈飞","gender":"女","phone":"18600982820","avatar_url":"https://lorempixel.com/640/480/?64462","money":"103.45","real_authenticated_at":"2019-09-09 09:55:51","real_name":"dsad","real_id":"732878328727827832","created_at":"2019-09-05 13:13:12","updated_at":"2019-09-09 09:55:51"}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @number 75
+     * @throws \Exception
+     */
+    public function realAuthentication(UserRequest $request)
+    {
+        $user = Auth::guard('client')->user();
+
+        if ($user->real_authenticated_at)
+        {
+            throw new StoreResourceFailedException(null, [
+                'real_name' => '用户已实名认证,无法继续'
+            ]);
+        }
+
+        $attributes = $request->only(['real_name', 'real_id']);
+        $attributes['real_authenticated_at'] = Carbon::now();
 
 
-    // public function update(UserRequest $request, ImageUploadHandler $handler)
-    // {
-    //     $user = Auth::guard('client')->user();
-    //
-    //     $attributes = $request->only(['avatar']);
-    //
-    //     if ($request->avatar)
-    //     {
-    //         $attributes['avatar'] = $handler->uploadOriginal($request->avatar, 'avatar/' . date('Ym', now()->timestamp), $request->avatar->hashName());
-    //     }
-    //
-    //     $user->update($attributes);
-    //
-    //     return $this->response->item($user, new UserTransformer());
-    // }
+        $user->update($attributes);
+        return $this->response->item($user, new UserTransformer());
+    }
 }
