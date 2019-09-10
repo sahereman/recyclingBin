@@ -9,7 +9,7 @@ class BinTcpSocket extends TcpSocket
     public function onConnect(Server $server, $fd, $reactorId)
     {
         \Log::info('New TCP connection', [$fd]);
-        $server->send($fd, 'New TCP connection OK');
+        $server->send($fd, 'New TCP connection Success');
     }
 
     public function onClose(Server $server, $fd, $reactorId)
@@ -39,19 +39,17 @@ class BinTcpSocket extends TcpSocket
 //        echo int_helper::uInt32("\xff\xff\xff\x7f") . PHP_EOL . PHP_EOL;  // 2147483647
 
 
-        info($data);
-
         \Log::info('TcpSocket  Received data', [$fd, $reactorId, $data]);
 
 
-//        $server->send($fd, 'LaravelS: ' . $data);
+        $server->send($fd, 'TcpSocket  Received data' . $data);
 
 
-//        if ($data === "quit\r\n")
-//        {
-//            $server->send($fd, 'LaravelS: bye' . PHP_EOL);
-//            $server->close($fd);
-//        }
+        if ($data === "quit\r\n")
+        {
+            $server->send($fd, 'LaravelS: bye' . PHP_EOL);
+            $server->close($fd);
+        }
     }
 
 }
