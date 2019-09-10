@@ -23,7 +23,25 @@ return [
         'enable' => false,
         //'handler' => XxxWebSocketHandler::class,
     ],
-    'sockets'                  => [],
+    'sockets' => [
+        [
+            'host' => '0.0.0.0',
+            'port' => 5501,
+            'type' => SWOOLE_SOCK_TCP,// 支持的嵌套字类型：https://wiki.swoole.com/wiki/page/16.html#entry_h2_0
+            'settings' => [// Swoole可用的配置项：https://wiki.swoole.com/wiki/page/526.html
+                'open_eof_check' => false,
+                'open_eof_split' => false,
+                'package_eof' => "##_**",
+
+                //                'open_length_check' => true,
+                //                'package_max_length' => 81920,
+                //                'package_length_type' => 'N',
+                //                'package_length_offset' => 8,
+                //                'package_body_offset' => 16,
+            ],
+            'handler' => \App\Sockets\BinTcpSocket::class,
+        ],
+    ],
     'processes'                => [
         //[
         //    'class'    => \App\Processes\TestProcess::class,
