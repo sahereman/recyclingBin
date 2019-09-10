@@ -14,7 +14,7 @@ class BinTcpSocket extends TcpSocket
 
     public function onClose(Server $server, $fd, $reactorId)
     {
-        \Log::info('Close TcpSocket connection', [$fd]);
+        \Log::info('Close TcpSocket connection : ', [$fd]);
         $server->send($fd, 'Goodbye');
     }
 
@@ -42,7 +42,7 @@ class BinTcpSocket extends TcpSocket
         \Log::info('TcpSocket  Received data', [$fd, $reactorId, $data]);
 
 
-        $server->send($fd, 'TcpSocket  Received data' . $data);
+        $server->send($fd, 'TcpSocket  Received data : ' . $data);
 
 
         if ($data === "quit\r\n")
