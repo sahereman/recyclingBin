@@ -19,6 +19,7 @@ class CreateRecycleOrdersTable extends Migration
             $table->unsignedInteger('recycler_id')->comment('recycler_id');
             $table->foreign('recycler_id')->references('id')->on('recyclers')->onDelete('cascade');
 
+            $table->string('sn')->comment('单号');
             $table->string('status')->default('completed')->comment('order-status:completed[已完成]')->index();
 
             $table->json('bin_snapshot')->comment('回收箱快照');

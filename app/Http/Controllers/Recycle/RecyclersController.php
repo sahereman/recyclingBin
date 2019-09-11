@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Recycle;
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
 use App\Models\User;
 use App\Models\UserWithdraw;
+use App\Transformers\Recycle\BinTransformer;
 use App\Transformers\Recycle\RecyclerTransformer;
 use App\Transformers\Client\UserMoneyBillTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -31,9 +32,9 @@ class RecyclersController extends Controller
      */
     public function show()
     {
-        $user = Auth::guard('recycle')->user();
+        $recycler = Auth::guard('recycle')->user();
 
-        return $this->response->item($user, new RecyclerTransformer());
+        return $this->response->item($recycler, new RecyclerTransformer());
     }
 
 
@@ -105,5 +106,26 @@ class RecyclersController extends Controller
         });
 
         return $this->response->created();
+    }
+
+    /**
+     * showdoc
+     * @catalog 回收端/回收箱相关
+     * @title GET 获取我的回收箱
+     * @method GET
+     * @url users/bins
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @return {"data":[{"id":1,"site_id":1,"name":"济南新城区","no":"0532001","address":"69 葛 Street","site":{"id":1,"name":"青岛站","county":"中国","province":"山东省","province_simple":"山东","city":"青岛市","city_simple":"青岛","created_at":"2019-09-11 14:56:01","updated_at":"2019-09-11 14:56:01"},"type_paper":{"id":1,"bin_id":1,"name":"可回收物","status":"repair","number":"4.56","unit":"公斤","client_price_id":1,"recycle_price_id":1,"status_text":"维护","recycle_price":{"id":1,"slug":"paper","price":"0.70"}},"type_fabric":{"id":1,"bin_id":1,"name":"纺织物","status":"normal","number":"61.58","unit":"公斤","client_price_id":2,"recycle_price_id":2,"status_text":"正常","recycle_price":{"id":2,"slug":"fabric","price":"0.40"}}}]}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @number 80
+     */
+    public function bins()
+    {
+        $recycler = Auth::guard('recycle')->user();
+
+        $bins = $recycler->bins()->with(['site', 'type_paper', 'type_fabric','type_paper.recycle_price','type_fabric.recycle_price'])->get();
+
+        return $this->response->collection($bins, new BinTransformer());
+
     }
 }

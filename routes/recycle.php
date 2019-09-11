@@ -38,6 +38,11 @@ $api->version('v1', [
 
             // 回收员
             $api->get('recyclers/show', 'RecyclersController@show')->name('recycle.recyclers.show');/*获取回收员信息*/
+            $api->get('recyclers/bins', 'RecyclersController@bins')->name('recycle.recyclers.bins');/*获取我的回收箱*/
+
+            // 订单
+            $api->get('orders', 'OrdersController@index')->name('recycle.orders.index');/*获取订单列表*/
+
 
             //
             //            // 首页

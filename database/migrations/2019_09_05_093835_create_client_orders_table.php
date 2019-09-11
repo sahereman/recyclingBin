@@ -19,6 +19,7 @@ class CreateClientOrdersTable extends Migration
             $table->unsignedInteger('user_id')->comment('user-id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+            $table->string('sn')->comment('单号');
             $table->string('status')->default('completed')->comment('order-status:completed[已完成]')->index();
 
             $table->json('bin_snapshot')->comment('回收箱快照');
