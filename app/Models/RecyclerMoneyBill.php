@@ -112,8 +112,20 @@ class RecyclerMoneyBill extends Model
                 $description = '回收废品';
                 break;
             case self::TYPE_RECYCLER_WITHDRAW :
+                if (!$related instanceof RecyclerWithdraw || !$related->exists)
+                {
+                    throw new \Exception('关联模型异常');
+                }
                 $operator = '-';
                 $description = '余额提现';
+                break;
+            case self::TYPE_RECYCLER_DEPOSIT :
+                if (!$related instanceof RecyclerDeposit || !$related->exists)
+                {
+                    throw new \Exception('关联模型异常');
+                }
+                $operator = '+';
+                $description = '余额充值';
                 break;
         }
 

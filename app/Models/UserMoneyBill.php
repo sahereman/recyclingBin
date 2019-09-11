@@ -107,6 +107,9 @@ class UserMoneyBill extends Model
                 $description = '投递废品';
                 break;
             case self::TYPE_USER_WITHDRAW :
+                if (!$related instanceof UserWithdraw || !$related->exists) {
+                    throw new \Exception('关联模型异常');
+                }
                 $operator = '-';
                 $description = '奖励金提现';
                 break;

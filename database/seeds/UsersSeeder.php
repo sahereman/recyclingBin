@@ -45,7 +45,7 @@ class UsersSeeder extends Seeder
                     ]);
                     break;
                 case UserWithdraw::STATUS_AGREE :
-                    UserMoneyBill::change($user, UserMoneyBill::TYPE_USER_WITHDRAW, $withdraw->money);
+                    UserMoneyBill::change($user, UserMoneyBill::TYPE_USER_WITHDRAW, $withdraw->money, $withdraw);
                     break;
                 case UserWithdraw::STATUS_DENY :
                     $withdraw->update([
