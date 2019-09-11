@@ -53,4 +53,9 @@ class Recycler extends Authenticatable implements JWTSubject
         }
         return \Storage::disk('public')->url($this->attributes['avatar']);
     }
+
+    public function bins()
+    {
+        return $this->belongsToMany(Bin::class, 'bin_recyclers', 'recycler_id');
+    }
 }

@@ -14,11 +14,14 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminTablesSeeder::class);
         $this->call(ConfigsSeeder::class);
 
+        // Banner
+        $this->call(BannersSeeder::class);
+
         // 用户
         $this->call(UsersSeeder::class);
 
-        // Banner
-        $this->call(BannersSeeder::class);
+        // 回收员
+        $this->call(RecyclersSeeder::class);
 
         // 服务站点
         $this->call(ServiceSitesSeeder::class);
@@ -36,8 +39,7 @@ class DatabaseSeeder extends Seeder
         // 客户端订单
         $this->call(ClientOrdersSeeder::class);
 
-        // 回收员
-        $this->call(RecyclersSeeder::class);
+
 
         // 回收端订单
         $this->call(RecycleOrdersSeeder::class);

@@ -8,7 +8,6 @@ class Bin extends Model
 {
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -24,7 +23,6 @@ class Bin extends Model
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
@@ -34,7 +32,6 @@ class Bin extends Model
 
     /**
      * The attributes that should be mutated to dates.
-     *
      * @var array
      */
     protected $dates = [
@@ -43,7 +40,6 @@ class Bin extends Model
 
     /**
      * The accessors to append to the model's array form.
-     *
      * @var array
      */
     protected $appends = [
@@ -81,5 +77,10 @@ class Bin extends Model
     public function type_fabric()
     {
         return $this->hasOne(BinTypeFabric::class);
+    }
+
+    public function recyclers()
+    {
+        return $this->belongsToMany(Recycler::class, 'bin_recyclers', 'bin_id');
     }
 }

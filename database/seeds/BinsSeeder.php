@@ -8,6 +8,8 @@ use App\Models\ClientPrice;
 use App\Models\RecyclePrice;
 use App\Models\ServiceSite;
 use Illuminate\Database\Seeder;
+use App\Models\Recycler;
+use App\Models\BinRecycler;
 
 class BinsSeeder extends Seeder
 {
@@ -17,6 +19,10 @@ class BinsSeeder extends Seeder
      */
     public function run()
     {
+        //回收员
+        $recycler_1 = Recycler::find(1);
+        $recycler_2 = Recycler::find(2);
+
         //客户端价格
         $client_paper_price = ClientPrice::where('slug', 'paper')->first();
         $client_fabric_price = ClientPrice::where('slug', 'fabric')->first();
@@ -26,59 +32,87 @@ class BinsSeeder extends Seeder
         $recyc_fabric_price = RecyclePrice::where('slug', 'fabric')->first();
 
         // 青岛站
-        $qd_site = ServiceSite::where('city', '青岛市')->first();
-        $qd_lat = '36.092550';
-        $qd_lng = '120.381420';
-        for ($i = 1; $i <= 20; $i++) {
-            $qd_bin = factory(Bin::class)->create([
-                'site_id' => $qd_site->id,
+        $site = ServiceSite::where('city', '青岛市')->first();
+        $lat = '36.092550';
+        $lng = '120.381420';
+        for ($i = 1; $i <= 20; $i++)
+        {
+            $bin = factory(Bin::class)->create([
+                'site_id' => $site->id,
                 'no' => '053200' . $i,
-                'lat' => $qd_lat,
-                'lng' => $qd_lng,
+                'lat' => $lat,
+                'lng' => $lng,
             ]);
-            $qd_lat = bcadd($qd_lat, '0.001', 6);
-            $qd_lng = bcadd($qd_lng, '0.001', 6);
+            $lat = bcadd($lat, '0.001', 6);
+            $lng = bcadd($lng, '0.001', 6);
 
             factory(BinTypePaper::class)->create([
-                'bin_id' => $qd_bin->id,
+                'bin_id' => $bin->id,
                 'client_price_id' => $client_paper_price->id,
                 'recycle_price_id' => $recyc_paper_price->id,
             ]);
             factory(BinTypeFabric::class)->create([
-                'bin_id' => $qd_bin->id,
+                'bin_id' => $bin->id,
                 'client_price_id' => $client_fabric_price->id,
                 'recycle_price_id' => $recyc_fabric_price->id,
             ]);
 
-            GenerateBinTypeSnapshot::dispatch($qd_bin);
+            GenerateBinTypeSnapshot::dispatch($bin);
+
+            // 回收箱绑定回收员
+            if ($i <= 2)
+            {
+                BinRecycler::create([
+                    'bin_id' => $bin->id,
+                    'recycler_id' => $recycler_1->id,
+                ]);
+                BinRecycler::create([
+                    'bin_id' => $bin->id,
+                    'recycler_id' => $recycler_2->id,
+                ]);
+            }
         }
 
         // 济南站
-        $jn_site = ServiceSite::where('city', '济南市')->first();
-        $jn_lat = '36.660958';
-        $jn_lng = '117.016158';
-        for ($i = 1; $i <= 5; $i++) {
-            $jn_bin = factory(Bin::class)->create([
-                'site_id' => $jn_site->id,
+        $site = ServiceSite::where('city', '济南市')->first();
+        $lat = '36.660958';
+        $lng = '117.016158';
+        for ($i = 1; $i <= 5; $i++)
+        {
+            $bin = factory(Bin::class)->create([
+                'site_id' => $site->id,
                 'no' => '053100' . $i,
-                'lat' => $jn_lat,
-                'lng' => $jn_lng,
+                'lat' => $lat,
+                'lng' => $lng,
             ]);
-            $jn_lat = bcadd($jn_lat, '0.001', 6);
-            $jn_lng = bcadd($jn_lng, '0.001', 6);
+            $lat = bcadd($lat, '0.001', 6);
+            $lng = bcadd($lng, '0.001', 6);
 
             factory(BinTypePaper::class)->create([
-                'bin_id' => $jn_bin->id,
+                'bin_id' => $bin->id,
                 'client_price_id' => $client_paper_price->id,
                 'recycle_price_id' => $recyc_paper_price->id,
             ]);
             factory(BinTypeFabric::class)->create([
-                'bin_id' => $jn_bin->id,
+                'bin_id' => $bin->id,
                 'client_price_id' => $client_fabric_price->id,
                 'recycle_price_id' => $recyc_fabric_price->id,
             ]);
 
-            GenerateBinTypeSnapshot::dispatch($jn_bin);
+            GenerateBinTypeSnapshot::dispatch($bin);
+
+            // 回收箱绑定回收员
+            if ($i <= 2)
+            {
+                BinRecycler::create([
+                    'bin_id' => $bin->id,
+                    'recycler_id' => $recycler_1->id,
+                ]);
+                BinRecycler::create([
+                    'bin_id' => $bin->id,
+                    'recycler_id' => $recycler_2->id,
+                ]);
+            }
         }
     }
 }

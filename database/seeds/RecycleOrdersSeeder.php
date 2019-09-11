@@ -13,7 +13,7 @@ class RecycleOrdersSeeder extends Seeder
     public function run()
     {
         $recycler = Recycler::find(1);
-        $bins = Bin::all();
+        $bins = $recycler->bins;
 
         for ($i = 1; $i <= 20; $i++)
         {
