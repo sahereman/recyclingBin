@@ -8,10 +8,12 @@ class RecyclerMoneyBill extends Model
 {
     const TYPE_RECYCLE_ORDER = 'recycleOrder';
     const TYPE_RECYCLER_WITHDRAW = 'recyclerWithdraw';
+    const TYPE_RECYCLER_DEPOSIT = 'recyclerDeposit';
 
     public static $TypeMap = [
         self::TYPE_RECYCLE_ORDER => '取货订单',
         self::TYPE_RECYCLER_WITHDRAW => '回收员提现',
+        self::TYPE_RECYCLER_DEPOSIT => '回收员充值',
     ];
 
     /**
@@ -101,22 +103,22 @@ class RecyclerMoneyBill extends Model
 
         switch ($type)
         {
-            case self::TYPE_CLIENT_ORDER :
-                if (!$related instanceof ClientOrder || !$related->exists)
+            case self::TYPE_RECYCLE_ORDER :
+                if (!$related instanceof RecycleOrder || !$related->exists)
                 {
                     throw new \Exception('关联模型异常');
                 }
                 $operator = '+';
-                $description = '投递废品';
+                $description = '回收废品';
                 break;
-            case self::TYPE_USER_WITHDRAW :
+            case self::TYPE_RECYCLER_WITHDRAW :
                 $operator = '-';
-                $description = '奖励金提现';
+                $description = '余额提现';
                 break;
         }
 
         $data = [
-            'user_id' => $user->id,
+            'recycler_id' => $recycler->id,
             'type' => $type,
             'description' => $description,
             'operator' => $operator,

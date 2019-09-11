@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Bin;
 use App\Models\ClientOrder;
+use App\Models\RecycleOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -12,14 +13,14 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
 
 
-class GenerateClientOrderSnapshot
+class GenerateRecycleOrderSnapshot
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $order;
     protected $bin;
 
-    public function __construct(ClientOrder $order, Bin $bin)
+    public function __construct(RecycleOrder $order, Bin $bin)
     {
         $this->order = $order;
         $this->bin = $bin;

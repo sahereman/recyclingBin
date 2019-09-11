@@ -11,7 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
 
 
-class GenerateBinTypeSnapshot implements ShouldQueue
+class GenerateBinTypeSnapshot
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
