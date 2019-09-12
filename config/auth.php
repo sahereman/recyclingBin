@@ -46,7 +46,7 @@ return [
             'provider' => 'users',
         ],
 
-        'recycle' => [
+        'clean' => [
             'driver' => 'jwt',
             'provider' => 'recyclers',
         ],

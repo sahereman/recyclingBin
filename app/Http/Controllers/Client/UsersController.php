@@ -28,7 +28,7 @@ class UsersController extends Controller
      * @method GET
      * @url users/show
      * @param Headers.Authorization 必选 headers 用户凭证
-     * @return {"data":{"id":1,"wx_openid":"kZeqcFTG2xgJ0yM9","name":"伍玉兰","gender":"女","phone":"18600982820","avatar_url":"https://lorempixel.com/640/480/?95254","money":"0.00","created_at":"2019-08-24 19:37:26","updated_at":"2019-08-29 09:56:56"}}
+     * @return {"id":1,"wx_openid":"7GSjvYxzNoVgluIK","name":"鄢金凤","gender":"男","phone":"18600982820","avatar_url":"https://lorempixel.com/640/480/?99944","money":"677.36","total_client_order_money":"626.03","total_client_order_count":"66.00","real_authenticated_at":null,"real_name":"","real_id":"","created_at":"2019-09-12 04:46:34","updated_at":"2019-09-12 09:40:12"}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param * json 用户信息
      * @number 60
@@ -50,7 +50,7 @@ class UsersController extends Controller
      * @param phone 必选 string 手机号
      * @param verification_key 必选 string 短信验证码key
      * @param verification_code 必选 string 短信验证码
-     * @return {"id":1,"wx_openid":"BNfbhkx3mB8BryGN","name":"牟志新","gender":"男","phone":"18600982820","avatar_url":"https://lorempixel.com/640/480/?96741","money":"522.14","created_at":"2019-09-03 03:57:16","updated_at":"2019-09-06 11:46:12"}
+     * @return {"id":1,"wx_openid":"7GSjvYxzNoVgluIK","name":"鄢金凤","gender":"男","phone":"18600982820","avatar_url":"https://lorempixel.com/640/480/?99944","money":"677.36","total_client_order_money":"626.03","total_client_order_count":"66.00","real_authenticated_at":null,"real_name":"","real_id":"","created_at":"2019-09-12 04:46:34","updated_at":"2019-09-12 09:40:12"}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @number 50
      */

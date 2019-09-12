@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RecycleOrderItem extends Model
+class CleanOrderItem extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -55,6 +55,6 @@ class RecycleOrderItem extends Model
     /* Eloquent Relationships */
     public function order()
     {
-        return $this->belongsTo(RecycleOrder::class);
+        return $this->belongsTo(CleanOrder::class);
     }
 }

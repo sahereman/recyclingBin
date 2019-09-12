@@ -6,7 +6,7 @@ use App\Models\Bin;
 use App\Models\BinTypeFabric;
 use App\Models\BinTypePaper;
 use App\Models\ClientPrice;
-use App\Models\RecyclePrice;
+use App\Models\CleanPrice;
 use App\Models\ServiceSite;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -41,8 +41,8 @@ class BinsController extends AdminController
             'off' => ['value' => 0, 'text' => 'NO', 'color' => 'default'],
         ]);
         $grid->column('name', 'Name')->expand(function ($model) {
-            $types[0] = $model->type_fabric->only('name', 'status_text', 'number', 'unit', 'client_price_value', 'recycle_price_value');
-            $types[1] = $model->type_paper->only('name', 'status_text', 'number', 'unit', 'client_price_value', 'recycle_price_value');
+            $types[0] = $model->type_fabric->only('name', 'status_text', 'number', 'unit', 'client_price_value', 'clean_price_value');
+            $types[1] = $model->type_paper->only('name', 'status_text', 'number', 'unit', 'client_price_value', 'clean_price_value');
             return new Table(['Type', 'Status', 'Number', 'Unit', '客户端价格', '回收端价格'], $types);
         });
         $grid->column('no', 'No.');
@@ -90,7 +90,7 @@ class BinsController extends AdminController
             $type_fabric->number('Number');
             $type_fabric->unit('Unit');
             $type_fabric->client_price_value('客户端价格');
-            $type_fabric->recycle_price_value('回收端价格');
+            $type_fabric->clean_price_value('回收端价格');
         });
         $show->type_paper('纸类、塑料、金属', function ($type_paper) {
             /*禁用*/
@@ -104,7 +104,7 @@ class BinsController extends AdminController
             $type_paper->number('Number');
             $type_paper->unit('Unit');
             $type_paper->client_price_value('客户端价格');
-            $type_paper->recycle_price_value('回收端价格');
+            $type_paper->clean_price_value('回收端价格');
         });
         $show->field('created_at', 'Created at');
         $show->field('updated_at', 'Updated at');
@@ -146,8 +146,8 @@ class BinsController extends AdminController
         $form->hidden('type_fabric.unit', 'Unit')->setWidth(2)->default('公斤')->rules('required|string');
         $fabric_client_prices = ClientPrice::where('slug', 'fabric')->get()->pluck('price', 'id')->toArray();
         $form->select('type_fabric.client_price_id', '客户端价格')->options($fabric_client_prices)->default(array_keys($fabric_client_prices)[0]);
-        $fabric_recycle_prices = RecyclePrice::where('slug', 'fabric')->get()->pluck('price', 'id')->toArray();
-        $form->select('type_fabric.recycle_price_id', '回收端价格')->options($fabric_recycle_prices)->default(array_keys($fabric_recycle_prices)[0]);
+        $fabric_clean_prices = CleanPrice::where('slug', 'fabric')->get()->pluck('price', 'id')->toArray();
+        $form->select('type_fabric.clean_price_id', '回收端价格')->options($fabric_clean_prices)->default(array_keys($fabric_clean_prices)[0]);
 
         $form->divider();
         $form->display('type_paper.name', 'Type')->default('纸类、塑料、金属');
@@ -158,8 +158,8 @@ class BinsController extends AdminController
         $form->hidden('type_paper.unit', 'Unit')->setWidth(2)->default('公斤')->rules('required|string');
         $paper_client_prices = ClientPrice::where('slug', 'paper')->get()->pluck('price', 'id')->toArray();
         $form->select('type_paper.client_price_id', '客户端价格')->options($paper_client_prices)->default(array_keys($paper_client_prices)[0]);
-        $paper_recycle_prices = RecyclePrice::where('slug', 'paper')->get()->pluck('price', 'id')->toArray();
-        $form->select('type_paper.recycle_price_id', '回收端价格')->options($paper_recycle_prices)->default(array_keys($paper_recycle_prices)[0]);
+        $paper_clean_prices = CleanPrice::where('slug', 'paper')->get()->pluck('price', 'id')->toArray();
+        $form->select('type_paper.clean_price_id', '回收端价格')->options($paper_clean_prices)->default(array_keys($paper_clean_prices)[0]);
 
         return $form;
     }

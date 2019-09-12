@@ -27,8 +27,8 @@ class GenerateBinTypeSnapshot
 
         $bin = $this->bin;
         $bin->types_snapshot = DB::transaction(function () use ($bin) {
-            $type_fabric = $bin->type_fabric()->with(['client_price', 'recycle_price'])->first();
-            $type_paper = $bin->type_paper()->with(['client_price', 'recycle_price'])->first();
+            $type_fabric = $bin->type_fabric()->with(['client_price', 'clean_price'])->first();
+            $type_paper = $bin->type_paper()->with(['client_price', 'clean_price'])->first();
             return ['type_fabric' => $type_fabric, 'type_paper' => $type_paper];
         });
         $bin->save();

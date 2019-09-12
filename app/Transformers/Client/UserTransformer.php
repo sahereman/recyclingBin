@@ -18,7 +18,10 @@ class UserTransformer extends TransformerAbstract
             'avatar_url' => $user->avatar_url,
             'money' => $user->money,
 
-            'real_authenticated_at' => $user->real_authenticated_at->toDateTimeString(),
+            'total_client_order_money' => $user->total_client_order_money,
+            'total_client_order_count' => $user->total_client_order_count,
+
+            'real_authenticated_at' => $user->real_authenticated_at ? $user->real_authenticated_at->toDateTimeString() : null,
             'real_name' => $user->real_name,
             'real_id' => $user->real_id,
 

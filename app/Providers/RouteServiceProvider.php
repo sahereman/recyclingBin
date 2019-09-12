@@ -38,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapClientRoutes();
-        $this->mapRecycleRoutes();
+        $this->mapCleanRoutes();
     }
 
     /**
@@ -68,9 +68,9 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/client.php'));
     }
 
-    protected function mapRecycleRoutes()
+    protected function mapCleanRoutes()
     {
         Route::middleware('api')
-            ->group(base_path('routes/recycle.php'));
+            ->group(base_path('routes/clean.php'));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\RecyclePrice;
+use App\Models\CleanPrice;
 use Illuminate\Database\Seeder;
 
 class RecyclePricesSeeder extends Seeder
@@ -12,12 +12,12 @@ class RecyclePricesSeeder extends Seeder
      */
     public function run()
     {
-        RecyclePrice::create([
+        CleanPrice::create([
             'slug' => 'paper',
             'price' => '0.70'
         ]);
 
-        RecyclePrice::create([
+        CleanPrice::create([
             'slug' => 'fabric',
             'price' => '0.40'
         ]);

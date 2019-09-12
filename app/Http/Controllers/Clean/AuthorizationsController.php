@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Recycle;
+namespace App\Http\Controllers\Clean;
 
 
 use App\Http\Requests\Recycle\AuthorizationRequest;
@@ -37,7 +37,7 @@ class AuthorizationsController extends Controller
         $credentials['phone'] = $username;
         $credentials['password'] = $request->password;
 
-        if (!$token = Auth::guard('recycle')->attempt($credentials))
+        if (!$token = Auth::guard('clean')->attempt($credentials))
         {
             throw new StoreResourceFailedException(null, [
                 'username' => '用户名或密码错误'
@@ -66,7 +66,7 @@ class AuthorizationsController extends Controller
      */
     public function update(Request $request)
     {
-        $check = Auth::guard('recycle')->parser()->setRequest($request)->hasToken();
+        $check = Auth::guard('clean')->parser()->setRequest($request)->hasToken();
 
         if(!$check)
         {
@@ -74,13 +74,13 @@ class AuthorizationsController extends Controller
         }
 
         try {
-            $token = Auth::guard('recycle')->refresh();
+            $token = Auth::guard('clean')->refresh();
 
         } catch (TokenExpiredException $exception) {
             // 此处捕获到了 token 过期所抛出的 TokenExpiredException 异常，我们在这里需要做的是刷新该用户的 token 并将它添加到响应头中
             try {
                 // 刷新用户的 token
-                $token = Auth::guard('recycle')->refresh();
+                $token = Auth::guard('clean')->refresh();
             } catch (JWTException $exception) {
                 // 如果捕获到此异常，即代表 refresh 也过期了，用户无法刷新令牌，需要重新登录。
                 throw new UnauthorizedHttpException('jwt-auth', $exception->getMessage());
@@ -104,14 +104,14 @@ class AuthorizationsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $check = Auth::guard('recycle')->parser()->setRequest($request)->hasToken();
+        $check = Auth::guard('clean')->parser()->setRequest($request)->hasToken();
 
         if (!$check)
         {
             throw new TokenInvalidException('Failed to authenticate because of bad credentials or an invalid authorization header.');
         }
 
-        Auth::guard('recycle')->logout();
+        Auth::guard('clean')->logout();
         return $this->response->noContent();
     }
 
@@ -121,7 +121,7 @@ class AuthorizationsController extends Controller
         return $this->response->array([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'expires_in' => Auth::guard('recycle')->factory()->getTTL() * 60 // token有效的时间(单位:秒)
+            'expires_in' => Auth::guard('clean')->factory()->getTTL() * 60 // token有效的时间(单位:秒)
         ]);
     }
 

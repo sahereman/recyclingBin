@@ -61,6 +61,6 @@ class Recycler extends Authenticatable implements JWTSubject
 
     public function orders()
     {
-        return $this->hasMany(RecycleOrder::class);
+        return $this->hasMany(CleanOrder::class);
     }
 }

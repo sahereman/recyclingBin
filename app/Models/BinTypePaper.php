@@ -30,7 +30,7 @@ class BinTypePaper extends Model
         'number',
         'unit',
         'client_price_id',
-        'recycle_price_id',
+        'clean_price_id',
     ];
 
     /**
@@ -78,9 +78,9 @@ class BinTypePaper extends Model
         return $this->client_price->price;
     }
 
-    public function getRecyclePriceValueAttribute()
+    public function getCleanPriceValueAttribute()
     {
-        return $this->recycle_price->price;
+        return $this->clean_price->price;
     }
 
     /* Mutators */
@@ -94,9 +94,9 @@ class BinTypePaper extends Model
         unset($this->attributes['client_price_value']);
     }
 
-    public function setRecyclePriceValueAttribute($value)
+    public function setCleanPriceValueAttribute($value)
     {
-        unset($this->attributes['recycle_price_value']);
+        unset($this->attributes['clean_price_value']);
     }
 
     /* Eloquent Relationships */
@@ -105,9 +105,9 @@ class BinTypePaper extends Model
         return $this->belongsTo(ClientPrice::class);
     }
 
-    public function recycle_price()
+    public function clean_price()
     {
-        return $this->belongsTo(RecyclePrice::class);
+        return $this->belongsTo(CleanPrice::class);
     }
 
     public function bin()

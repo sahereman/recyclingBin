@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Recycle;
+namespace App\Http\Controllers\Clean;
 
 
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
@@ -32,7 +32,7 @@ class RecyclersController extends Controller
      */
     public function show()
     {
-        $recycler = Auth::guard('recycle')->user();
+        $recycler = Auth::guard('clean')->user();
 
         return $this->response->item($recycler, new RecyclerTransformer());
     }
@@ -52,7 +52,7 @@ class RecyclersController extends Controller
      */
     public function moneyBill()
     {
-        $user = Auth::guard('recycle')->user();
+        $user = Auth::guard('clean')->user();
 
         $bills = $user->moneyBills()->paginate(5);
 
@@ -76,7 +76,7 @@ class RecyclersController extends Controller
      */
     public function WithdrawUnionPay(WithdrawUnionPayRequest $request)
     {
-        $user = User::find(Auth::guard('client')->user()->id);
+        $user = User::find(Auth::guard('clean')->user()->id);
 
         if ($user->money < $request->input('money'))
         {
@@ -121,9 +121,9 @@ class RecyclersController extends Controller
      */
     public function bins()
     {
-        $recycler = Auth::guard('recycle')->user();
+        $recycler = Auth::guard('clean')->user();
 
-        $bins = $recycler->bins()->with(['site', 'type_paper', 'type_fabric','type_paper.recycle_price','type_fabric.recycle_price'])->get();
+        $bins = $recycler->bins()->with(['site', 'type_paper', 'type_fabric','type_paper.clean_price','type_fabric.clean_price'])->get();
 
         return $this->response->collection($bins, new BinTransformer());
 

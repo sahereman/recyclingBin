@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Recycle;
+namespace App\Http\Controllers\Clean;
 
 use App\Transformers\Recycle\OrderTransformer;
 use Illuminate\Http\Request;
@@ -23,10 +23,10 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $recycle = Auth::guard('recycle')->user();
+        $recycler = Auth::guard('clean')->user();
 
 
-        $orders = $recycle->orders()->orderBy('created_at', 'desc')->paginate(5);
+        $orders = $recycler->orders()->orderBy('created_at', 'desc')->paginate(5);
 
 
         return $this->response->paginator($orders, new OrderTransformer());

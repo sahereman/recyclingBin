@@ -40,9 +40,9 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'name' => '回收端价格管理',
-                'slug' => 'recycle_prices',
+                'slug' => 'clean_prices',
                 'http_method' => '',
-                'http_path' => "/recycle_prices",
+                'http_path' => "/clean_prices",
             ],
             [
                 'name' => '话题分类管理',
@@ -113,7 +113,7 @@ class AdminTablesSeeder extends Seeder
                 'order' => 4,
                 'title' => '回收端价格管理',
                 'icon' => 'fa-dollar',
-                'uri' => '/recycle_prices',
+                'uri' => '/clean_prices',
             ],
             [
                 'parent_id' => 0,

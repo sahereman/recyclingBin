@@ -33,8 +33,8 @@ class GenerateClientOrderSnapshot
         $order->bin_snapshot = DB::transaction(function () use ($bin) {
             $snapshot_bin = Bin::with([
                 'site',
-                'type_paper', 'type_paper.client_price', 'type_paper.recycle_price',
-                'type_fabric', 'type_fabric.client_price', 'type_fabric.recycle_price',
+                'type_paper', 'type_paper.client_price', 'type_paper.clean_price',
+                'type_fabric', 'type_fabric.client_price', 'type_fabric.clean_price',
             ])->where('id', $bin->id)->first();
 
             $snapshot_bin->types_snapshot = [];

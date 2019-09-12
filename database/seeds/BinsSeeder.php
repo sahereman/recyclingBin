@@ -5,7 +5,7 @@ use App\Models\Bin;
 use App\Models\BinTypeFabric;
 use App\Models\BinTypePaper;
 use App\Models\ClientPrice;
-use App\Models\RecyclePrice;
+use App\Models\CleanPrice;
 use App\Models\ServiceSite;
 use Illuminate\Database\Seeder;
 use App\Models\Recycler;
@@ -28,8 +28,8 @@ class BinsSeeder extends Seeder
         $client_fabric_price = ClientPrice::where('slug', 'fabric')->first();
 
         //回收端价格
-        $recyc_paper_price = RecyclePrice::where('slug', 'paper')->first();
-        $recyc_fabric_price = RecyclePrice::where('slug', 'fabric')->first();
+        $clean_paper_price = CleanPrice::where('slug', 'paper')->first();
+        $clean_fabric_price = CleanPrice::where('slug', 'fabric')->first();
 
         // 青岛站
         $site = ServiceSite::where('city', '青岛市')->first();
@@ -49,12 +49,12 @@ class BinsSeeder extends Seeder
             factory(BinTypePaper::class)->create([
                 'bin_id' => $bin->id,
                 'client_price_id' => $client_paper_price->id,
-                'recycle_price_id' => $recyc_paper_price->id,
+                'clean_price_id' => $clean_paper_price->id,
             ]);
             factory(BinTypeFabric::class)->create([
                 'bin_id' => $bin->id,
                 'client_price_id' => $client_fabric_price->id,
-                'recycle_price_id' => $recyc_fabric_price->id,
+                'clean_price_id' => $clean_fabric_price->id,
             ]);
 
             GenerateBinTypeSnapshot::dispatch($bin);
@@ -91,12 +91,12 @@ class BinsSeeder extends Seeder
             factory(BinTypePaper::class)->create([
                 'bin_id' => $bin->id,
                 'client_price_id' => $client_paper_price->id,
-                'recycle_price_id' => $recyc_paper_price->id,
+                'clean_price_id' => $clean_paper_price->id,
             ]);
             factory(BinTypeFabric::class)->create([
                 'bin_id' => $bin->id,
                 'client_price_id' => $client_fabric_price->id,
-                'recycle_price_id' => $recyc_fabric_price->id,
+                'clean_price_id' => $clean_fabric_price->id,
             ]);
 
             GenerateBinTypeSnapshot::dispatch($bin);

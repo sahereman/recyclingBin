@@ -2,12 +2,12 @@
 
 namespace App\Transformers\Recycle;
 
-use App\Models\RecycleOrder;
+use App\Models\CleanOrder;
 use League\Fractal\TransformerAbstract;
 
 class OrderTransformer extends TransformerAbstract
 {
-    public function transform(RecycleOrder $order)
+    public function transform(CleanOrder $order)
     {
         return [
             'id' => $order->id,

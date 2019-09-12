@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\RecyclePrice;
+use App\Models\CleanPrice;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -24,7 +24,7 @@ class RecyclePricesController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new RecyclePrice);
+        $grid = new Grid(new CleanPrice);
 
         $grid->column('id', 'Id')->sortable();
         $grid->column('slug', 'Slug')->sortable();
@@ -41,7 +41,7 @@ class RecyclePricesController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(RecyclePrice::findOrFail($id));
+        $show = new Show(CleanPrice::findOrFail($id));
 
         // $show->field('id', 'Id');
         $show->field('slug', 'Slug');
@@ -57,7 +57,7 @@ class RecyclePricesController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new RecyclePrice);
+        $form = new Form(new CleanPrice);
 
         $form->text('slug', 'Slug')->rules('required|string');
         $form->decimal('price', 'Price')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');

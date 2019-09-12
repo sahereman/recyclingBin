@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\Models\RecycleOrderItem::class, function (Faker $faker) {
+$factory->define(App\Models\CleanOrderItem::class, function (Faker $faker) {
     return [
         'order_id' => null,
         'type_name' => $faker->randomElement([\App\Models\BinTypePaper::NAME, \App\Models\BinTypeFabric::NAME]),

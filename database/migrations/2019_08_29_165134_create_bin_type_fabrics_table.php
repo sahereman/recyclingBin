@@ -28,8 +28,8 @@ class CreateBinTypeFabricsTable extends Migration
             $table->unsignedInteger('client_price_id')->comment('客户端价格');
             $table->foreign('client_price_id')->references('id')->on('client_prices')->onDelete('cascade');
 
-            $table->unsignedInteger('recycle_price_id')->comment('回收端价格');
-            $table->foreign('recycle_price_id')->references('id')->on('recycle_prices')->onDelete('cascade');
+            $table->unsignedInteger('clean_price_id')->comment('回收端价格');
+            $table->foreign('clean_price_id')->references('id')->on('clean_prices')->onDelete('cascade');
         });
     }
 

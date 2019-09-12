@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RecyclePrice extends Model
+class CleanPrice extends Model
 {
     /**
      * The attributes that are mass assignable.

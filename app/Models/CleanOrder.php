@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RecycleOrder extends Model
+class CleanOrder extends Model
 {
     const STATUS_COMPLETED = 'completed';
 
@@ -101,7 +101,7 @@ class RecycleOrder extends Model
     /* Eloquent Relationships */
     public function items()
     {
-        return $this->hasMany(RecycleOrderItem::class, 'order_id');
+        return $this->hasMany(CleanOrderItem::class, 'order_id');
     }
 
     public function recycler()

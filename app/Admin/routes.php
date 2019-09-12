@@ -37,8 +37,8 @@ Route::group([
     /*ClientPrice*/
     $router->resource('client_prices', 'ClientPricesController');
 
-    /*RecyclePrice*/
-    $router->resource('recycle_prices', 'RecyclePricesController');
+    /*CleanPrice*/
+    $router->resource('clean_prices', 'RecyclePricesController');
 
     /*TopicCategory*/
     $router->resource('topic_categories', 'TopicCategoriesController');

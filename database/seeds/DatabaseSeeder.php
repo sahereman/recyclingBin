@@ -42,6 +42,6 @@ class DatabaseSeeder extends Seeder
 
 
         // 回收端订单
-        $this->call(RecycleOrdersSeeder::class);
+        $this->call(CleanOrdersSeeder::class);
     }
 }

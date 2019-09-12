@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRecycleOrderItemsTable extends Migration
+class CreateCleanOrderItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateRecycleOrderItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('recycle_order_items', function (Blueprint $table) {
+        Schema::create('clean_order_items', function (Blueprint $table) {
             $table->increments('id');
 
             $table->unsignedInteger('order_id')->comment('order-id');
-            $table->foreign('order_id')->references('id')->on('recycle_orders')->onDelete('cascade');
+            $table->foreign('order_id')->references('id')->on('clean_orders')->onDelete('cascade');
 
             $table->string('type_name')->comment('回收分类名称');
 
@@ -35,6 +35,6 @@ class CreateRecycleOrderItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recycle_order_items');
+        Schema::dropIfExists('clean_order_items');
     }
 }

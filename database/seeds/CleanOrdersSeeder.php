@@ -1,14 +1,14 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\RecycleOrder;
-use App\Models\RecycleOrderItem;
+use App\Models\CleanOrder;
+use App\Models\CleanOrderItem;
 use App\Admin\Models\Bin;
 use App\Models\RecyclerMoneyBill;
 use App\Models\Recycler;
 use App\Jobs\GenerateRecycleOrderSnapshot;
 
-class RecycleOrdersSeeder extends Seeder
+class CleanOrdersSeeder extends Seeder
 {
     public function run()
     {
@@ -17,11 +17,11 @@ class RecycleOrdersSeeder extends Seeder
 
         for ($i = 1; $i <= 20; $i++)
         {
-            $order = factory(RecycleOrder::class)->create([
+            $order = factory(CleanOrder::class)->create([
                 'recycler_id' => $recycler->id,
             ]);
 
-            factory(RecycleOrderItem::class, random_int(1, 2))->create([
+            factory(CleanOrderItem::class, random_int(1, 2))->create([
                 'order_id' => $order,
             ]);
 

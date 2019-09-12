@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Bin;
 use App\Models\ClientOrder;
-use App\Models\RecycleOrder;
+use App\Models\CleanOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,7 +20,7 @@ class GenerateRecycleOrderSnapshot
     protected $order;
     protected $bin;
 
-    public function __construct(RecycleOrder $order, Bin $bin)
+    public function __construct(CleanOrder $order, Bin $bin)
     {
         $this->order = $order;
         $this->bin = $bin;
@@ -34,8 +34,8 @@ class GenerateRecycleOrderSnapshot
         $order->bin_snapshot = DB::transaction(function () use ($bin) {
             $snapshot_bin = Bin::with([
                 'site',
-                'type_paper', 'type_paper.client_price', 'type_paper.recycle_price',
-                'type_fabric', 'type_fabric.client_price', 'type_fabric.recycle_price',
+                'type_paper', 'type_paper.client_price', 'type_paper.clean_price',
+                'type_fabric', 'type_fabric.client_price', 'type_fabric.clean_price',
             ])->where('id', $bin->id)->first();
 
             $snapshot_bin->types_snapshot = [];

@@ -14,6 +14,6 @@ class BinTypePaper extends BinTypePaperModel
     protected $appends = [
         'status_text',
         'client_price_value',
-        'recycle_price_value'
+        'clean_price_value'
     ];
 }

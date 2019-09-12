@@ -28,6 +28,9 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'avatar' => $faker->imageUrl(),
         'money' => $faker->randomFloat(2, 100, 1000),
 
+        'total_client_order_money' => $faker->randomFloat(2, 100, 1000),
+        'total_client_order_count' => $faker->randomNumber(2),
+
         'wx_country' => $faker->country,
         'wx_province' => $faker->country,
         'wx_city' => $faker->city,

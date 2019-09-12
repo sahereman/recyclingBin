@@ -104,7 +104,7 @@ class RecyclerMoneyBill extends Model
         switch ($type)
         {
             case self::TYPE_RECYCLE_ORDER :
-                if (!$related instanceof RecycleOrder || !$related->exists)
+                if (!$related instanceof CleanOrder || !$related->exists)
                 {
                     throw new \Exception('关联模型异常');
                 }
