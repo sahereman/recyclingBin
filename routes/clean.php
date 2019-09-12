@@ -37,10 +37,12 @@ $api->version('v1', [
         $api->group(['middleware' => 'api.auth:clean'], function ($api) {
 
             // 回收员
+            $api->post('sms/verification', 'SmsController@verification')->name('clean.sms.verification');/*获取短信验证码*/
             $api->get('recyclers/show', 'RecyclersController@show')->name('clean.recyclers.show');/*获取回收员信息*/
             $api->get('recyclers/bins', 'RecyclersController@bins')->name('clean.recyclers.bins');/*获取我的回收箱*/
             $api->get('recyclers/moneyBill', 'RecyclersController@moneyBill')->name('clean.recyclers.moneyBill');/*获取金钱账单列表*/
             $api->post('recyclers/withdraw/unionPay', 'RecyclersController@WithdrawUnionPay')->name('clean.recyclers.withdraw.unionPay');/*回收员银联提现*/
+            $api->put('recyclers/passwordReset', 'RecyclersController@passwordReset')->name('clean.recyclers.passwordReset');/*回收员重置密码*/
 
 
             // 订单

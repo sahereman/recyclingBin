@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Clean;
 
-use App\Transformers\Recycle\OrderTransformer;
+use App\Transformers\Clean\OrderTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

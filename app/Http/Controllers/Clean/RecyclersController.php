@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Clean;
 
 
-use App\Http\Requests\Recycle\WithdrawUnionPayRequest;
+use App\Http\Requests\Clean\PasswordResetRequest;
+use App\Http\Requests\Clean\WithdrawUnionPayRequest;
 use App\Models\Recycler;
 use App\Models\RecyclerWithdraw;
-use App\Transformers\Recycle\BinTransformer;
-use App\Transformers\Recycle\RecyclerMoneyBillTransformer;
-use App\Transformers\Recycle\RecyclerTransformer;
+use App\Transformers\Clean\BinTransformer;
+use App\Transformers\Clean\RecyclerMoneyBillTransformer;
+use App\Transformers\Clean\RecyclerTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 
@@ -35,6 +37,45 @@ class RecyclersController extends Controller
         $recycler = Auth::guard('clean')->user();
 
         return $this->response->item($recycler, new RecyclerTransformer());
+    }
+
+    /**
+     * showdoc
+     * @catalog 回收端/回收员相关
+     * @title PUT 回收员重置密码
+     * @method PUT
+     * @url recyclers/passwordReset
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @param phone 必选 string 手机号
+     * @param verification_key 必选 string 短信验证码key
+     * @param verification_code 必选 string 短信验证码
+     * @param password 必选 string 密码
+     * @param password_confirmation 必选 string 确认密码
+     * @return ["密码重置成功,请重新登录"]
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @number 50
+     */
+    public function passwordReset(PasswordResetRequest $request)
+    {
+        $verify_data = Cache::get($request->verification_key);
+        // Cache::forget($request->verification_key);// 清除验证码缓存
+
+        if (!$verify_data || !hash_equals($verify_data['code'], $request->verification_code))
+        {
+            throw new StoreResourceFailedException(null, [
+                'verification_code' => '验证码错误'
+            ]);
+        }
+
+        $recycler = Auth::guard('clean')->user();
+        $recycler->password = bcrypt($request->password);
+        $recycler->save();
+
+        Auth::guard('clean')->logout();
+
+        return $this->response->array([
+            '密码重置成功,请重新登录'
+        ]);
     }
 
 

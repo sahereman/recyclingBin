@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Clean;
 
 
-use App\Http\Requests\Recycle\AuthorizationRequest;
+use App\Http\Requests\Clean\AuthorizationRequest;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

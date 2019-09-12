@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transformers\Recycle;
+namespace App\Transformers\Clean;
 
 use App\Models\RecyclerMoneyBill;
 use App\Models\User;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transformers\Recycle;
+namespace App\Transformers\Clean;
 
 use App\Models\CleanOrder;
 use League\Fractal\TransformerAbstract;
