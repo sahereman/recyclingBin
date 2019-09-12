@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Clean;
 
 
-use App\Http\Requests\Client\WithdrawUnionPayRequest;
-use App\Models\User;
-use App\Models\UserWithdraw;
+use App\Http\Requests\Recycle\WithdrawUnionPayRequest;
+use App\Models\Recycler;
+use App\Models\RecyclerWithdraw;
 use App\Transformers\Recycle\BinTransformer;
+use App\Transformers\Recycle\RecyclerMoneyBillTransformer;
 use App\Transformers\Recycle\RecyclerTransformer;
-use App\Transformers\Client\UserMoneyBillTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -39,12 +39,13 @@ class RecyclersController extends Controller
 
 
     /**
+     * showdoc
      * @catalog 回收端/回收员相关
      * @title GET 获取金钱账单列表
      * @method GET
-     * @url users/moneyBill
+     * @url recyclers/moneyBill
      * @param Headers.Authorization 必选 headers 用户凭证
-     * @return {"data":[{"id":1,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"24.02","created_at":"2019-09-05 15:23:14"},{"id":2,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"90.43","created_at":"2019-09-05 15:23:14"}],"meta":{"pagination":{"total":20,"count":5,"per_page":5,"current_page":1,"total_pages":4,"links":{"previous":null,"next":"http://bin.test/api/client/users/moneyBill?page=2"}}}}
+     * @return {"data":[{"id":1,"user_id":null,"type":"recyclerDeposit","type_text":"回收员充值","description":"余额充值","operator":"+","number":"7.00","created_at":"2019-09-12 09:40:12"},{"id":2,"user_id":null,"type":"recyclerDeposit","type_text":"回收员充值","description":"余额充值","operator":"+","number":"11.00","created_at":"2019-09-12 09:40:12"}],"meta":{"pagination":{"total":27,"count":5,"per_page":5,"current_page":1,"total_pages":6,"links":{"previous":null,"next":"http://bin.test/api/clean/recyclers/moneyBill?page=2"}}}}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param data.* json 账单列表信息
      * @return_param mata.pagination json 分页信息 (使用links.next前往下一页数据)
@@ -52,18 +53,19 @@ class RecyclersController extends Controller
      */
     public function moneyBill()
     {
-        $user = Auth::guard('clean')->user();
+        $recycler = Auth::guard('clean')->user();
 
-        $bills = $user->moneyBills()->paginate(5);
+        $bills = $recycler->moneyBills()->paginate(5);
 
-        return $this->response->paginator($bills, new UserMoneyBillTransformer());
+        return $this->response->paginator($bills, new RecyclerMoneyBillTransformer());
     }
 
     /**
+     * showdoc
      * @catalog 回收端/回收员相关
-     * @title POST 用户银联提现
+     * @title POST 回收员银联提现
      * @method POST
-     * @url users/withdraw/unionPay
+     * @url recyclers/withdraw/unionPay
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param name 必选 string 持卡人姓名
      * @param bank 必选 string 银行
@@ -76,22 +78,21 @@ class RecyclersController extends Controller
      */
     public function WithdrawUnionPay(WithdrawUnionPayRequest $request)
     {
-        $user = User::find(Auth::guard('clean')->user()->id);
+        $recycler = Recycler::find(Auth::guard('clean')->user()->id);
 
-        if ($user->money < $request->input('money'))
+        if ($recycler->money < $request->input('money'))
         {
             throw new StoreResourceFailedException(null, [
                 'money' => '余额不足'
             ]);
         }
 
+        DB::transaction(function () use ($recycler, $request) {
 
-        DB::transaction(function () use ($user, $request) {
-
-            $withdraw = UserWithdraw::create([
-                'user_id' => $user->id,
-                'type' => UserWithdraw::TYPE_UNION_PAY,
-                'status' => UserWithdraw::STATUS_WAIT,
+            $withdraw = RecyclerWithdraw::create([
+                'recycler_id' => $recycler->id,
+                'type' => RecyclerWithdraw::TYPE_UNION_PAY,
+                'status' => RecyclerWithdraw::STATUS_WAIT,
                 'money' => $request->input('money'),
                 'info' => [
                     'name' => $request->input('name'),
@@ -100,9 +101,9 @@ class RecyclersController extends Controller
                 ]
             ]);
 
-            $user->frozen_money = bcadd($user->frozen_money, $withdraw->money, 2);
-            $user->money = bcsub($user->money, $withdraw->money, 2);
-            $user->save();
+            $recycler->frozen_money = bcadd($recycler->frozen_money, $withdraw->money, 2);
+            $recycler->money = bcsub($recycler->money, $withdraw->money, 2);
+            $recycler->save();
         });
 
         return $this->response->created();
@@ -113,9 +114,9 @@ class RecyclersController extends Controller
      * @catalog 回收端/回收箱相关
      * @title GET 获取我的回收箱
      * @method GET
-     * @url users/bins
+     * @url recyclers/bins
      * @param Headers.Authorization 必选 headers 用户凭证
-     * @return {"data":[{"id":1,"site_id":1,"name":"济南新城区","no":"0532001","address":"69 葛 Street","site":{"id":1,"name":"青岛站","county":"中国","province":"山东省","province_simple":"山东","city":"青岛市","city_simple":"青岛","created_at":"2019-09-11 14:56:01","updated_at":"2019-09-11 14:56:01"},"type_paper":{"id":1,"bin_id":1,"name":"可回收物","status":"repair","number":"4.56","unit":"公斤","client_price_id":1,"recycle_price_id":1,"status_text":"维护","recycle_price":{"id":1,"slug":"paper","price":"0.70"}},"type_fabric":{"id":1,"bin_id":1,"name":"纺织物","status":"normal","number":"61.58","unit":"公斤","client_price_id":2,"recycle_price_id":2,"status_text":"正常","recycle_price":{"id":2,"slug":"fabric","price":"0.40"}}}]}
+     * @return {"data":[{"id":1,"site_id":1,"name":"呼和浩特上街区","no":"0532001","address":"21 褚 Street","site":{"id":1,"name":"青岛站","county":"中国","province":"山东省","province_simple":"山东","city":"青岛市","city_simple":"青岛","created_at":"2019-09-12 09:40:13","updated_at":"2019-09-12 09:40:13"},"type_paper":{"id":1,"bin_id":1,"name":"可回收物","status":"full","number":"14.88","unit":"公斤","client_price_id":1,"clean_price_id":1,"status_text":"满箱","clean_price":{"id":1,"slug":"paper","price":"0.70"}},"type_fabric":{"id":1,"bin_id":1,"name":"纺织物","status":"normal","number":"66.54","unit":"公斤","client_price_id":2,"clean_price_id":2,"status_text":"正常","clean_price":{"id":2,"slug":"fabric","price":"0.40"}}},{"id":2,"site_id":1,"name":"天津西夏区","no":"0532002","address":"74 胥 Street","site":{"id":1,"name":"青岛站","county":"中国","province":"山东省","province_simple":"山东","city":"青岛市","city_simple":"青岛","created_at":"2019-09-12 09:40:13","updated_at":"2019-09-12 09:40:13"},"type_paper":{"id":2,"bin_id":2,"name":"可回收物","status":"full","number":"58.56","unit":"公斤","client_price_id":1,"clean_price_id":1,"status_text":"满箱","clean_price":{"id":1,"slug":"paper","price":"0.70"}},"type_fabric":{"id":2,"bin_id":2,"name":"纺织物","status":"full","number":"88.66","unit":"公斤","client_price_id":2,"clean_price_id":2,"status_text":"满箱","clean_price":{"id":2,"slug":"fabric","price":"0.40"}}}]}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @number 80
      */
@@ -123,7 +124,7 @@ class RecyclersController extends Controller
     {
         $recycler = Auth::guard('clean')->user();
 
-        $bins = $recycler->bins()->with(['site', 'type_paper', 'type_fabric','type_paper.clean_price','type_fabric.clean_price'])->get();
+        $bins = $recycler->bins()->with(['site', 'type_paper', 'type_fabric', 'type_paper.clean_price', 'type_fabric.clean_price'])->get();
 
         return $this->response->collection($bins, new BinTransformer());
 

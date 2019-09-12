@@ -39,6 +39,9 @@ $api->version('v1', [
             // 回收员
             $api->get('recyclers/show', 'RecyclersController@show')->name('clean.recyclers.show');/*获取回收员信息*/
             $api->get('recyclers/bins', 'RecyclersController@bins')->name('clean.recyclers.bins');/*获取我的回收箱*/
+            $api->get('recyclers/moneyBill', 'RecyclersController@moneyBill')->name('clean.recyclers.moneyBill');/*获取金钱账单列表*/
+            $api->post('recyclers/withdraw/unionPay', 'RecyclersController@WithdrawUnionPay')->name('clean.recyclers.withdraw.unionPay');/*回收员银联提现*/
+
 
             // 订单
             $api->get('orders', 'OrdersController@index')->name('clean.orders.index');/*获取订单列表*/
