@@ -8,6 +8,7 @@ use App\Http\Requests\Client\UserRequest;
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
 use App\Models\User;
 use App\Models\UserWithdraw;
+use App\Transformers\Client\NotificationTransformer;
 use App\Transformers\Client\UserMoneyBillTransformer;
 use App\Transformers\Client\UserTransformer;
 use Carbon\Carbon;
@@ -38,6 +39,28 @@ class UsersController extends Controller
         $user = Auth::guard('client')->user();
 
         return $this->response->item($user, new UserTransformer());
+    }
+
+    /**
+     * showdoc
+     * @catalog 客户端/用户相关
+     * @title GET 获取消息通知
+     * @method GET
+     * @url users/notifications
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @return {"data":[{"title":"投递成功","info":"恭喜您投递成功,获得奖励金96.22元,前往\"我的订单\"页面查看投递详情","relation_model":"App\\Models\\ClientOrder","relation_id":12,"link":"","created_at":"2019-09-16 11:18:01"},{"title":"投递成功","info":"恭喜您投递成功,获得奖励金76.45元,前往\"我的订单\"页面查看投递详情","relation_model":"App\\Models\\ClientOrder","relation_id":8,"link":"","created_at":"2019-09-16 11:18:01"},{"title":"提现失败","info":"很抱歉您申请的提现未通过审核,提现金额36.99元,失败原因:银行预留信息错误,请修改后重新提交申请","relation_model":"App\\Models\\UserWithdraw","relation_id":6,"link":"","created_at":"2019-09-16 11:17:59"},{"title":"提现失败","info":"很抱歉您申请的提现未通过审核,提现金额28.33元,失败原因:银行预留信息错误,请修改后重新提交申请","relation_model":"App\\Models\\UserWithdraw","relation_id":5,"link":"","created_at":"2019-09-16 11:17:59"},{"title":"提现成功","info":"恭喜您提现成功,提现金额75.83元已转入银行卡,银行账号:62223078323174632,请注意查收","relation_model":"App\\Models\\UserWithdraw","relation_id":7,"link":"","created_at":"2019-09-16 11:17:59"}],"meta":{"pagination":{"total":8,"count":5,"per_page":5,"current_page":1,"total_pages":2,"links":{"previous":null,"next":"http://bin.test/api/client/users/notifications?page=2"}}}}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @return_param data.* json 消息通知数据
+     * @return_param mata.pagination json 分页信息 (使用links.next前往下一页数据)
+     * @number 65
+     */
+    public function notifications()
+    {
+        $user = Auth::guard('client')->user();
+        $notifications = $user->notifications()->paginate(5);
+
+
+        return $this->response->paginator($notifications,new NotificationTransformer());
     }
 
     /**

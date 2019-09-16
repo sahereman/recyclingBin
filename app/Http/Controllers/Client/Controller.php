@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Client;
 
 use App\Models\Bin;
+use App\Models\ClientOrder;
 use App\Models\Recycler;
 use App\Models\User;
+use App\Notifications\Client\ClientOrderCompletedNotification;
 use Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Controller as BaseController;
 use Ramsey\Uuid\Uuid;
@@ -15,7 +17,9 @@ class Controller extends BaseController
 
     public function test()
     {
+        $user = User::find(1);
         $bin = Bin::find(1);
+        $order = ClientOrder::find(1);
 
         $recycler = Recycler::find(1);
 
@@ -26,6 +30,11 @@ class Controller extends BaseController
 //        $type_paper = $bin->type_paper()->with(['client_price', 'recycle_price'])->first()->toArray();
 //        $a =  ['type_fabric' => $type_fabric, 'type_paper' => $type_paper];
 
+
+        $user->notify(new ClientOrderCompletedNotification($order));
+
+//        dd(ClientOrder::class);
+        dd($order->getMorphClass());
         $a = $bin->recyclers;
         $b = $recycler->bins;
         dd($a,$b);

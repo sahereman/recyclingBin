@@ -41,6 +41,7 @@ $api->version('v1', [
 
             // 用户
             $api->get('users/show', 'UsersController@show')->name('client.users.show');/*获取用户信息*/
+            $api->get('users/notifications', 'UsersController@notifications')->name('client.users.notifications');/*获取消息通知*/
             $api->put('users/real_authentication', 'UsersController@realAuthentication')->name('client.users.real_authentication');/*用户实名认证*/
             $api->post('sms/verification', 'SmsController@verification')->name('client.sms.verification');/*获取短信验证码*/
             $api->put('users/bindPhone', 'UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/

@@ -4,6 +4,8 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\UserWithdraw;
 use App\Models\UserMoneyBill;
+use App\Notifications\Client\UserWithdrawAgreeNotification;
+use App\Notifications\Client\UserWithdrawDenyNotification;
 
 class UsersSeeder extends Seeder
 {
@@ -46,11 +48,13 @@ class UsersSeeder extends Seeder
                     break;
                 case UserWithdraw::STATUS_AGREE :
                     UserMoneyBill::change($user, UserMoneyBill::TYPE_USER_WITHDRAW, $withdraw->money, $withdraw);
+                    $withdraw->user->notify(new UserWithdrawAgreeNotification($withdraw));
                     break;
                 case UserWithdraw::STATUS_DENY :
                     $withdraw->update([
                         'reason' => '银行预留信息错误'
                     ]);
+                    $withdraw->user->notify(new UserWithdrawDenyNotification($withdraw));
                     break;
             }
 

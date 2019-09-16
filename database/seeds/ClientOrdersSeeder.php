@@ -7,6 +7,7 @@ use App\Admin\Models\Bin;
 use App\Models\UserMoneyBill;
 use App\Models\User;
 use App\Jobs\GenerateClientOrderSnapshot;
+use App\Notifications\Client\ClientOrderCompletedNotification;
 
 class ClientOrdersSeeder extends Seeder
 {
@@ -27,6 +28,7 @@ class ClientOrdersSeeder extends Seeder
 
             GenerateClientOrderSnapshot::dispatch($order, $bins->random());
             UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
+            $order->user->notify(new ClientOrderCompletedNotification($order));
         }
     }
 }
