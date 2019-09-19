@@ -52,7 +52,7 @@ class AuthorizationsController extends Controller
 
         $user = User::where('wx_openid', $decryptData['openId'])->first();
 
-        info($decryptData);
+//        info($decryptData);
 
         if (!$user)
         {

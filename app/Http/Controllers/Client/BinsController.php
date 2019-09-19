@@ -21,6 +21,7 @@ class BinsController extends Controller
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param lat 必选 string 纬度
      * @param lng 必选 string 经度
+     * @param count 非必选(默认10条) string 需要返回的条数
      * @return {"data":[{"id":1,"site_id":1,"name":"呼和浩特上街区","no":"0532001","address":"21 褚 Street","distance":824,"types_snapshot":{"type_paper":{"id":1,"name":"可回收物","unit":"公斤","bin_id":1,"number":"14.88","status":"full","clean_price":{"id":1,"slug":"paper","price":"0.70"},"status_text":"满箱","client_price":{"id":1,"slug":"paper","price":"0.50"},"clean_price_id":1,"client_price_id":1},"type_fabric":{"id":1,"name":"纺织物","unit":"公斤","bin_id":1,"number":"66.54","status":"normal","clean_price":{"id":2,"slug":"fabric","price":"0.40"},"status_text":"正常","client_price":{"id":2,"slug":"fabric","price":"0.10"},"clean_price_id":2,"client_price_id":2}}}],"meta":{"pagination":{"total":25,"count":3,"per_page":3,"current_page":1,"total_pages":9,"links":{"previous":null,"next":"http://bin.test/api/client/bins?lat=36.08743＆lng=120.37479＆page=2"}}}}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param data.* json 回收箱列表信息
@@ -29,7 +30,7 @@ class BinsController extends Controller
      */
     public function index(BinRequest $request)
     {
-        $bins = Bin::where('is_run',true)->get();
+        $bins = Bin::where('is_run', true)->get();
         $location_coor = new Coordinate($request->get('lat'), $request->get('lng'));
 
 
@@ -41,7 +42,7 @@ class BinsController extends Controller
         });
         $bins = $bins->sortBy('distance');//按距离排序
 
-        $perPage = 3;// 每页显示数量
+        $perPage = $request->get('count', 10);// 每页显示数量
         if ($request->has('page'))
         {
             // 请求是第几页，如果没有传page数据，则默认为1
@@ -82,7 +83,7 @@ class BinsController extends Controller
      */
     public function nearby(BinRequest $request)
     {
-        $bins = Bin::where('is_run',true)->get();
+        $bins = Bin::where('is_run', true)->get();
         $location_coor = new Coordinate($request->get('lat'), $request->get('lng'));
 
 
@@ -94,6 +95,6 @@ class BinsController extends Controller
         });
         $bins = $bins->sortBy('distance');//按距离排序
 
-        return $this->response->item($bins->first(),new BinSimpleTransformer());
+        return $this->response->item($bins->first(), new BinSimpleTransformer());
     }
 }

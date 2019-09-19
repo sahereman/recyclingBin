@@ -26,19 +26,6 @@ class BinTcpSocket extends TcpSocket
         // 二次开机 收到60102 设备开关机通知
 
 
-//        $command = 60201;
-
-//        echo int_helper::uInt8(107) . PHP_EOL;  // k
-//        echo int_helper::uInt8("\x6b") . PHP_EOL . PHP_EOL;  // 107
-//
-//        echo int_helper::uInt16(4101) . PHP_EOL;  // \x05\x10
-//        echo int_helper::uInt16("\x05\x10") . PHP_EOL;  // 4101
-//        echo int_helper::uInt16("\x05\x10", true) . PHP_EOL . PHP_EOL;  // 1296
-//
-//        echo int_helper::uInt32(2147483647) . PHP_EOL;  // \xff\xff\xff\x7f
-//        echo int_helper::uInt32("\xff\xff\xff\x7f") . PHP_EOL . PHP_EOL;  // 2147483647
-
-
         \Log::info('TcpSocket  Received data', [$fd, $reactorId, $data]);
 
 

@@ -19,10 +19,11 @@ class CreateTopicsTable extends Migration
             $table->foreign('category_id')->references('id')->on('topic_categories')->onDelete('cascade');
 
             $table->string('title')->comment('名称');
-            $table->string('thumb')->comment('缩略图');
-            $table->string('image')->comment('图片');
-            $table->text('content')->comment('内容 HTML');
-            $table->boolean('is_index')->comment('是否推荐');
+            $table->string('thumb')->nullable()->comment('缩略图');
+            $table->string('image')->nullable()->comment('图片');
+            $table->text('content')->nullable()->comment('内容 HTML');
+            $table->boolean('is_index')->default(false)->comment('是否推荐');
+            $table->unsignedInteger('view_count')->default(0)->comment('浏览量');
 
             $table->timestamps();
         });

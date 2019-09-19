@@ -14,6 +14,7 @@ $factory->define(App\Models\Topic::class, function (Faker $faker) {
         'image' => $faker->imageUrl(640),
         'content' => $faker->sentences(7, true),
         'is_index' => false,
+        'view_count' => $faker->randomNumber(3),
 
         'created_at' => $created_at,
         'updated_at' => $updated_at,

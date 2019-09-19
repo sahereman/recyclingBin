@@ -17,6 +17,8 @@ class BinSimpleTransformer extends TransformerAbstract
             'no' => $bin->no,
             'address' => $bin->address,
             'distance' => $bin->distance ?? 0,
+            'lat' => $bin->lat,
+            'lng' => $bin->lng,
             'types_snapshot' => $bin->types_snapshot,
         ];
     }
