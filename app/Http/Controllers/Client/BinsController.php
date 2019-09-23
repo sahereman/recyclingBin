@@ -123,12 +123,12 @@ class BinsController extends Controller
     {
         $token = BinToken::where('token', $request->token)->first();
 
-        //        if ($token->auth_id != null)
-        //        {
-        //            throw new StoreResourceFailedException(null, [
-        //                'token' => '令牌已使用,请重新获取'
-        //            ]);
-        //        }
+        if ($token->auth_id != null)
+        {
+            throw new StoreResourceFailedException(null, [
+                'token' => '令牌已使用,请重新获取'
+            ]);
+        }
 
         $user = Auth::guard('client')->user();
         $swoole = app('swoole');
