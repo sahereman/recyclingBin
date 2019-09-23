@@ -96,7 +96,6 @@ class BinTcpSocket extends TcpSocket
     public function clientLoginAction($server, $fd, $data)
     {
 
-        Log::info()
     }
 
     /*
