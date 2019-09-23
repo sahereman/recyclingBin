@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Handlers\SocketJsonHandler;
 use App\Handlers\Tools\Coordinate;
 use App\Http\Requests\Client\BinRequest;
 use App\Http\Requests\Client\BinTokenRequest;
 use App\Models\Bin;
 use App\Models\BinToken;
+use App\Models\ClientPrice;
+use App\Sockets\BinTcpSocket;
 use App\Transformers\Client\BinSimpleTransformer;
 use App\Transformers\Client\BinTokenTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -120,18 +123,31 @@ class BinsController extends Controller
     {
         $token = BinToken::where('token', $request->token)->first();
 
-        if ($token->auth_id != null)
-        {
-            throw new StoreResourceFailedException(null, [
-                'token' => '令牌已使用,请重新获取'
-            ]);
-        }
+        //        if ($token->auth_id != null)
+        //        {
+        //            throw new StoreResourceFailedException(null, [
+        //                'token' => '令牌已使用,请重新获取'
+        //            ]);
+        //        }
 
         $user = Auth::guard('client')->user();
+        $swoole = app('swoole');
+        $client_prices = ClientPrice::all();
 
         $token->auth_model = $user->getMorphClass();
         $token->auth_id = $user->id;
         $token->save();
+
+
+        $swoole->send($token->fd, new SocketJsonHandler([
+            //            'static_no' => BinTcpSocket::CLIENT_LOGIN,
+            //            'result_code' => '200',
+            'user_card' => (string)$user->id,
+            'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
+            'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
+            'money' => bcmul($user->money, 100)
+        ]));
+
 
         return $this->response->item($token, new BinTokenTransformer());
     }

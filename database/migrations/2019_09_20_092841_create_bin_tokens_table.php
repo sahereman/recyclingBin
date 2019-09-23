@@ -19,6 +19,7 @@ class CreateBinTokensTable extends Migration
             $table->foreign('bin_id')->references('id')->on('bins')->onDelete('cascade');
 
             $table->string('token');
+            $table->unsignedInteger('fd');
 
             $table->string('related_model')->nullable()->default(null)->comment('关联模型');
             $table->unsignedInteger('related_id')->nullable()->default(null)->comment('关联模型ID');
