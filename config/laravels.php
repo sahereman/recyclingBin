@@ -70,7 +70,7 @@ return [
         // ...
     ],
     'destroy_controllers'      => [
-        'enable'        => false,
+        'enable'        => true,
         'excluded_list' => [
             //\App\Http\Controllers\TestController::class,
         ],
