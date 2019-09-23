@@ -157,7 +157,7 @@ class BinsController extends Controller
      * @catalog 客户端/回收箱相关
      * @title GET 回收箱订单检查
      * @method GET
-     * @url bins/qrLogin/{token_id}
+     * @url bins/orderCheck/{token_id}
      * @param Headers.Authorization 必选 headers 用户凭证
      * @return {"id":3,"bin_id":1,"token":"pKrH8FmTPtlu22fC","related_model":"App\\Models\\ClientOrder","related_id":109,"auth_model":"App\\Models\\User","auth_id":1,"created_at":"2019-09-23 09:55:54","updated_at":"2019-09-23 11:13:05"}
      * @return_param HTTP.Status int 成功时HTTP状态码:200

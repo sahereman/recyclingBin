@@ -153,6 +153,11 @@ class BinTcpSocket extends TcpSocket
         UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
         $order->user->notify(new ClientOrderCompletedNotification($order));
 
+        $bin->token->update([
+            'related_model' => $order->getMorphClass(),
+            'related_id' => $order->id,
+        ]);
+
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::CLIENT_TRANSACTION,
             'result_code' => '200',

@@ -39,7 +39,7 @@ class OrdersController extends Controller
      * @catalog 客户端/订单相关
      * @title GET 获取订单详情
      * @method GET
-     * @url orders/show
+     * @url orders/{order_id}
      * @param Headers.Authorization 必选 headers 用户凭证
      * @return {"id":2,"user_id":1,"status":"completed","status_text":"已完成","bin_name":"呼和浩特西峰区","total":"43.59","items":[{"id":3,"order_id":2,"type_name":"可回收物","number":"0.83","unit":"公斤","subtotal":"6.94"},{"id":4,"order_id":2,"type_name":"纺织物","number":"0.91","unit":"公斤","subtotal":"8.6"}]}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
