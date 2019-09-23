@@ -7,19 +7,20 @@ class ClientPricesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
      * @return void
      */
     public function run()
     {
         ClientPrice::create([
             'slug' => 'paper',
-            'price' => '0.50'
+            'price' => '0.50',
+            'unit' => '公斤',
         ]);
 
         ClientPrice::create([
             'slug' => 'fabric',
-            'price' => '0.10'
+            'price' => '0.10',
+            'unit' => '公斤',
         ]);
     }
 }

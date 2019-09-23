@@ -3,8 +3,16 @@
 namespace App\Sockets;
 
 use App\Handlers\SocketJsonHandler;
+use App\Jobs\GenerateClientOrderSnapshot;
 use App\Models\Bin;
 use App\Models\BinToken;
+use App\Models\BinTypeFabric;
+use App\Models\BinTypePaper;
+use App\Models\ClientOrder;
+use App\Models\ClientPrice;
+use App\Models\User;
+use App\Models\UserMoneyBill;
+use App\Notifications\Client\ClientOrderCompletedNotification;
 use Hhxsv5\LaravelS\Swoole\Socket\TcpSocket;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +48,7 @@ class BinTcpSocket extends TcpSocket
 
     public function onReceive(Server $server, $fd, $reactorId, $data)
     {
-        Log::info('TCP Received', [$fd, $reactorId, $data]);
+        Log::info([$fd, $data]);
 
         //        $redis = app('redis.connection');
         //        $userId = array_first($redis->zrangebyscore($this->client_fd, $frame->fd, $frame->fd));
@@ -88,32 +96,125 @@ class BinTcpSocket extends TcpSocket
     public function clientLoginAction($server, $fd, $data)
     {
 
+        Log::info()
     }
 
+    /*
+     {"static_no":"yzs001","equipment_no":"0532001","equipment_all":false,"user_card":"1","delivery_type":"1","delivery_weight":"3000","delivery_price":"50","delivery_money":"10","delivery_time":"20190923140001"}
+     */
     public function clientTransactionAction($server, $fd, $data)
     {
+        $bin = Bin::where('no', $data['equipment_no'])->first();
+        $user = User::find($data['user_card']);
+        $client_prices = ClientPrice::all();
 
+        if (!$bin || !$user)
+        {
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
+            return false;
+        }
+
+        switch ($data['delivery_type'])
+        {
+            case 1:
+                $type = $bin->type_paper;
+                $price = $client_prices->where('slug', 'paper')->first();
+                break;
+            case 2:
+                $type = $bin->type_fabric;
+                $price = $client_prices->where('slug', 'fabric')->first();
+                break;
+        }
+        $type_name = $type::NAME;
+        $weight = bcdiv($data['delivery_weight'], 1000, 2);
+        $subtotal = bcmul($price['price'], $weight, 2);
+
+        $order = ClientOrder::create([
+            'status' => ClientOrder::STATUS_COMPLETED,
+            'user_id' => $user->id,
+            'total' => $subtotal,
+            'bin_snapshot' => [],
+        ]);
+
+        $order->items()->create([
+            'type_name' => $type_name,
+            'number' => $weight,
+            'unit' => $price['unit'],
+            'subtotal' => $subtotal,
+        ]);
+
+        $type->update([
+            'status' => $data['equipment_all'] ? $type::STATUS_FULL : $type->status,
+            'number' => bcadd($type->number, $weight, 2),
+        ]);
+
+        GenerateClientOrderSnapshot::dispatch($order, $bin);
+        UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
+        $order->user->notify(new ClientOrderCompletedNotification($order));
+
+        $server->send($fd, new SocketJsonHandler([
+            'static_no' => self::CLIENT_TRANSACTION,
+            'result_code' => '200',
+        ]));
     }
 
+    /*
+     {"static_no":"yzs002","equipment_no":"0532001"}
+     */
     public function clientLogoutAction($server, $fd, $data)
     {
+        $bin = Bin::where('no', $data['equipment_no'])->first();
+        if (!$bin)
+        {
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
+            return false;
+        }
 
+
+        BinToken::where('bin_id', $bin->id)->delete();// 清空已有token
+        $server->send($fd, new SocketJsonHandler([
+            'static_no' => self::CLIENT_LOGOUT,
+            'result_code' => '200',
+        ]));
     }
 
+    /*
+    {"static_no":"yzs003","equipment_no":"0532001","equipment_all":false,"device":"0000","send_time":"20190923150201"}
+     */
     public function beatAction($server, $fd, $data)
     {
+        $bin = Bin::where('no', $data['equipment_no'])->first();
+        if (!$bin)
+        {
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
+            return false;
+        }
 
+
+        $server->send($fd, new SocketJsonHandler([
+            'static_no' => self::BEAT,
+            'result_code' => '200',
+        ]));
     }
 
 
     /*
     {"static_no":"yzs004","equipment_no":"0532001"}
-    */
+     */
     public function qrcodeAction($server, $fd, $data)
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
         if (!$bin)
         {
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
             return false;
         }
 
@@ -121,11 +222,13 @@ class BinTcpSocket extends TcpSocket
 
         $bin_token = new BinToken();
         $bin_token->bin_id = $bin->id;
+        $bin_token->fd = $fd;
         $bin_token->save();
 
         $server->send($fd, new SocketJsonHandler([
+            //            'static_no' => self::CLIENT_LOGIN,
             'result_code' => '200',
-            'set_url' => url('client/qrlogin') . '?token=' . $bin_token->token
+            'set_url' => url('client/qr') . '?token=' . $bin_token->token
         ]));
     }
 }

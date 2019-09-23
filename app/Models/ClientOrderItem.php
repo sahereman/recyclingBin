@@ -16,7 +16,7 @@ class ClientOrderItem extends Model
         'type_name',
         'number',
         'unit',
-        'sub_total'
+        'subtotal'
     ];
 
     /**

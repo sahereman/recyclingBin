@@ -14,12 +14,14 @@ class RecyclePricesSeeder extends Seeder
     {
         CleanPrice::create([
             'slug' => 'paper',
-            'price' => '0.70'
+            'price' => '0.70',
+            'unit' => '公斤',
         ]);
 
         CleanPrice::create([
             'slug' => 'fabric',
-            'price' => '0.40'
+            'price' => '0.40',
+            'unit' => '公斤',
         ]);
     }
 }
