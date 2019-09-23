@@ -48,7 +48,7 @@ class BinTcpSocket extends TcpSocket
 
     public function onReceive(Server $server, $fd, $reactorId, $data)
     {
-        Log::info($fd, [$data]);
+        Log::info($fd, $data);
 
         //        $redis = app('redis.connection');
         //        $userId = array_first($redis->zrangebyscore($this->client_fd, $frame->fd, $frame->fd));
