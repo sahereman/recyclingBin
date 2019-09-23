@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Client;
 
 use App\Handlers\Tools\Coordinate;
 use App\Http\Requests\Client\BinRequest;
+use App\Http\Requests\Client\BinTokenRequest;
 use App\Models\Bin;
+use App\Models\BinToken;
 use App\Transformers\Client\BinSimpleTransformer;
+use App\Transformers\Client\BinTokenTransformer;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 
 class BinsController extends Controller
 {
@@ -96,5 +101,62 @@ class BinsController extends Controller
         $bins = $bins->sortBy('distance');//按距离排序
 
         return $this->response->item($bins->first(), new BinSimpleTransformer());
+    }
+
+    /**
+     * showdoc
+     * @catalog 客户端/回收箱相关
+     * @title PUT 扫码开箱
+     * @method PUT
+     * @url bins/qrLogin
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @param token 必选 string 令牌
+     * @return {"id":3,"bin_id":1,"token":"pKrH8FmTPtlu22fC","related_model":null,"related_id":null,"auth_model":"App\\Models\\User","auth_id":1,"created_at":"2019-09-23 09:55:54","updated_at":"2019-09-23 11:13:05"}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @return_param * json 令牌信息
+     * @number 30
+     */
+    public function qrLogin(BinTokenRequest $request)
+    {
+        $token = BinToken::where('token', $request->token)->first();
+
+        if ($token->auth_id != null)
+        {
+            throw new StoreResourceFailedException(null, [
+                'token' => '令牌已使用,请重新获取'
+            ]);
+        }
+
+        $user = Auth::guard('client')->user();
+
+        $token->auth_model = $user->getMorphClass();
+        $token->auth_id = $user->id;
+        $token->save();
+
+        return $this->response->item($token, new BinTokenTransformer());
+    }
+
+    /**
+     * showdoc
+     * @catalog 客户端/回收箱相关
+     * @title GET 回收箱订单检查
+     * @method GET
+     * @url bins/qrLogin/{token_id}
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @return {"id":3,"bin_id":1,"token":"pKrH8FmTPtlu22fC","related_model":"App\\Models\\ClientOrder","related_id":109,"auth_model":"App\\Models\\User","auth_id":1,"created_at":"2019-09-23 09:55:54","updated_at":"2019-09-23 11:13:05"}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @return_param * json 令牌信息
+     * @number 40
+     */
+    public function orderCheck(BinToken $token)
+    {
+        $user = Auth::guard('client')->user();
+
+        if (!$user->can('own', $token))
+        {
+            return $this->response->errorForbidden('This action is unauthorized.');
+        }
+
+        return $this->response->item($token, new BinTokenTransformer());
     }
 }

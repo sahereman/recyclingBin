@@ -83,4 +83,9 @@ class Bin extends Model
     {
         return $this->belongsToMany(Recycler::class, 'bin_recyclers', 'bin_id');
     }
+
+    public function token()
+    {
+        return $this->hasOne(BinToken::class);
+    }
 }

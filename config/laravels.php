@@ -99,6 +99,9 @@ return [
         'enable_coroutine'   => false,
         'http_compression'   => false,
 
+        'heartbeat_idle_time'      => 1200,
+        'heartbeat_check_interval' => 60,
+
         // Slow log
         // 'request_slowlog_timeout' => 2,
         // 'request_slowlog_file'    => storage_path(sprintf('logs/slow-%s.log', date('Y-m'))),

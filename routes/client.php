@@ -52,6 +52,8 @@ $api->version('v1', [
             //回收箱
             $api->get('bins/nearby', 'BinsController@nearby')->name('client.bins.nearby');/*获取距离最近的回收箱*/
             $api->get('bins', 'BinsController@index')->name('client.bins.index');/*获取回收箱列表*/
+            $api->put('bins/qrLogin', 'BinsController@qrLogin')->name('client.bins.qrLogin');/*扫码开箱*/
+            $api->get('bins/orderCheck/{token}', 'BinsController@orderCheck')->name('client.bins.orderCheck');/*回收箱订单检查*/
 
             //话题
             $api->get('topic_categories', 'TopicCategoriesController@index')->name('client.topic_categories.index');/*获取话题分类*/
@@ -60,6 +62,7 @@ $api->version('v1', [
 
             //订单
             $api->get('orders', 'OrdersController@index')->name('client.orders.index');/*获取订单列表*/
+            $api->get('orders/{order}', 'OrdersController@show')->name('client.orders.show');/*获取订单详情*/
 
 
         });
