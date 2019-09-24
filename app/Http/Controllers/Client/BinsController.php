@@ -123,12 +123,12 @@ class BinsController extends Controller
     {
         $token = BinToken::where('token', $request->token)->first();
 
-//        if ($token->auth_id != null)
-//        {
-//            throw new StoreResourceFailedException(null, [
-//                'token' => '令牌已使用,请重新获取'
-//            ]);
-//        }
+        //        if ($token->auth_id != null)
+        //        {
+        //            throw new StoreResourceFailedException(null, [
+        //                'token' => '令牌已使用,请重新获取'
+        //            ]);
+        //        }
 
         $user = Auth::guard('client')->user();
         $swoole = app('swoole');
@@ -140,8 +140,8 @@ class BinsController extends Controller
 
 
         $swoole->send($token->fd, new SocketJsonHandler([
-            //            'static_no' => BinTcpSocket::CLIENT_LOGIN,
             //            'result_code' => '200',
+            'static_no' => BinTcpSocket::CLIENT_LOGIN,
             'user_card' => (string)$user->id,
             'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
             'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
