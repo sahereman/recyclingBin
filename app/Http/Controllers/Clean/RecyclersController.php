@@ -170,4 +170,6 @@ class RecyclersController extends Controller
         return $this->response->collection($bins, new BinTransformer());
 
     }
+
+
 }

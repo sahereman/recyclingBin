@@ -114,7 +114,7 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis'), // 推荐使用phpredis，以获得更好的性能
+        'client' => env('REDIS_CLIENT', 'predis'), // 推荐使用phpredis，以获得更好的性能
         'default' => [
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),

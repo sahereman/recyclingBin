@@ -44,9 +44,11 @@ $api->version('v1', [
             $api->post('recyclers/withdraw/unionPay', 'RecyclersController@WithdrawUnionPay')->name('clean.recyclers.withdraw.unionPay');/*回收员银联提现*/
             $api->put('recyclers/passwordReset', 'RecyclersController@passwordReset')->name('clean.recyclers.passwordReset');/*回收员重置密码*/
 
-
             // 订单
             $api->get('orders', 'OrdersController@index')->name('clean.orders.index');/*获取订单列表*/
+
+            // 回收价格
+            $api->get('cleanPrices', 'CleanPricesController@index')->name('clean.cleanPrices.index');/*获取回收价格列表*/
 
 
             //
