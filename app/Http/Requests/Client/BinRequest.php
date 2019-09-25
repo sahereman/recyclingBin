@@ -9,8 +9,8 @@ class BinRequest extends FormRequest
     public function rules()
     {
         return [
-            'lat' => ['required','numeric', 'between:0,90'],
-            'lng' => ['required','numeric', 'between:0,180'],
+            'lat' => ['required','numeric', 'between:-90,90'],
+            'lng' => ['required','numeric', 'between:-180,180'],
         ];
     }
 

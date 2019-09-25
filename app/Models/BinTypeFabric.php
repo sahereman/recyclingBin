@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BinTypeFabric extends Model
 {
     const NAME = '纺织物';
+    const SLUG = 'fabric';
 
     const STATUS_NORMAL = 'normal';
     const STATUS_FULL = 'full';
@@ -20,7 +21,6 @@ class BinTypeFabric extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -35,7 +35,6 @@ class BinTypeFabric extends Model
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
@@ -44,7 +43,6 @@ class BinTypeFabric extends Model
 
     /**
      * The attributes that should be mutated to dates.
-     *
      * @var array
      */
     protected $dates = [
@@ -53,7 +51,6 @@ class BinTypeFabric extends Model
 
     /**
      * The accessors to append to the model's array form.
-     *
      * @var array
      */
     protected $appends = [
@@ -62,7 +59,6 @@ class BinTypeFabric extends Model
 
     /**
      * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
     public $timestamps = false;

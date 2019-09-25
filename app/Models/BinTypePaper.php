@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BinTypePaper extends Model
 {
     const NAME = '可回收物';
+    const SLUG = 'paper';
 
     const STATUS_NORMAL = 'normal';
     const STATUS_FULL = 'full';
