@@ -52,12 +52,13 @@ class AuthorizationsController extends Controller
 
         $user = User::where('wx_openid', $decryptData['openId'])->first();
 
-//        info($decryptData);
+        //        info($decryptData);
 
         if (!$user)
         {
             $user = User::create([
                 'wx_openid' => $decryptData['openId'],
+                'wx_session_key' => $wx_session['session_key'],
                 'name' => $decryptData['nickName'],
                 'gender' => $decryptData['gender'] == 2 ? '女' : '男',
                 'avatar' => $decryptData['avatarUrl'],
@@ -70,6 +71,7 @@ class AuthorizationsController extends Controller
         } else
         {
             $user->update([
+                'wx_session_key' => $wx_session['session_key'],
                 'name' => $decryptData['nickName'],
                 'gender' => $decryptData['gender'] == 2 ? '女' : '男',
                 'avatar' => $decryptData['avatarUrl'],
@@ -105,20 +107,24 @@ class AuthorizationsController extends Controller
     {
         $check = Auth::guard('client')->parser()->setRequest($request)->hasToken();
 
-        if(!$check)
+        if (!$check)
         {
             throw new TokenInvalidException('Failed to authenticate because of bad credentials or an invalid authorization header.');
         }
 
-        try {
+        try
+        {
             $token = Auth::guard('client')->refresh();
 
-        } catch (TokenExpiredException $exception) {
+        } catch (TokenExpiredException $exception)
+        {
             // 此处捕获到了 token 过期所抛出的 TokenExpiredException 异常，我们在这里需要做的是刷新该用户的 token 并将它添加到响应头中
-            try {
+            try
+            {
                 // 刷新用户的 token
                 $token = Auth::guard('client')->refresh();
-            } catch (JWTException $exception) {
+            } catch (JWTException $exception)
+            {
                 // 如果捕获到此异常，即代表 refresh 也过期了，用户无法刷新令牌，需要重新登录。
                 throw new UnauthorizedHttpException('jwt-auth', $exception->getMessage());
             }
@@ -143,7 +149,7 @@ class AuthorizationsController extends Controller
     {
         $check = Auth::guard('client')->parser()->setRequest($request)->hasToken();
 
-        if(!$check)
+        if (!$check)
         {
             throw new TokenInvalidException('Failed to authenticate because of bad credentials or an invalid authorization header.');
         }

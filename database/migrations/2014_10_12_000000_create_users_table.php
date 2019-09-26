@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('total_client_order_count')->default(0)->comment('累计投递订单次数');
 
             $table->string('wx_openid')->nullable()->comment('微信授权id');
+            $table->string('wx_session_key')->nullable()->comment('微信会话秘钥');
             $table->string('wx_country')->default('')->comment('WX国家');
             $table->string('wx_province')->default('')->comment('WX省');
             $table->string('wx_city')->default('')->comment('WX市');

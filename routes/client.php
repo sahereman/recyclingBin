@@ -64,6 +64,9 @@ $api->version('v1', [
             $api->get('orders', 'OrdersController@index')->name('client.orders.index');/*获取订单列表*/
             $api->get('orders/{order}', 'OrdersController@show')->name('client.orders.show');/*获取订单详情*/
 
+            //微信
+            $api->get('wechats/decryptedData', 'WechatsController@decryptedData')->name('client.wechats.index');/*微信数据解密*/
+
 
         });
 

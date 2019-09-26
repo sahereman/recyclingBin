@@ -68,6 +68,7 @@ class User extends Authenticatable implements JWTSubject
         'wx_province',
         'wx_city',
         'wx_openid',
+        'wx_session_key',
         'real_name',
         'real_id',
         'real_authenticated_at',
