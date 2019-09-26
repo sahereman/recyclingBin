@@ -15,7 +15,7 @@ class WechatsController extends Controller
      * @catalog 客户端/其他相关
      * @title POST 微信数据解密
      * @method POST
-     * @url decryptedData
+     * @url wechats/decryptedData
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param encryptedData 必选 string 微信获取encryptedData
      * @param iv 必选 string 微信获取iv
@@ -28,6 +28,9 @@ class WechatsController extends Controller
     {
         $user = Auth::guard('client')->user();
         $app = app('wechat.mini_program');
+
+        info($user);
+        info($request->all());
 
         $decryptData = $app->encryptor->decryptData($user['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
