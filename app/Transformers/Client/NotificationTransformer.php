@@ -17,6 +17,7 @@ class NotificationTransformer extends TransformerAbstract
             'relation_id' => $notification->data['relation_id'],
             'link' => $notification->data['link'],
 
+            'read_at' => $notification->read_at ? $notification->read_at->toDateTimeString() : null,
             'created_at' => $notification->created_at->toDateTimeString(),
         ];
     }

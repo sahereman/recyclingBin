@@ -59,6 +59,7 @@ class UsersController extends Controller
         $user = Auth::guard('client')->user();
         $notifications = $user->notifications()->paginate(5);
 
+        $user->markAsRead();
 
         return $this->response->paginator($notifications,new NotificationTransformer());
     }

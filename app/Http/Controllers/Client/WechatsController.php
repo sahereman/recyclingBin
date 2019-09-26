@@ -20,8 +20,9 @@ class WechatsController extends Controller
      * @param encryptedData 必选 string 微信获取encryptedData
      * @param iv 必选 string 微信获取iv
      * @param cloudID 非必选 string 微信获取cloudID
-     * @return {}
+     * @return {"phoneNumber":"15165360297","purePhoneNumber":"15165360297","countryCode":"86","watermark":{"timestamp":1569488815,"appid":"wx1f30dc232736f812"}}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @return_param * json 解密信息
      * @number 10
      */
     public function decryptedData(WechatRequest $request)
@@ -29,8 +30,6 @@ class WechatsController extends Controller
         $user = Auth::guard('client')->user();
         $app = app('wechat.mini_program');
 
-//        info($user);
-//        info($request->all());
 
         $decryptData = $app->encryptor->decryptData($user['wx_session_key'], $request->input('iv'), $request->input('encryptedData'));
 
