@@ -13,10 +13,13 @@ class WechatsController extends Controller
     /**
      * showdoc
      * @catalog 客户端/其他相关
-     * @title GET 微信数据解密
-     * @method GET
+     * @title POST 微信数据解密
+     * @method POST
      * @url decryptedData
      * @param Headers.Authorization 必选 headers 用户凭证
+     * @param encryptedData 必选 string 微信获取encryptedData
+     * @param iv 必选 string 微信获取iv
+     * @param cloudID 非必选 string 微信获取cloudID
      * @return {}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @number 10
