@@ -29,10 +29,10 @@ class WechatsController extends Controller
         $user = Auth::guard('client')->user();
         $app = app('wechat.mini_program');
 
-        info($user);
-        info($request->all());
+//        info($user);
+//        info($request->all());
 
-        $decryptData = $app->encryptor->decryptData($user['session_key'], $request->input('iv'), $request->input('encryptedData'));
+        $decryptData = $app->encryptor->decryptData($user['wx_session_key'], $request->input('iv'), $request->input('encryptedData'));
 
 
         return $this->response->array($decryptData);
