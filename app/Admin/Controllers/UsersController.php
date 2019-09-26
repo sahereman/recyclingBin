@@ -35,15 +35,26 @@ class UsersController extends AdminController
 
         $grid->column('id', 'Id')->sortable();
         $grid->avatar('Avatar')->image('', 40);
-        // $grid->column('wx_openid', 'Wx openid');
         $grid->column('name', 'Name');
         $grid->column('gender', 'Gender')->sortable();
         $grid->column('phone', 'Phone');
         // $grid->column('avatar', 'Avatar');
-        $grid->column('money', 'Money');
-        $grid->column('wx_country', 'Wx country');
-        $grid->column('wx_province', 'Wx province');
-        $grid->column('wx_city', 'Wx city');
+        $grid->column('money', '奖励金')->sortable();
+        // $grid->column('frozen_money', '冻结金额')->sortable();
+        $grid->column('total_client_order_money', '累计投递订单金额')->sortable();
+        $grid->column('total_client_order_count', '累计投递订单次数')->sortable();
+        // $grid->column('wx_openid', '微信授权 ID');
+        // $grid->column('wx_country', '微信 Country');
+        $grid->column('wx_province', '微信 Province');
+        $grid->column('wx_city', '微信 City');
+        $grid->column('real_id', '身份证号');
+        $grid->column('real_name', '真实姓名');
+        $grid->column('is_authenticated', '是否实名验证')->switch([
+            'on' => ['value' => 1, 'text' => 'YES', 'color' => 'primary'],
+            'off' => ['value' => 0, 'text' => 'NO', 'color' => 'default'],
+        ]);
+        // $grid->column('real_authenticated_at', '实名认证时间');
+        // $grid->column('notification_count', '通知未读数');
         $grid->column('email', 'Email');
         // $grid->column('email_verified_at', 'Email verified at');
         // $grid->column('password', 'Password');
@@ -73,15 +84,23 @@ class UsersController extends AdminController
 
         $show->field('id', 'Id');
         $show->field('avatar', 'Avatar')->image('', 120);
-        $show->field('wx_openid', 'Wx openid');
         $show->field('name', 'Name');
         $show->field('gender', 'Gender');
         $show->field('phone', 'Phone');
         // $show->field('avatar', 'Avatar');
-        $show->field('money', 'Money');
-        $show->field('wx_country', 'Wx country');
-        $show->field('wx_province', 'Wx province');
-        $show->field('wx_city', 'Wx city');
+        $show->field('money', '奖励金');
+        $show->field('frozen_money', '冻结金额');
+        $show->field('total_client_order_money', '累计投递订单金额');
+        $show->field('total_client_order_count', '累计投递订单次数');
+        // $show->field('wx_openid', '微信授权 ID');
+        $show->field('wx_country', '微信 Country');
+        $show->field('wx_province', '微信 Province');
+        $show->field('wx_city', '微信 City');
+        $show->field('real_id', '身份证号');
+        $show->field('real_name', '真实姓名');
+        $show->field('is_authenticated', '是否实名验证')->as(function ($is_authenticated) {
+            return $is_authenticated ? 'YES' : 'NO';
+        });
         $show->field('email', 'Email');
         $show->field('email_verified_at', 'Email verified at');
         // $show->field('password', 'Password');
@@ -189,8 +208,6 @@ class UsersController extends AdminController
         });
 
         $form->image('avatar', 'Avatar')->uniqueName()->move('avatars/' . date('Ym', time()))->rules('required|image');
-        // $form->text('wx_openid', 'Wx openid');
-        $form->display('wx_openid', 'Wx openid');
         // $form->text('name', 'Name');
         $form->display('name', 'Name')->rules('required|string');
         // $form->text('gender', 'Gender');
@@ -198,14 +215,25 @@ class UsersController extends AdminController
         // $form->mobile('phone', 'Phone');
         $form->display('phone', 'Phone');
         // $form->image('avatar', 'Avatar');
-        // $form->decimal('money', 'Money')->default(0.00);
-        $form->display('money', 'Money')->default(0.00);
-        // $form->text('wx_country', 'Wx country');
-        $form->display('wx_country', 'Wx country');
-        // $form->text('wx_province', 'Wx province');
-        $form->display('wx_province', 'Wx province');
-        // $form->text('wx_city', 'Wx city');
-        $form->display('wx_city', 'Wx city');
+        // $form->decimal('money', '奖励金')->default(0.00);
+        $form->display('money', '奖励金')->default(0.00);
+        $form->display('frozen_money', '冻结金额')->default(0.00);
+        $form->display('total_client_order_money', '累计投递订单金额')->default(0.00);
+        $form->display('total_client_order_count', '累计投递订单次数')->default(0.00);
+        // $form->text('wx_openid', '微信 openid');
+        $form->display('wx_openid', '微信 openid');
+        // $form->text('wx_country', '微信 country');
+        $form->display('wx_country', '微信 country');
+        // $form->text('wx_province', '微信 province');
+        $form->display('wx_province', '微信 province');
+        // $form->text('wx_city', '微信 city');
+        $form->display('wx_city', '微信 city');
+        $form->display('real_id', '身份证号');
+        $form->display('real_name', '真实姓名');
+        $form->switch('is_authenticated', '是否实名验证')->states([
+            'on' => ['value' => 1, 'text' => 'YES', 'color' => 'primary'],
+            'off' => ['value' => 0, 'text' => 'NO', 'color' => 'default'],
+        ]);
         // $form->email('email', 'Email');
         $form->display('email', 'Email');
         // $form->datetime('email_verified_at', 'Email verified at'))->default(date('Y-m-d H:i:s');

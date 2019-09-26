@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -57,7 +58,6 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'wx_openid',
         'name',
         'gender',
         'phone',
@@ -67,12 +67,13 @@ class User extends Authenticatable implements JWTSubject
         'wx_country',
         'wx_province',
         'wx_city',
-        'password',
-        'email',
-        'email_verified_at',
+        'wx_openid',
         'real_name',
         'real_id',
         'real_authenticated_at',
+        'email',
+        'email_verified_at',
+        'password',
     ];
 
     /**
@@ -99,6 +100,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $appends = [
         'avatar_url',
+        'is_authenticated',
     ];
 
     /* Accessors */
@@ -112,10 +114,21 @@ class User extends Authenticatable implements JWTSubject
         return \Storage::disk('public')->url($this->attributes['avatar']);
     }
 
+    public function getIsAuthenticatedAttribute()
+    {
+        return !is_null($this->attributes['real_authenticated_at']);
+    }
+
     /* Mutators */
     public function setAvatarUrlAttribute($value)
     {
         unset($this->attributes['avatar_url']);
+    }
+
+    public function setIsAuthenticatedAttribute($value)
+    {
+        unset($this->attributes['is_authenticated']);
+        $this->attributes['real_authenticated_at'] = Carbon::now()->toDateTimeString();
     }
 
     /* Eloquent Relationships */

@@ -21,7 +21,6 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     $created_at = $faker->dateTimeBetween($startDate = '-6 days', $endDate = 'now');
 
     return [
-        'wx_openid' => Str::random(),
         'name' => $faker->name,
         'gender' => $faker->randomElement(['男', '女']),
         'phone' => $faker->phoneNumber,
@@ -32,8 +31,14 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'total_client_order_count' => $faker->randomNumber(2),
 
         'wx_country' => $faker->country,
-        'wx_province' => $faker->country,
+        'wx_province' => $faker->citySuffix,
         'wx_city' => $faker->city,
+        'wx_openid' => Str::random(),
+
+        'real_id' => $faker->uuid,
+        'real_name' => $faker->name,
+
+        'email' => $faker->safeEmail,
 
         'created_at' => $created_at,
         'updated_at' => $updated_at,
