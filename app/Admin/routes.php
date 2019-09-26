@@ -28,25 +28,25 @@ Route::group([
     $router->put('users/{id}', 'UsersController@update')->name('admin.users.update');
     $router->delete('users/{id}', 'UsersController@destroy')->name('admin.users.destroy');
 
-    /*ServiceSite*/
+    /*服务城市*/
     $router->resource('service_sites', 'ServiceSitesController');
 
-    /*Bin*/
+    /*回收箱*/
     $router->resource('bins', 'BinsController');
 
-    /*ClientPrice*/
+    /*客户端价格*/
     $router->resource('client_prices', 'ClientPricesController');
 
-    /*CleanPrice*/
+    /*回收端价格*/
     $router->resource('clean_prices', 'RecyclePricesController');
 
-    /*TopicCategory*/
+    /*话题分类*/
     $router->resource('topic_categories', 'TopicCategoriesController');
 
-    /*Topic*/
+    /*话题*/
     $router->resource('topics', 'TopicsController');
 
-    /*ClientOrder*/
+    /*投递订单*/
     $router->resource('client_orders', 'ClientOrdersController');
 
     // $router->resource('example', ExampleController::class)->names('admin.example');

@@ -34,6 +34,7 @@ class UsersSeeder extends Seeder
                             'name' => '张三',
                             'bank' => '中国农业银行',
                             'account' => '62223078323174632',
+                            'bank_name' => 'XXX支行',
                         ]
                     ]);
                     break;

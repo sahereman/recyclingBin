@@ -100,7 +100,6 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $appends = [
         'avatar_url',
-        'is_authenticated',
     ];
 
     /* Accessors */
@@ -114,21 +113,10 @@ class User extends Authenticatable implements JWTSubject
         return \Storage::disk('public')->url($this->attributes['avatar']);
     }
 
-    public function getIsAuthenticatedAttribute()
-    {
-        return !is_null($this->attributes['real_authenticated_at']);
-    }
-
     /* Mutators */
     public function setAvatarUrlAttribute($value)
     {
         unset($this->attributes['avatar_url']);
-    }
-
-    public function setIsAuthenticatedAttribute($value)
-    {
-        unset($this->attributes['is_authenticated']);
-        $this->attributes['real_authenticated_at'] = Carbon::now()->toDateTimeString();
     }
 
     /* Eloquent Relationships */

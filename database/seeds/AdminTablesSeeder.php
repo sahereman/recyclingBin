@@ -73,107 +73,109 @@ class AdminTablesSeeder extends Seeder
     /*自定义添加的菜单*/
     private $custom_menus =
         [
+            // 菜单组 ID:14 作为起始数据
             [
                 'parent_id' => 0,
-                'order' => 2,
+                'order' => 20,
                 'title' => '用户管理',
                 'icon' => 'fa-users',
-                'uri' => '/users',
+                'uri' => '',
             ],
             [
                 'parent_id' => 0,
-                'order' => 3,
-                'title' => '回收管理',
+                'order' => 30,
+                'title' => '回收员管理',
+                'icon' => 'fa-users',
+                'uri' => '',
+            ],
+            [
+                'parent_id' => 0,
+                'order' => 40,
+                'title' => '回收箱管理',
                 'icon' => 'fa-recycle',
                 'uri' => '',
             ],
             [
-                'parent_id' => 15,
-                'order' => 1,
-                'title' => '回收站点管理',
-                'icon' => 'fa-sitemap',
-                'uri' => '/service_sites',
-            ],
-            [
-                'parent_id' => 15,
-                'order' => 2,
-                'title' => '回收垃圾桶管理',
-                'icon' => 'fa-bitbucket',
-                'uri' => '/bins',
-            ],
-            [
-                'parent_id' => 15,
-                'order' => 3,
-                'title' => '客户端价格管理',
-                'icon' => 'fa-yen',
-                'uri' => '/client_prices',
-            ],
-            [
-                'parent_id' => 15,
-                'order' => 4,
-                'title' => '回收端价格管理',
-                'icon' => 'fa-dollar',
-                'uri' => '/clean_prices',
-            ],
-            [
                 'parent_id' => 0,
-                'order' => 4,
-                'title' => '文章管理',
+                'order' => 50,
+                'title' => '话题管理',
                 'icon' => 'fa-archive',
                 'uri' => '',
             ],
+
+
+            //用户管理
             [
-                'parent_id' => 20,
-                'order' => 1,
-                'title' => '话题分类管理',
-                'icon' => 'fa-list-ol',
-                'uri' => '/topic_categories',
-            ],
-            [
-                'parent_id' => 20,
+                'parent_id' => 14,
                 'order' => 2,
-                'title' => '话题管理',
-                'icon' => 'fa-file-text',
-                'uri' => '/topics',
+                'title' => '用户列表',
+                'icon' => 'fa-users',
+                'uri' => 'users',
             ],
             [
-                'parent_id' => 0,
+                'parent_id' => 14,
                 'order' => 5,
-                'title' => '订单管理',
+                'title' => '投递订单列表',
                 'icon' => 'fa-list',
                 'uri' => 'client_orders',
             ],
+
+            //回收员管理
             [
-                'parent_id' => 0,
-                'order' => 11,
-                'title' => '城市热门地点管理',
-                'icon' => 'fa-list',
-                'uri' => 'city_hot_addresses',
+                'parent_id' => 15,
+                'order' => 2,
+                'title' => '回收员列表',
+                'icon' => 'fa-users',
+                'uri' => 'recyclers',
             ],
 
+            //回收箱管理
             [
-                'parent_id' => 0,
-                'order' => 11,
-                'title' => '设计图DEMO',
-                'icon' => 'fa-list',
-                'uri' => '',
+                'parent_id' => 16,
+                'order' => 10,
+                'title' => '回收箱列表',
+                'icon' => 'fa-bitbucket',
+                'uri' => 'bins',
+            ],
+            [
+                'parent_id' => 16,
+                'order' => 20,
+                'title' => '客户端价格',
+                'icon' => 'fa-yen',
+                'uri' => 'client_prices',
+            ],
+            [
+                'parent_id' => 16,
+                'order' => 30,
+                'title' => '回收端价格',
+                'icon' => 'fa-dollar',
+                'uri' => 'clean_prices',
+            ],
+            [
+                'parent_id' => 16,
+                'order' => 40,
+                'title' => '服务城市列表',
+                'icon' => 'fa-sitemap',
+                'uri' => 'service_sites',
             ],
 
+
+            //话题管理
             [
-                'parent_id' => 0,
-                'order' => 11,
-                'title' => '类',
-                'icon' => 'fa-list',
-                'uri' => 'cat',
+                'parent_id' => 17,
+                'order' => 5,
+                'title' => '话题分类',
+                'icon' => 'fa-list-ol',
+                'uri' => 'topic_categories',
+            ],
+            [
+                'parent_id' => 17,
+                'order' => 10,
+                'title' => '话题列表',
+                'icon' => 'fa-file-text',
+                'uri' => 'topics',
             ],
 
-            [
-                'parent_id' => 0,
-                'order' => 11,
-                'title' => '图',
-                'icon' => 'fa-list',
-                'uri' => 'img',
-            ],
         ];
 
     /**
