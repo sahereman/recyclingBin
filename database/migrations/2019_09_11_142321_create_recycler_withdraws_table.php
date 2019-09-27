@@ -28,6 +28,7 @@ class CreateRecyclerWithdrawsTable extends Migration
 
             $table->string('reason')->nullable()->comment('回复拒绝原因等信息');
 
+            $table->timestamp('checked_at')->nullable()->comment('审核时间');
             $table->timestamps();
         });
     }

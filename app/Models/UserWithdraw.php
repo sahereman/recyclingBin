@@ -35,6 +35,7 @@ class UserWithdraw extends Model
         'money',
         'info',
         'reason',
+        'checked_at',
     ];
 
     /**
@@ -50,7 +51,7 @@ class UserWithdraw extends Model
      * @var array
      */
     protected $dates = [
-        //
+        'checked_at'
     ];
 
     /**

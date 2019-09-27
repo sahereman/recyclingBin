@@ -20,7 +20,7 @@ class UsersSeeder extends Seeder
         $user->save();
 
         // 提现数据
-        for ($i = 1; $i <= 10; $i++)
+        for ($i = 1; $i <= 20; $i++)
         {
             $withdraw = factory(UserWithdraw::class)->create([
                 'user_id' => $user,
@@ -50,12 +50,16 @@ class UsersSeeder extends Seeder
                 case UserWithdraw::STATUS_AGREE :
                     UserMoneyBill::change($user, UserMoneyBill::TYPE_USER_WITHDRAW, $withdraw->money, $withdraw);
                     $withdraw->user->notify(new UserWithdrawAgreeNotification($withdraw));
+                    $withdraw->checked_at = now();
+                    $withdraw->save();
                     break;
                 case UserWithdraw::STATUS_DENY :
                     $withdraw->update([
                         'reason' => '银行预留信息错误'
                     ]);
                     $withdraw->user->notify(new UserWithdrawDenyNotification($withdraw));
+                    $withdraw->checked_at = now();
+                    $withdraw->save();
                     break;
             }
 

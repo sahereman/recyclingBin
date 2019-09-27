@@ -28,6 +28,11 @@ Route::group([
     $router->put('users/{id}', 'UsersController@update')->name('admin.users.update');
     $router->delete('users/{id}', 'UsersController@destroy')->name('admin.users.destroy');
 
+    /*用户提现*/
+    $router->get('user_withdraws', 'UserWithdrawsController@index')->name('admin.user_withdraws');
+    $router->post('user_withdraws/{withdraw}/agree', 'UserWithdrawsController@agree')->name('admin.user_withdraws.agree')/*同意*/;
+    $router->post('user_withdraws/{withdraw}/deny', 'UserWithdrawsController@deny')->name('admin.user_withdraws.deny')/*拒绝*/;
+
     /*服务城市*/
     $router->resource('service_sites', 'ServiceSitesController');
 

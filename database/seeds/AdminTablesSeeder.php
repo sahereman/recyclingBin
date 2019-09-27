@@ -114,6 +114,13 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 14,
+                'order' => 3,
+                'title' => '用户提现申请',
+                'icon' => 'fa-users',
+                'uri' => 'user_withdraws',
+            ],
+            [
+                'parent_id' => 14,
                 'order' => 5,
                 'title' => '投递订单列表',
                 'icon' => 'fa-list',

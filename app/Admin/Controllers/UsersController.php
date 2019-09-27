@@ -8,6 +8,8 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
+use Illuminate\Http\Request;
 
 class UsersController extends AdminController
 {
@@ -16,7 +18,7 @@ class UsersController extends AdminController
      * @var string
      */
     protected $title = '用户';
-
+    
     /**
      * Make a grid builder.
      * @return Grid
@@ -25,6 +27,7 @@ class UsersController extends AdminController
     {
         $grid = new Grid(new User);
         //        $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->disableCreateButton();
 
         /*筛选*/
         $grid->filter(function ($filter) {
@@ -54,33 +57,26 @@ class UsersController extends AdminController
             });
         });
 
+        // grid
         $grid->column('id', 'ID')->sortable();
         $grid->avatar('头像')->image('', 40);
-        $grid->column('name', '昵称');
+        $grid->name('昵称')->display(function ($name)
+        {
+            return "<a href='".route('admin.users.show',$this->id)."'>$name</a>";
+        });
         $grid->column('gender', '性别')->sortable();
         $grid->column('phone', '手机号');
-        // $grid->column('avatar', 'Avatar');
         $grid->column('money', '奖励金')->sortable();
-        // $grid->column('frozen_money', '冻结金额')->sortable();
-        //        $grid->column('total_client_order_money', '累计投递订单金额')->sortable();
         $grid->column('total_client_order_count', '累计投递订单次数')->sortable();
-        // $grid->column('wx_openid', '微信授权 ID');
-        // $grid->column('wx_country', '微信 Country');
-        //        $grid->column('wx_province', '微信 Province');
-        //        $grid->column('wx_city', '微信 City');
-        //        $grid->column('real_id', '身份证号');
-        //        $grid->column('real_name', '真实姓名');
-        // $grid->column('real_authenticated_at', '实名认证时间');
-        // $grid->column('notification_count', '通知未读数');
-        //        $grid->column('email', 'Email');
-        // $grid->column('email_verified_at', 'Email verified at');
-        // $grid->column('password', 'Password');
         $grid->column('created_at', '创建时间')->sortable();
-        // $grid->column('updated_at', 'Updated at');
 
-        // 不在页面显示 `新建` 按钮，因为我们不需要在后台新建用户
-        // $grid->disableCreation(); // Deprecated
-        $grid->disableCreateButton();
+        $grid->column('manage','管理')->display(function () {
+            $buttons = '';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.users.show', ['tid' => $this->id]) . '">发送通知</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.users.show', ['tid' => $this->id]) . '">投递订单</a>';
+            return $buttons;
+        });
+
 
         return $grid;
     }
@@ -119,6 +115,24 @@ class UsersController extends AdminController
         // $show->field('password', 'Password');
         // $show->field('created_at', 'Created at');
         // $show->field('updated_at', 'Updated at');
+
+        $show->notifications('消息通知', function ($notify) {
+            $notify->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+
+            /*禁用*/
+            $notify->disableCreateButton();
+            $notify->disableFilter();
+            $notify->disableActions();
+            $notify->disableBatchActions();
+
+            // grid
+            $notify->created_at('时间');
+            $notify->column('data','通知')->display(function ($data)
+            {
+                return "$data[title]<br/>$data[info]<br/>";
+            });
+            $notify->column('read_at','已读')->bool();
+        });
 
         $show->moneyBills('账单记录', function ($moneyBill) {
             $moneyBill->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
@@ -204,4 +218,6 @@ class UsersController extends AdminController
 
         return $form;
     }
+
+
 }
