@@ -2,15 +2,21 @@
 
 namespace App\Admin\Controllers;
 
-use \App\Models\Recycler;
+use App\Models\Bin;
+use App\Models\Recycler;
+use App\Http\Requests\Request;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class RecyclersController extends AdminController
 {
+    use ValidatesRequests;
+
     /**
      * Title for current resource.
      *
@@ -153,5 +159,65 @@ class RecyclersController extends AdminController
         });
 
         return $form;
+    }
+
+    // GET: 回收员指派 页面
+    public function assignmentShow(Content $content)
+    {
+        return $content
+            ->header('回收员指派')
+            ->body($this->assignmentForm());
+    }
+
+    protected function assignmentForm()
+    {
+        $form = new Form(new Bin());
+
+        $form->setAction(route('admin.recyclers.assignment.store'));
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableList();
+            $tools->disableDelete();
+            $tools->disableView();
+        });
+
+        $form->select('recycler_id')->options(Recycler::all()->pluck('name', 'id'));
+
+        $form->listbox('bin_ids', '请选择回收箱')->options(Bin::all()->pluck('full_name', 'id'));
+
+        return $form;
+    }
+
+    // POST: 回收员指派 请求处理
+    public function assignmentStore(Request $request, Content $content)
+    {
+        $data = $this->validate($request, [
+            'bin_ids' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (Bin::whereIn('id', request()->input($attribute))->count() == 0) {
+                        $fail('请选择回收箱');
+                    }
+                },
+            ],
+            'recycler_id' => 'required|integer'
+        ], [], [
+            'bin_ids' => '回收箱 IDs',
+            'recycler_id' => '回收员'
+        ]);
+
+        $recycler_id = $data['recycler_id'];
+        $bin_ids = $data['bin_ids'];
+        $key = array_search(NULL, $bin_ids, true);
+        if ($key !== false) {
+            unset($bin_ids[$key]);
+        }
+        $recycler = Recycler::find($recycler_id);
+        $recycler->bins()->sync($bin_ids);
+
+        return $content
+            ->row("<center><h3>回收员指派成功！</h3></center>")
+            // ->row("<center><a href='/admin/recyclers'>返回 回收员 列表</a></center>");
+            ->row("<center><a href='" . route('recyclers.index') . "'>返回 回收员 列表</a></center>");
     }
 }
