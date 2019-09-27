@@ -88,40 +88,33 @@ class RecyclerMoneyBill extends Model
         return $this->belongsTo($this->related_model, 'related_id');
     }
 
-
     public static function change(Recycler $recycler, $type, $number, Model $related = null)
     {
-        if (!in_array($type, array_keys(self::$TypeMap)))
-        {
+        if (!in_array($type, array_keys(self::$TypeMap))) {
             throw new \Exception('账单类型异常');
         }
 
-        if ($number < 0)
-        {
+        if ($number < 0) {
             throw new \Exception('账单数额异常');
         }
 
-        switch ($type)
-        {
+        switch ($type) {
             case self::TYPE_RECYCLE_ORDER :
-                if (!$related instanceof CleanOrder || !$related->exists)
-                {
+                if (!$related instanceof CleanOrder || !$related->exists) {
                     throw new \Exception('关联模型异常');
                 }
                 $operator = '+';
                 $description = '回收废品';
                 break;
             case self::TYPE_RECYCLER_WITHDRAW :
-                if (!$related instanceof RecyclerWithdraw || !$related->exists)
-                {
+                if (!$related instanceof RecyclerWithdraw || !$related->exists) {
                     throw new \Exception('关联模型异常');
                 }
                 $operator = '-';
                 $description = '余额提现';
                 break;
             case self::TYPE_RECYCLER_DEPOSIT :
-                if (!$related instanceof RecyclerDeposit || !$related->exists)
-                {
+                if (!$related instanceof RecyclerDeposit || !$related->exists) {
                     throw new \Exception('关联模型异常');
                 }
                 $operator = '+';
@@ -137,8 +130,7 @@ class RecyclerMoneyBill extends Model
             'number' => $number,
         ];
 
-        if ($related != null && $related->exists)
-        {
+        if ($related != null && $related->exists) {
             $data = array_merge($data, [
                 'related_model' => $related->getMorphClass(),
                 'related_id' => $related->id,

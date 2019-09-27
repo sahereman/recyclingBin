@@ -52,10 +52,20 @@ class Bin extends Model
         return $this->site->name;
     }
 
+    public function getFullNameAttribute()
+    {
+        return $this->site->name . '-' . $this->attributes['name'] . '-' . $this->attributes['no'];
+    }
+
     /* Mutators */
     public function setSiteNameAttribute($value)
     {
         unset($this->attributes['site_name']);
+    }
+
+    public function setFullNameAttribute($value)
+    {
+        unset($this->attributes['full_name']);
     }
 
     /* Eloquent Relationships */

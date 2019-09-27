@@ -16,17 +16,18 @@ class ClientOrdersSeeder extends Seeder
         $user = User::find(1);
         $bins = Bin::all();
 
-        for ($i = 1; $i <= 20; $i++)
-        {
+        for ($i = 1; $i <= 20; $i++) {
+            $bin = $bins->random();
             $order = factory(ClientOrder::class)->create([
+                'bin_id' => $bin->id,
                 'user_id' => $user->id,
             ]);
 
             factory(ClientOrderItem::class, random_int(1, 2))->create([
-                'order_id' => $order,
+                'order_id' => $order->id,
             ]);
 
-            GenerateClientOrderSnapshot::dispatch($order, $bins->random());
+            GenerateClientOrderSnapshot::dispatch($order, $bin);
             UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
             $order->user->notify(new ClientOrderCompletedNotification($order));
         }

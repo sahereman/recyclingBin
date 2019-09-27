@@ -23,5 +23,6 @@ class Bin extends BinModel
      */
     protected $appends = [
         // 'site_name',
+        'full_name',
     ];
 }

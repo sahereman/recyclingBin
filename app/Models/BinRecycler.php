@@ -36,5 +36,17 @@ class BinRecycler extends Model
      * @var array
      */
     protected $appends = [
+        //
     ];
+
+    /* Eloquent Relationships */
+    public function bin()
+    {
+        return $this->belongsTo(Bin::class);
+    }
+
+    public function recycler()
+    {
+        return $this->belongsTo(Recycler::class);
+    }
 }

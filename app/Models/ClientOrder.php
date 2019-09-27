@@ -17,7 +17,9 @@ class ClientOrder extends Model
      * @var array
      */
     protected $fillable = [
+        'bin_id',
         'user_id',
+        'sn',
         'status',
         'bin_snapshot',
         'total'
@@ -97,13 +99,18 @@ class ClientOrder extends Model
     }
 
     /* Eloquent Relationships */
-    public function items()
+    public function bin()
     {
-        return $this->hasMany(ClientOrderItem::class, 'order_id');
+        return $this->belongsTo(Bin::class);
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(ClientOrderItem::class, 'order_id');
     }
 }

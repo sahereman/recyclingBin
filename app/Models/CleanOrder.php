@@ -17,8 +17,9 @@ class CleanOrder extends Model
      * @var array
      */
     protected $fillable = [
-        'sn',
+        'bin_id',
         'recycler_id',
+        'sn',
         'status',
         'bin_snapshot',
         'total'
@@ -99,13 +100,18 @@ class CleanOrder extends Model
     }
 
     /* Eloquent Relationships */
-    public function items()
+    public function bin()
     {
-        return $this->hasMany(CleanOrderItem::class, 'order_id');
+        return $this->belongsTo(Bin::class);
     }
 
     public function recycler()
     {
         return $this->belongsTo(Recycler::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(CleanOrderItem::class, 'order_id');
     }
 }

@@ -15,17 +15,18 @@ class CleanOrdersSeeder extends Seeder
         $recycler = Recycler::find(1);
         $bins = $recycler->bins;
 
-        for ($i = 1; $i <= 20; $i++)
-        {
+        for ($i = 1; $i <= 20; $i++) {
+            $bin = $bins->random();
             $order = factory(CleanOrder::class)->create([
+                'bin_id' => $bin->id,
                 'recycler_id' => $recycler->id,
             ]);
 
             factory(CleanOrderItem::class, random_int(1, 2))->create([
-                'order_id' => $order,
+                'order_id' => $order->id,
             ]);
 
-            GenerateRecycleOrderSnapshot::dispatch($order, $bins->random());
+            GenerateRecycleOrderSnapshot::dispatch($order, $bin);
             RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLE_ORDER, $order->total, $order);
         }
     }

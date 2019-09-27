@@ -87,7 +87,6 @@ class UserMoneyBill extends Model
         return $this->belongsTo($this->related_model, 'related_id');
     }
 
-
     public static function change(User $user, $type, $number, Model $related = null)
     {
         if (!in_array($type, array_keys(self::$TypeMap))) {

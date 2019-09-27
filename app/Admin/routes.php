@@ -49,6 +49,9 @@ Route::group([
     /*投递订单*/
     $router->resource('client_orders', 'ClientOrdersController');
 
+    /*回收员*/
+    $router->resource('recyclers', 'RecyclersController');
+
     // $router->resource('example', ExampleController::class)->names('admin.example');
     // $router->get('example', 'ExampleController@index')->name('admin.example.index');
     // $router->get('example/create', 'ExampleController@create')->name('admin.example.create');

@@ -17,7 +17,7 @@ class ClientOrdersController extends AdminController
      *
      * @var string
      */
-    protected $title = '订单';
+    protected $title = '投递订单';
 
     /**
      * Make a grid builder.
