@@ -14,11 +14,11 @@ class ConfigsSeeder extends Seeder
                 'sort' => 1000,
                 'configs' =>
                     [
-                        ['name' => '网站标题', 'code' => 'title', 'type' => "text", 'sort' => 10, 'value' => '网站标题', 'help' => '默认的网站SEO标题',],
-                        ['name' => '网站关键字', 'code' => 'keywords', 'type' => "text", 'sort' => 20],
-                        ['name' => '网站描述', 'code' => 'description', 'type' => "text", 'sort' => 30],
-                        ['name' => '司机端 Android Apk', 'code' => 'driver_android_apk', 'type' => "file", 'sort' => 40],
-                        ['name' => '小程序二维码', 'code' => 'client_qrcode', 'type' => "image", 'sort' => 50],
+//                        ['name' => '网站标题', 'code' => 'title', 'type' => "text", 'sort' => 10, 'value' => '网站标题', 'help' => '默认的网站SEO标题',],
+//                        ['name' => '网站关键字', 'code' => 'keywords', 'type' => "text", 'sort' => 20],
+//                        ['name' => '网站描述', 'code' => 'description', 'type' => "text", 'sort' => 30],
+//                        ['name' => '司机端 Android Apk', 'code' => 'driver_android_apk', 'type' => "file", 'sort' => 40],
+//                        ['name' => '小程序二维码', 'code' => 'client_qrcode', 'type' => "image", 'sort' => 50],
 
                         // ['name' => '网站关闭', 'code' => 'site_close', 'type' => "radio", 'sort' => 50,
                         //     'select_range' => [['value' => 0, 'name' => '开启'], ['value' => 1, 'name' => '关闭']],
