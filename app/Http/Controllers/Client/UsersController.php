@@ -109,7 +109,7 @@ class UsersController extends Controller
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param type 非必选(参考值:all,clientOrder,other) string 账单类型
      * @param date 非必选(参考值:2019-08) string 状态
-     * @return {"data":[{"id":1,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"24.02","created_at":"2019-09-05 15:23:14"},{"id":2,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"90.43","created_at":"2019-09-05 15:23:14"}],"meta":{"pagination":{"total":20,"count":5,"per_page":5,"current_page":1,"total_pages":4,"links":{"previous":null,"next":"http://bin.test/api/client/users/moneyBill?page=2"}}}}
+     * @return {"data":[{"id":23,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"28.09","created_at":"2019-09-27 16:45:58"},{"id":24,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"55.09","created_at":"2019-09-27 16:45:58"},{"id":25,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"55.68","created_at":"2019-09-27 16:45:58"}],"meta":{"pagination":{"total":18,"count":3,"per_page":3,"current_page":1,"total_pages":6,"links":{"previous":null,"next":"http://bin.test/api/client/users/moneyBill?type=clientOrder＆date=2019-09＆page=2"}}}}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param data.* json 账单列表信息
      * @return_param mata.pagination json 分页信息 (使用links.next前往下一页数据)
@@ -121,6 +121,7 @@ class UsersController extends Controller
 
         $builder = $user->moneyBills()->orderBy('created_at', 'desc');
 
+        // 筛选类型
         switch ($request->input('type'))
         {
             case 'all':
@@ -133,25 +134,24 @@ class UsersController extends Controller
                 break;
         }
 
-
-        $date = Carbon::createFromFormat('Y-m', $request->ss)->toDateTimeString();
-
-        return $date;
-
-        switch ($request->input('date'))
+        // 筛选时间
+        try
         {
-            case 'today' :
-                $builder->whereBetween('created_at', [today(), today()->addDay()]);
-                break;
-            case 'yesterday' :
-                $builder->whereBetween('created_at', [today()->subDay(), today()]);
-                break;
-            case 'month' :
-                $builder->whereBetween('created_at', [today()->subMonth(), now()]);
-                break;
+            $date = Carbon::createFromFormat('Y-m', $request->input('date'));
+
+        } catch (\InvalidArgumentException $e)
+        {
+            $date = null;
+        }
+        if ($date instanceof Carbon)
+        {
+            $builder->whereBetween('created_at', [
+                $date->startOfMonth()->toDateTimeString(),// start
+                $date->endOfMonth()->toDateTimeString(),// end
+            ]);
         }
 
-        $bills = $builder->paginate(3)->appends($request->except('page'));
+        $bills = $builder->paginate(10)->appends($request->except('page'));
 
         return $this->response->paginator($bills, new UserMoneyBillTransformer());
     }
