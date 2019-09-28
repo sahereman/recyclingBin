@@ -2,19 +2,19 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Models\ClientPrice;
+use App\Admin\Models\CleanPrice;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class ClientPricesController extends AdminController
+class CleanPricesController extends AdminController
 {
     protected $title = '客户端价格';
 
     protected function grid()
     {
-        $grid = new Grid(new ClientPrice());
+        $grid = new Grid(new CleanPrice());
         $grid->disableCreateButton();
         $grid->disablePagination();
         $grid->disableFilter();
@@ -35,7 +35,7 @@ class ClientPricesController extends AdminController
 
     protected function form()
     {
-        $form = new Form(new ClientPrice);
+        $form = new Form(new CleanPrice);
 
         $form->display('slug_text', '分类箱');
         $form->decimal('price', '价格')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');

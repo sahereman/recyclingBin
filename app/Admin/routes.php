@@ -44,7 +44,7 @@ Route::group([
     $router->resource('client_prices', 'ClientPricesController');
 
     /*回收端价格*/
-    $router->resource('clean_prices', 'RecyclePricesController');
+    $router->resource('clean_prices', 'CleanPricesController');
 
     /*话题分类*/
     $router->resource('topic_categories', 'TopicCategoriesController');
@@ -54,6 +54,9 @@ Route::group([
 
     /*投递订单*/
     $router->resource('client_orders', 'ClientOrdersController')->names('admin.client_orders');
+
+    /*回收订单*/
+    $router->resource('clean_orders', 'CleanOrdersController')->names('admin.clean_orders');
 
     /*回收员*/
     $router->get('recyclers/{id}/assignment', 'RecyclersController@assignmentShow')->name('admin.recyclers.assignment.show'); /*分配回收箱 页面*/

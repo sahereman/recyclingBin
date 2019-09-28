@@ -8,7 +8,6 @@ class CreateClientOrderItemsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
@@ -19,6 +18,7 @@ class CreateClientOrderItemsTable extends Migration
             $table->unsignedInteger('order_id')->comment('order-id');
             $table->foreign('order_id')->references('id')->on('client_orders')->onDelete('cascade');
 
+            $table->string('type_slug')->comment('回收分类标示');
             $table->string('type_name')->comment('回收分类名称');
 
             $table->decimal('number')->comment('数量');
@@ -30,7 +30,6 @@ class CreateClientOrderItemsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

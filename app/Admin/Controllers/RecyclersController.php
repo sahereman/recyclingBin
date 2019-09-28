@@ -56,10 +56,13 @@ class RecyclersController extends AdminController
         $grid->column('bins', '分配的回收箱')->display(function ($bins) {
             return count($bins);
         });
+        $grid->column('orders', '回收订单数')->display(function ($orders) {
+            return count($orders);
+        });
         $grid->column('manage', '管理')->display(function () {
             $buttons = '';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.show', ['tid' => $this->id]) . '">发送通知</a>';
-            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.client_orders.index', ['user_id' => $this->id]) . '">回收订单</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.clean_orders.index', ['recycler_id' => $this->id]) . '">回收订单</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.assignment.show', $this->id) . '">分配回收箱</a>';
             return $buttons;
         });

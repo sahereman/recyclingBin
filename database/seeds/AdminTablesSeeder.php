@@ -136,6 +136,13 @@ class AdminTablesSeeder extends Seeder
                 'icon' => 'fa-users',
                 'uri' => 'recycler_withdraws',
             ],
+            [
+                'parent_id' => 15,
+                'order' => 5,
+                'title' => '回收订单列表',
+                'icon' => 'fa-list',
+                'uri' => 'clean_orders',
+            ],
 
             //回收箱管理
             [

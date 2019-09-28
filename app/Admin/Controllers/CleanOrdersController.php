@@ -3,36 +3,27 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Bin;
-use App\Models\ClientOrder;
-use App\Models\ClientOrderItem;
-use App\Models\User;
+use App\Models\CleanOrder;
+use App\Models\Recycler;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 
-class ClientOrdersController extends AdminController
+class CleanOrdersController extends AdminController
 {
-    /**
-     * Title for current resource.
-     * @var string
-     */
-    protected $title = '投递订单';
+    protected $title = '回收订单';
 
-    /**
-     * Make a grid builder.
-     * @return Grid
-     */
     protected function grid()
     {
-        $grid = new Grid(new ClientOrder);
-        $grid->model()->with(['items','bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
-        $user = User::find(request()->input('user_id'));
+        $grid = new Grid(new CleanOrder);
+        $grid->model()->with(['items', 'bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $recycler = Recycler::find(request()->input('recycler_id'));
         $bin = Bin::find(request()->input('bin_id'));
-        if ($user instanceof User)
+        if ($recycler instanceof Recycler)
         {
-            $grid->model()->where('user_id', $user->id);
+            $grid->model()->where('recycler_id', $recycler->id);
         }
         if ($bin instanceof Bin)
         {
@@ -50,12 +41,12 @@ class ClientOrdersController extends AdminController
             $filter->disableIdFilter(); // 去掉默认的id过滤器
             $filter->column(1 / 2, function ($filter) {
                 $filter->where(function ($query) {
-                    $query->whereHas('user', function ($query) {
+                    $query->whereHas('recycler', function ($query) {
                         $query->where('name', 'like', "%{$this->input}%");
                     });
-                }, '用户');
+                }, '回收员');
                 $filter->where(function ($query) {
-                    $query->whereHas('user', function ($query) {
+                    $query->whereHas('recycler', function ($query) {
                         $query->where('phone', 'like', "%{$this->input}%");
                     });
                 }, '手机号');
@@ -63,19 +54,19 @@ class ClientOrdersController extends AdminController
 
             $filter->column(1 / 2, function ($filter) {
                 $filter->like('sn', '订单号');
-                $filter->between('created_at', '投递时间')->datetime();
+                $filter->between('created_at', '回收时间')->datetime();
             });
         });
 
-        $grid->created_at('投递时间')->sortable();
+        $grid->created_at('回收时间')->sortable();
         $grid->sn('订单号')->expand(function ($model) {
             $item = $model->items->map(function ($item) {
-                return $item->only(['type_name', 'number', 'unit','subtotal']);
+                return $item->only(['type_name', 'number', 'unit', 'subtotal']);
             });
-            return new Table(['分类箱', '数量', '单位','小计'], $item->toArray());
+            return new Table(['分类箱', '数量', '单位', '小计'], $item->toArray());
         });;
-        $grid->user('用户')->display(function ($user) {
-            return "<a href='" . route('admin.users.show', $user['id']) . "'>$user[name]</a>";
+        $grid->recycler('回收员')->display(function ($recycler) {
+            return "<a href='" . route('admin.recyclers.show', $recycler['id']) . "'>$recycler[name]</a>";
         });
         $grid->bin('回收箱')->display(function ($bin) {
             return $bin ? "<a href='" . route('admin.bins.show', $bin['id']) . "'>$bin[name]</a>" : '';
@@ -86,14 +77,9 @@ class ClientOrdersController extends AdminController
         return $grid;
     }
 
-    /**
-     * Make a show builder.
-     * @param mixed $id
-     * @return Show
-     */
     protected function detail($id)
     {
-        $show = new Show(ClientOrder::findOrFail($id));
+        $show = new Show(CleanOrder::findOrFail($id));
 
         $show->panel()->tools(function ($tools) {
             $tools->disableEdit();
@@ -120,7 +106,7 @@ class ClientOrdersController extends AdminController
             $item->subtotal('小计');
         });
 
-        $show->user('投递用户信息', function ($user) {
+        $show->recycler('回收员信息', function ($user) {
             /*禁用*/
             $user->panel()->tools(function ($tools) {
                 $tools->disableList();
@@ -131,45 +117,11 @@ class ClientOrdersController extends AdminController
             $user->field('id', 'ID');
             $user->field('avatar', '头像')->image('', 120);
             $user->field('name', '昵称');
-            $user->field('gender', '性别');
             $user->field('phone', '手机号');
-            $user->field('money', '奖励金');
-            $user->field('frozen_money', '冻结金额');
-            $user->field('total_client_order_money', '累计投递订单金额');
-            $user->field('total_client_order_count', '累计投递订单次数');
+            $user->field('money', '余额');
         });
-
-
-
 
 
         return $show;
     }
-
-//    protected function form()
-//    {
-//        $form = new Form(new ClientOrder);
-//
-//        $form->tools(function (Form\Tools $tools) {
-//            $tools->disableDelete();
-//        });
-//
-//        // $form->number('user_id', 'User id');
-//        $users = User::all()->pluck('name', 'id');
-//        $form->select('user_id', 'User')->options($users)->readOnly();
-//        // $form->text('status', 'Status')->default('completed');
-//        $form->display('status_text', 'Status')->default('completed');
-//        // $form->text('bin_snapshot', 'Bin snapshot');
-//        // $form->decimal('total', 'Total');
-//        $form->display('total', 'Total')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');
-//
-//        $form->hasMany('items', '订单详情', function ($item) {
-//            $item->display('type_name', 'Type')->setWidth(3);
-//            $item->display('number', 'Number')->setWidth(2);
-//            $item->display('unit', 'Unit')->setWidth(2);
-//            $item->display('subtotal', '小计')->setWidth(2)->default(0.01);
-//        })->disableCreate()->disableDelete()->readonly();
-//
-//        return $form;
-//    }
 }

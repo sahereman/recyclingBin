@@ -14,6 +14,7 @@ class CleanPrice extends Model
     protected $fillable = [
         'slug',
         'price',
+        'unit',
     ];
 
     /**
@@ -34,10 +35,20 @@ class CleanPrice extends Model
         //
     ];
 
+    protected $appends = [
+    ];
+
     /**
      * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
     public $timestamps = false;
+
+    public function getSlugTextAttribute()
+    {
+        $slug = title_case($this->slug);
+        $className = '\App\Models\BinType' . $slug;
+        $type = new $className;
+        return $type::NAME;
+    }
 }
