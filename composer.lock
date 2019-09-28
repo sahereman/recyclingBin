@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e96995a721ef7fa49826b8f9f0a482e8",
+    "content-hash": "64421fac2c338d85a8077294734653bf",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -2314,6 +2314,64 @@
                 "laravel-admin"
             ],
             "time": "2019-02-01T04:10:38+00:00"
+        },
+        {
+            "name": "laravel-admin-ext/latlong",
+            "version": "v1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/latlong.git",
+                "reference": "b8696bb6e8f6167b2305b713af9abb69aa1b2072"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/latlong/zipball/b8696bb6e8f6167b2305b713af9abb69aa1b2072",
+                "reference": "b8696bb6e8f6167b2305b713af9abb69aa1b2072",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\Admin\\Latlong\\LatlongServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\Admin\\Latlong\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "z-song",
+                    "email": "zosong@126.com"
+                }
+            ],
+            "description": "Latitude & Longitude selector",
+            "homepage": "https://github.com/laravel-admin-ext/latlong",
+            "keywords": [
+                "extension",
+                "laravel-admin"
+            ],
+            "time": "2019-05-22T07:32:17+00:00"
         },
         {
             "name": "laravel-admin-ext/log-viewer",

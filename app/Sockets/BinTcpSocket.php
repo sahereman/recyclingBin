@@ -209,7 +209,7 @@ class BinTcpSocket extends TcpSocket
 
 
     /*
-    {"static_no":"yzs004","equipment_no":"0532001"}
+    {"static_no":"yzs004","equipment_no":"0532002"}
      */
     public function qrcodeAction($server, $fd, $data)
     {
