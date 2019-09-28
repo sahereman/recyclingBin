@@ -40,7 +40,7 @@ class UserWithdrawsController extends AdminController
                     $query->whereHas('user', function ($query) {
                         $query->where('name', 'like', "%{$this->input}%");
                     });
-                }, '昵称');
+                }, '用户');
                 $filter->where(function ($query) {
                     $query->whereHas('user', function ($query) {
                         $query->where('phone', 'like', "%{$this->input}%");

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Bin;
 use App\Models\ClientOrder;
 use App\Models\ClientOrderItem;
 use App\Models\User;
@@ -9,57 +10,84 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 
 class ClientOrdersController extends AdminController
 {
     /**
      * Title for current resource.
-     *
      * @var string
      */
     protected $title = '投递订单';
 
     /**
      * Make a grid builder.
-     *
      * @return Grid
      */
     protected function grid()
     {
         $grid = new Grid(new ClientOrder);
-        $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->model()->with(['items', 'bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $user = User::find(request()->input('user_id'));
+        $bin = Bin::find(request()->input('bin_id'));
+        if ($user instanceof User)
+        {
+            $grid->model()->where('user_id', $user->id);
+        }
+        if ($bin instanceof Bin)
+        {
+            $grid->model()->where('bin_id', $bin->id);
+        }
 
-        // 关闭全部操作
-        $grid->actions(function ($actions) {
-            // 去掉删除
-            $actions->disableDelete();
-            // 去掉编辑
-            // $actions->disableEdit();
-            // 去掉查看
-            // $actions->disableView();
-        });
-        // 关闭全部操作
-        // $grid->disableActions();
-
-        $grid->column('id', 'Id')->sortable();
-        // $grid->column('user_id', 'User id')->sortable();
-        $grid->user()->name('User')->sortable();
-        // $grid->column('status', 'Status')->sortable();
-        $grid->column('status_text', 'Status');
-        // $grid->column('bin_snapshot', 'Bin snapshot');
-        $grid->column('total', 'Total')->sortable();
-        // $grid->column('created_at', 'Created at');
-        // $grid->column('updated_at', 'Updated at');
-
-        // 不在页面显示 `新建` 按钮，因为我们不需要在后台新建订单
+        /*禁用*/
         $grid->disableCreateButton();
+        $grid->actions(function ($actions) {
+            $actions->disableEdit();
+        });
+
+        /*筛选*/
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter(); // 去掉默认的id过滤器
+            $filter->column(1 / 2, function ($filter) {
+                $filter->where(function ($query) {
+                    $query->whereHas('user', function ($query) {
+                        $query->where('name', 'like', "%{$this->input}%");
+                    });
+                }, '用户');
+                $filter->where(function ($query) {
+                    $query->whereHas('user', function ($query) {
+                        $query->where('phone', 'like', "%{$this->input}%");
+                    });
+                }, '手机号');
+            });
+
+            $filter->column(1 / 2, function ($filter) {
+                $filter->like('sn', '订单号');
+                $filter->between('created_at', '投递时间')->datetime();
+            });
+        });
+
+        $grid->created_at('投递时间')->sortable();
+        $grid->sn('订单号')->expand(function ($model) {
+            $item = $model->items->map(function ($item) {
+                return $item->only(['type_name', 'number', 'unit', 'subtotal']);
+            });
+            return new Table(['投递分类', '数量', '单位', '小计'], $item->toArray());
+        });;
+        $grid->user('用户')->display(function ($user) {
+            return "<a href='" . route('admin.users.show', $user['id']) . "'>$user[name]</a>";
+        });
+        $grid->bin('回收箱')->display(function ($bin) {
+            return $bin ? "<a href='" . route('admin.bins.show', $bin['id']) . "'>$bin[name]</a>" : '';
+        });
+        $grid->status_text('状态');
+        $grid->total('合计')->sortable();
 
         return $grid;
     }
 
     /**
      * Make a show builder.
-     *
      * @param mixed $id
      * @return Show
      */
@@ -68,97 +96,80 @@ class ClientOrdersController extends AdminController
         $show = new Show(ClientOrder::findOrFail($id));
 
         $show->panel()->tools(function ($tools) {
-            $tools->disableDelete();
+            $tools->disableEdit();
         });
 
-        // $show->field('id', 'Id');
-        // $show->field('user_id', 'User id');
+        $show->id('ID');
+        $show->sn('订单号');
+        $show->status_text('状态');
+        $show->total('合计');
+        $show->created_at('投递时间');
 
-        $show->user('用户信息', function ($user) {
+        $show->items('投递详情', function ($item) {
+            /*禁用*/
+            $item->disableCreateButton();
+            $item->disableFilter();
+            $item->disableExport();
+            $item->disableActions();
+            $item->disableBatchActions();
+            $item->disablePagination();
+
+            $item->type_name('投递分类');
+            $item->number('数量');
+            $item->unit('单位');
+            $item->subtotal('小计');
+        });
+
+        $show->user('投递用户信息', function ($user) {
             /*禁用*/
             $user->panel()->tools(function ($tools) {
                 $tools->disableList();
                 $tools->disableEdit();
                 $tools->disableDelete();
             });
-            $user->name('Name');
-            $user->gender('Gender');
-            $user->phone('Phone');
+
+            $user->field('id', 'ID');
+            $user->field('avatar', '头像')->image('', 120);
+            $user->field('name', '昵称');
+            $user->field('gender', '性别');
+            $user->field('phone', '手机号');
+            $user->field('money', '奖励金');
+            $user->field('frozen_money', '冻结金额');
+            $user->field('total_client_order_money', '累计投递订单金额');
+            $user->field('total_client_order_count', '累计投递订单次数');
         });
 
-        $show->items('订单详情', function ($item) {
-            /*禁用*/
-            // $item->disableCreation(); // Deprecated
-            $item->disableCreateButton();
 
-            // 禁用筛选
-            $item->disableFilter();
 
-            // 禁用导出数据按钮
-            // $item->disableExport();
 
-            // 关闭全部操作
-            /*$item->actions(function ($actions) {
-                // 去掉删除
-                $actions->disableDelete();
-                // 去掉编辑
-                $actions->disableEdit();
-                // 去掉查看
-                $actions->disableView();
-            });*/
-            $item->disableActions();
-
-            // 去掉批量操作
-            /*$item->batchActions(function ($batch) {
-                $batch->disableDelete();
-            });*/
-            $item->disableBatchActions();
-
-            $item->type_name('Type');
-            $item->number('Number');
-            $item->unit('Unit');
-            $item->subtotal('小计');
-        });
-
-        // $show->field('status', 'Status');
-        $show->field('status_text', 'Status');
-        // $show->field('bin_snapshot', 'Bin snapshot');
-        $show->field('total', 'Total');
-        $show->field('created_at', 'Created at');
-        $show->field('updated_at', 'Updated at');
 
         return $show;
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
-    {
-        $form = new Form(new ClientOrder);
-
-        $form->tools(function (Form\Tools $tools) {
-            $tools->disableDelete();
-        });
-
-        // $form->number('user_id', 'User id');
-        $users = User::all()->pluck('name', 'id');
-        $form->select('user_id', 'User')->options($users)->readOnly();
-        // $form->text('status', 'Status')->default('completed');
-        $form->display('status_text', 'Status')->default('completed');
-        // $form->text('bin_snapshot', 'Bin snapshot');
-        // $form->decimal('total', 'Total');
-        $form->display('total', 'Total')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');
-
-        $form->hasMany('items', '订单详情', function ($item) {
-            $item->display('type_name', 'Type')->setWidth(3);
-            $item->display('number', 'Number')->setWidth(2);
-            $item->display('unit', 'Unit')->setWidth(2);
-            $item->display('subtotal', '小计')->setWidth(2)->default(0.01);
-        })->disableCreate()->disableDelete()->readonly();
-
-        return $form;
-    }
+//    protected function form()
+//    {
+//        $form = new Form(new ClientOrder);
+//
+//        $form->tools(function (Form\Tools $tools) {
+//            $tools->disableDelete();
+//        });
+//
+//        // $form->number('user_id', 'User id');
+//        $users = User::all()->pluck('name', 'id');
+//        $form->select('user_id', 'User')->options($users)->readOnly();
+//        // $form->text('status', 'Status')->default('completed');
+//        $form->display('status_text', 'Status')->default('completed');
+//        // $form->text('bin_snapshot', 'Bin snapshot');
+//        // $form->decimal('total', 'Total');
+//        $form->display('total', 'Total')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');
+//
+//        $form->hasMany('items', '订单详情', function ($item) {
+//            $item->display('type_name', 'Type')->setWidth(3);
+//            $item->display('number', 'Number')->setWidth(2);
+//            $item->display('unit', 'Unit')->setWidth(2);
+//            $item->display('subtotal', '小计')->setWidth(2)->default(0.01);
+//        })->disableCreate()->disableDelete()->readonly();
+//
+//        return $form;
+//    }
 }

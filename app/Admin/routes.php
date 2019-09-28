@@ -30,14 +30,16 @@ Route::group([
 
     /*用户提现*/
     $router->get('user_withdraws', 'UserWithdrawsController@index')->name('admin.user_withdraws');
-    $router->post('user_withdraws/{withdraw}/agree', 'UserWithdrawsController@agree')->name('admin.user_withdraws.agree')/*同意*/;
-    $router->post('user_withdraws/{withdraw}/deny', 'UserWithdrawsController@deny')->name('admin.user_withdraws.deny')/*拒绝*/;
+    $router->post('user_withdraws/{withdraw}/agree', 'UserWithdrawsController@agree')->name('admin.user_withdraws.agree')/*同意*/
+    ;
+    $router->post('user_withdraws/{withdraw}/deny', 'UserWithdrawsController@deny')->name('admin.user_withdraws.deny')/*拒绝*/
+    ;
 
     /*服务城市*/
     $router->resource('service_sites', 'ServiceSitesController');
 
     /*回收箱*/
-    $router->resource('bins', 'BinsController');
+    $router->resource('bins', 'BinsController')->names('admin.bins');
 
     /*客户端价格*/
     $router->resource('client_prices', 'ClientPricesController');
@@ -52,7 +54,7 @@ Route::group([
     $router->resource('topics', 'TopicsController');
 
     /*投递订单*/
-    $router->resource('client_orders', 'ClientOrdersController');
+    $router->resource('client_orders', 'ClientOrdersController')->names('admin.client_orders');
 
     /*回收员*/
     $router->get('recyclers/assignment', 'RecyclersController@assignmentShow')->name('admin.recyclers.assignment.show'); /*回收员指派 页面*/
