@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use App\Models\CleanOrder;
 use App\Models\CleanOrderItem;
-use App\Admin\Models\Bin;
 use App\Models\RecyclerMoneyBill;
 use App\Models\Recycler;
 use App\Jobs\GenerateRecycleOrderSnapshot;

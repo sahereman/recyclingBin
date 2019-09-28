@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\ClientOrder;
 use App\Models\ClientOrderItem;
-use App\Admin\Models\Bin;
+use App\Models\Bin;
 use App\Models\UserMoneyBill;
 use App\Models\User;
 use App\Jobs\GenerateClientOrderSnapshot;

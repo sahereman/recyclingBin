@@ -103,7 +103,7 @@ class RecyclerMoneyBill extends Model
                 if (!$related instanceof CleanOrder || !$related->exists) {
                     throw new \Exception('关联模型异常');
                 }
-                $operator = '+';
+                $operator = '-';
                 $description = '回收废品';
                 break;
             case self::TYPE_RECYCLER_WITHDRAW :

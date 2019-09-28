@@ -5,6 +5,8 @@ use App\Models\Recycler;
 use App\Models\RecyclerDeposit;
 use App\Models\RecyclerMoneyBill;
 use App\Models\RecyclerWithdraw;
+use App\Notifications\Clean\RecyclerWithdrawAgreeNotification;
+use App\Notifications\Clean\RecyclerWithdrawDenyNotification;
 
 class RecyclersSeeder extends Seeder
 {
@@ -54,6 +56,7 @@ class RecyclersSeeder extends Seeder
                             'name' => '李四',
                             'bank' => '中国农业银行',
                             'account' => '62223078323174632',
+                            'bank_name' => 'XXX支行',
                         ]
                     ]);
                     break;
@@ -68,11 +71,16 @@ class RecyclersSeeder extends Seeder
                     break;
                 case RecyclerWithdraw::STATUS_AGREE :
                     RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLER_WITHDRAW, $withdraw->money, $withdraw);
+                    $withdraw->recycler->notify(new RecyclerWithdrawAgreeNotification($withdraw));
+                    $withdraw->checked_at = now();
+                    $withdraw->save();
                     break;
                 case RecyclerWithdraw::STATUS_DENY :
                     $withdraw->update([
-                        'reason' => '银行预留信息错误'
+                        'reason' => '回收员银行预留信息错误',
+                        'checked_at'=>now(),
                     ]);
+                    $withdraw->recycler->notify(new RecyclerWithdrawDenyNotification($withdraw));
                     break;
             }
 

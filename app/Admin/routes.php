@@ -57,9 +57,9 @@ Route::group([
     $router->resource('client_orders', 'ClientOrdersController')->names('admin.client_orders');
 
     /*回收员*/
-    $router->get('recyclers/assignment', 'RecyclersController@assignmentShow')->name('admin.recyclers.assignment.show'); /*回收员指派 页面*/
-    $router->post('recyclers/assignment', 'RecyclersController@assignmentStore')->name('admin.recyclers.assignment.store'); /*回收员指派 请求处理*/
-    $router->resource('recyclers', 'RecyclersController');
+    $router->get('recyclers/{id}/assignment', 'RecyclersController@assignmentShow')->name('admin.recyclers.assignment.show'); /*分配回收箱 页面*/
+    $router->put('recyclers/{id}/assignment', 'RecyclersController@assignmentStore')->name('admin.recyclers.assignment.store'); /*分配回收箱 请求处理*/
+    $router->resource('recyclers', 'RecyclersController')->names('admin.recyclers');
 
 
     // $router->resource('example', ExampleController::class)->names('admin.example');

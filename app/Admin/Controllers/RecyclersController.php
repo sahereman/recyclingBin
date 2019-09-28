@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\Bin;
 use App\Models\Recycler;
 use App\Http\Requests\Request;
+use App\Models\RecyclerWithdraw;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -19,14 +20,12 @@ class RecyclersController extends AdminController
 
     /**
      * Title for current resource.
-     *
      * @var string
      */
     protected $title = '回收员';
 
     /**
      * Make a grid builder.
-     *
      * @return Grid
      */
     protected function grid()
@@ -49,23 +48,27 @@ class RecyclersController extends AdminController
 
         $grid->column('id', 'ID')->sortable();
         $grid->column('avatar', '头像')->image('', 40);
-        $grid->column('name', '昵称');
+        $grid->name('昵称')->display(function ($name) {
+            return "<a href='" . route('admin.recyclers.show', $this->id) . "'>$name</a>";
+        });
         $grid->column('phone', '手机号');
         $grid->column('money', '余额')->sortable();
-        // $grid->column('frozen_money', '冻结金额');
-        $grid->column('bins', 'Bins')->display(function ($bins) {
+        $grid->column('bins', '分配的回收箱')->display(function ($bins) {
             return count($bins);
         });
-        // $grid->column('password', 'Password');
-        $grid->column('created_at', 'Created at');
-        // $grid->column('updated_at', 'Updated at');
+        $grid->column('manage', '管理')->display(function () {
+            $buttons = '';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.show', ['tid' => $this->id]) . '">发送通知</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.client_orders.index', ['user_id' => $this->id]) . '">回收订单</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.assignment.show', $this->id) . '">分配回收箱</a>';
+            return $buttons;
+        });
 
         return $grid;
     }
 
     /**
      * Make a show builder.
-     *
      * @param mixed $id
      * @return Show
      */
@@ -79,35 +82,23 @@ class RecyclersController extends AdminController
         $show->field('phone', '手机号');
         $show->field('money', '余额');
         $show->field('frozen_money', '冻结金额');
-        // $show->field('password', 'Password');
-        $show->field('created_at', 'Created at');
-        // $show->field('updated_at', 'Updated at');
+        $show->field('created_at', '创建时间');
 
-        $show->bins('回收垃圾桶', function ($bin) {
-            $bin->model()->orderBy('bin_recyclers.created_at', 'desc'); // 设置初始排序条件
+        $show->notifications('消息通知', function ($notify) {
+            $notify->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
 
             /*禁用*/
-            $bin->disableCreateButton();
-            $bin->disableFilter();
-            $bin->disableActions();
-            $bin->disableBatchActions();
+            $notify->disableCreateButton();
+            $notify->disableFilter();
+            $notify->disableActions();
+            $notify->disableBatchActions();
 
-            $bin->column('id', 'Id')->sortable();
-            // $bin->column('site_id', 'Site id');
-            $bin->site()->name('Site');
-            $bin->column('is_run', 'Is Run')->switch([
-                'on' => ['value' => 1, 'text' => 'YES', 'color' => 'primary'],
-                'off' => ['value' => 0, 'text' => 'NO', 'color' => 'default'],
-            ]);
-            $bin->column('name', 'Name')->expand(function ($model) {
-                $types[0] = $model->type_fabric->only('name', 'status_text', 'number', 'unit', 'client_price_value', 'clean_price_value');
-                $types[1] = $model->type_paper->only('name', 'status_text', 'number', 'unit', 'client_price_value', 'clean_price_value');
-                return new Table(['Type', 'Status', 'Number', 'Unit', '客户端价格', '回收端价格'], $types);
+            // grid
+            $notify->created_at('时间');
+            $notify->column('data', '通知')->display(function ($data) {
+                return "$data[title]<br/>$data[info]<br/>";
             });
-            $bin->column('no', 'No.');
-            $bin->column('lat', 'Latitude');
-            $bin->column('lng', 'Longitude');
-            $bin->column('address', 'Address');
+            $notify->column('read_at', '已读')->bool();
         });
 
         $show->moneyBills('账单记录', function ($moneyBill) {
@@ -126,12 +117,38 @@ class RecyclersController extends AdminController
             $moneyBill->operator_number('金额');
         });
 
+        $show->withdraws('提现记录', function ($withdraw) {
+            $withdraw->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+
+            /*禁用*/
+            $withdraw->disableCreateButton();
+            $withdraw->disableFilter();
+            $withdraw->disableActions();
+            $withdraw->disableBatchActions();
+
+            // grid
+            $withdraw->created_at('时间');
+            $withdraw->type_text('到账方式');
+            $withdraw->status_text('状态');
+            $withdraw->money('金额');
+            $withdraw->info('提现预留信息')->display(function ($info) {
+                $str = '';
+                switch ($this->type)
+                {
+                    case RecyclerWithdraw::TYPE_UNION_PAY:
+                        $str = "户名:$info[name]<br/>账号:$info[account]<br/>银行:$info[bank]<br/>开户行:$info[bank_name]<br/>";
+                        break;
+                }
+                return $str;
+            });
+            $withdraw->reason('拒绝原因');
+        });
+
         return $show;
     }
 
     /**
      * Make a form builder.
-     *
      * @return Form
      */
     protected function form()
@@ -153,7 +170,8 @@ class RecyclersController extends AdminController
         $form->ignore(['password_confirmation']);
 
         $form->saving(function (Form $form) {
-            if ($form->password && $form->model()->password != $form->password) {
+            if ($form->password && $form->model()->password != $form->password)
+            {
                 $form->password = bcrypt($form->password);
             }
         });
@@ -162,62 +180,31 @@ class RecyclersController extends AdminController
     }
 
     // GET: 回收员指派 页面
-    public function assignmentShow(Content $content)
+    public function assignmentShow(Content $content, $id)
     {
         return $content
-            ->header('回收员指派')
-            ->body($this->assignmentForm());
+            ->header('分配回收箱')
+            ->body($this->assignmentForm($id)->edit($id));
     }
 
-    protected function assignmentForm()
+    protected function assignmentForm($id)
     {
-        $form = new Form(new Bin());
-
-        $form->setAction(route('admin.recyclers.assignment.store'));
+        $form = new Form(new Recycler);
+        $form->setAction(route('admin.recyclers.assignment.store',$id));
 
         $form->tools(function (Form\Tools $tools) {
-            $tools->disableList();
             $tools->disableDelete();
             $tools->disableView();
         });
 
-        $form->select('recycler_id')->options(Recycler::all()->pluck('name', 'id'));
-
-        $form->listbox('bin_ids', '请选择回收箱')->options(Bin::all()->pluck('full_name', 'id'));
+        $form->listbox('bins', '请选择回收箱')->options(Bin::with('site')->get()->pluck('full_name', 'id'));
 
         return $form;
     }
 
     // POST: 回收员指派 请求处理
-    public function assignmentStore(Request $request, Content $content)
+    public function assignmentStore($id)
     {
-        $data = $this->validate($request, [
-            'bin_ids' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if (Bin::whereIn('id', request()->input($attribute))->count() == 0) {
-                        $fail('请选择回收箱');
-                    }
-                },
-            ],
-            'recycler_id' => 'required|integer'
-        ], [], [
-            'bin_ids' => '回收箱 IDs',
-            'recycler_id' => '回收员'
-        ]);
-
-        $recycler_id = $data['recycler_id'];
-        $bin_ids = $data['bin_ids'];
-        $key = array_search(NULL, $bin_ids, true);
-        if ($key !== false) {
-            unset($bin_ids[$key]);
-        }
-        $recycler = Recycler::find($recycler_id);
-        $recycler->bins()->sync($bin_ids);
-
-        return $content
-            ->row("<center><h3>回收员指派成功！</h3></center>")
-            // ->row("<center><a href='/admin/recyclers'>返回 回收员 列表</a></center>");
-            ->row("<center><a href='" . route('recyclers.index') . "'>返回 回收员 列表</a></center>");
+        return $this->assignmentForm($id)->update($id);
     }
 }

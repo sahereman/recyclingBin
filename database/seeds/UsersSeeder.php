@@ -55,11 +55,10 @@ class UsersSeeder extends Seeder
                     break;
                 case UserWithdraw::STATUS_DENY :
                     $withdraw->update([
-                        'reason' => '银行预留信息错误'
+                        'reason' => '银行预留信息错误',
+                        'checked_at'=>now(),
                     ]);
                     $withdraw->user->notify(new UserWithdrawDenyNotification($withdraw));
-                    $withdraw->checked_at = now();
-                    $withdraw->save();
                     break;
             }
 
