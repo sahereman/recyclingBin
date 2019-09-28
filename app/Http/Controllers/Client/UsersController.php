@@ -6,7 +6,9 @@ namespace App\Http\Controllers\Client;
 use App\Http\Requests\Client\BindPhoneRequest;
 use App\Http\Requests\Client\UserRequest;
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
+use App\Http\Requests\Request;
 use App\Models\User;
+use App\Models\UserMoneyBill;
 use App\Models\UserWithdraw;
 use App\Transformers\Client\NotificationTransformer;
 use App\Transformers\Client\UserMoneyBillTransformer;
@@ -61,7 +63,7 @@ class UsersController extends Controller
 
         $user->markAsRead();
 
-        return $this->response->paginator($notifications,new NotificationTransformer());
+        return $this->response->paginator($notifications, new NotificationTransformer());
     }
 
     /**
@@ -105,18 +107,51 @@ class UsersController extends Controller
      * @method GET
      * @url users/moneyBill
      * @param Headers.Authorization 必选 headers 用户凭证
+     * @param type 非必选(参考值:all,clientOrder,other) string 账单类型
+     * @param date 非必选(参考值:2019-08) string 状态
      * @return {"data":[{"id":1,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"24.02","created_at":"2019-09-05 15:23:14"},{"id":2,"user_id":1,"type":"clientOrder","type_text":"回收订单","description":"投递废品","operator":"+","number":"90.43","created_at":"2019-09-05 15:23:14"}],"meta":{"pagination":{"total":20,"count":5,"per_page":5,"current_page":1,"total_pages":4,"links":{"previous":null,"next":"http://bin.test/api/client/users/moneyBill?page=2"}}}}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param data.* json 账单列表信息
      * @return_param mata.pagination json 分页信息 (使用links.next前往下一页数据)
      * @number 70
      */
-    public function moneyBill()
+    public function moneyBill(Request $request)
     {
         $user = Auth::guard('client')->user();
 
+        $builder = $user->moneyBills()->orderBy('created_at', 'desc');
 
-        $bills = $user->moneyBills()->paginate(5);
+        switch ($request->input('type'))
+        {
+            case 'all':
+                break;
+            case 'clientOrder' :
+                $builder->where('type', UserMoneyBill::TYPE_CLIENT_ORDER);
+                break;
+            case 'other' :
+                $builder->where('type', '!=', UserMoneyBill::TYPE_CLIENT_ORDER);
+                break;
+        }
+
+
+        $date = Carbon::createFromFormat('Y-m', $request->ss)->toDateTimeString();
+
+        return $date;
+
+        switch ($request->input('date'))
+        {
+            case 'today' :
+                $builder->whereBetween('created_at', [today(), today()->addDay()]);
+                break;
+            case 'yesterday' :
+                $builder->whereBetween('created_at', [today()->subDay(), today()]);
+                break;
+            case 'month' :
+                $builder->whereBetween('created_at', [today()->subMonth(), now()]);
+                break;
+        }
+
+        $bills = $builder->paginate(3)->appends($request->except('page'));
 
         return $this->response->paginator($bills, new UserMoneyBillTransformer());
     }
@@ -131,6 +166,7 @@ class UsersController extends Controller
      * @param name 必选 string 持卡人姓名
      * @param bank 必选 string 银行
      * @param account 必选 string 账号
+     * @param bank_name 必选 string 开户行
      * @param money 必选 string 金额
      * @return []
      * @return_param HTTP.Status int 成功时HTTP状态码:201
@@ -160,6 +196,7 @@ class UsersController extends Controller
                     'name' => $request->input('name'),
                     'bank' => $request->input('bank'),
                     'account' => $request->input('account'),
+                    'bank_name' => $request->input('bank_name')
                 ]
             ]);
 
