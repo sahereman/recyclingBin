@@ -24,6 +24,10 @@ class Recycler extends Authenticatable implements JWTSubject
     }
 
     protected $fillable = [
+        'frozen_money',
+        'money',
+        'phone',
+        'name',
     ];
 
     /**
@@ -48,7 +52,8 @@ class Recycler extends Authenticatable implements JWTSubject
     public function getAvatarUrlAttribute()
     {
         // 如果 image 字段本身就已经是完整的 url 就直接返回
-        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://'])) {
+        if (Str::startsWith($this->attributes['avatar'], ['http://', 'https://']))
+        {
             return $this->attributes['avatar'];
         }
         return Storage::disk('public')->url($this->attributes['avatar']);

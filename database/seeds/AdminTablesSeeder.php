@@ -62,12 +62,6 @@ class AdminTablesSeeder extends Seeder
                 'http_method' => '',
                 'http_path' => "/client_orders",
             ],
-            [
-                'name' => '城市热门地点管理',
-                'slug' => 'city_hot_addresses',
-                'http_method' => '',
-                'http_path' => "/city_hot_addresses",
-            ],
         ];
 
     /*自定义添加的菜单*/
@@ -138,9 +132,9 @@ class AdminTablesSeeder extends Seeder
             [
                 'parent_id' => 15,
                 'order' => 3,
-                'title' => '回收员指派',
-                'icon' => 'fa-bitbucket',
-                'uri' => 'recyclers/assignment',
+                'title' => '回收员提现申请',
+                'icon' => 'fa-users',
+                'uri' => 'recycler_withdraws',
             ],
 
             //回收箱管理
