@@ -230,7 +230,7 @@ class BinTcpSocket extends TcpSocket
         $bin_token->save();
 
         $server->send($fd, new SocketJsonHandler([
-            //            'static_no' => self::CLIENT_LOGIN,
+            'static_no' => self::QRCODE,
             'result_code' => '200',
             'set_url' => url('client/qr') . '?token=' . $bin_token->token
         ]));
