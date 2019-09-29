@@ -14,6 +14,7 @@ class ClientOrderItem extends Model
     protected $fillable = [
         'order_id',
         'type_name',
+        'type_slug',
         'number',
         'unit',
         'subtotal'
