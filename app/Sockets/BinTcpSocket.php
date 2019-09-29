@@ -99,7 +99,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs001","equipment_no":"0532001","equipment_all":false,"user_card":"6","delivery_type":"1","delivery_weight":"3000","delivery_price":"50","delivery_money":"10","delivery_time":"20190923140001"}
+     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"7","delivery_type":"1","delivery_weight":"3000","delivery_price":"50","delivery_money":"10","delivery_time":"20190923140001"}
      */
     public function clientTransactionAction($server, $fd, $data)
     {
@@ -107,7 +107,7 @@ class BinTcpSocket extends TcpSocket
         $user = User::find($data['user_card']);
         $client_prices = ClientPrice::all();
 
-        if (!$bin || !$user)
+        if (!$bin || !$user || !in_array($data['delivery_type'], [1, 2]))
         {
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
@@ -126,19 +126,20 @@ class BinTcpSocket extends TcpSocket
                 $price = $client_prices->where('slug', 'fabric')->first();
                 break;
         }
-        $type_name = $type::NAME;
         $weight = bcdiv($data['delivery_weight'], 1000, 2);
         $subtotal = bcmul($price['price'], $weight, 2);
 
         $order = ClientOrder::create([
             'status' => ClientOrder::STATUS_COMPLETED,
+            'bin_id' => $bin->id,
             'user_id' => $user->id,
             'total' => $subtotal,
             'bin_snapshot' => [],
         ]);
 
         $order->items()->create([
-            'type_name' => $type_name,
+            'type_slug' => $type::SLUG,
+            'type_name' => $type::NAME,
             'number' => $weight,
             'unit' => $price['unit'],
             'subtotal' => $subtotal,
@@ -187,7 +188,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-    {"static_no":"yzs003","equipment_no":"0532001","equipment_all":false,"device":"0000","send_time":"20190923150201"}
+    {"static_no":"yzs003","equipment_no":"0532009","equipment_all":false,"device":"0000","send_time":"20190923150201"}
      */
     public function beatAction($server, $fd, $data)
     {
@@ -209,7 +210,7 @@ class BinTcpSocket extends TcpSocket
 
 
     /*
-    {"static_no":"yzs004","equipment_no":"0532002"}
+    {"static_no":"yzs004","equipment_no":"0532009"}
      */
     public function qrcodeAction($server, $fd, $data)
     {
