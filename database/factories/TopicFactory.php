@@ -9,7 +9,7 @@ $factory->define(App\Models\Topic::class, function (Faker $faker) {
     $created_at = $faker->dateTimeBetween($startDate = '-6 days', $endDate = 'now');
 
     return [
-        'title' => $faker->company,
+        'title' => $faker->company . ' - ' . $faker->randomNumber(3),
         'thumb' => $faker->imageUrl(200),
         'image' => $faker->imageUrl(640),
         'content' => $faker->sentences(7, true),
