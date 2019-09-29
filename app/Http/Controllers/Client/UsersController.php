@@ -59,7 +59,7 @@ class UsersController extends Controller
     public function notifications()
     {
         $user = Auth::guard('client')->user();
-        $notifications = $user->notifications()->paginate(5);
+        $notifications = $user->notifications()->paginate(10);
 
         $user->markAsRead();
 
