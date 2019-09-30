@@ -14,6 +14,7 @@ use App\Transformers\Client\NotificationTransformer;
 use App\Transformers\Client\UserMoneyBillTransformer;
 use App\Transformers\Client\UserTransformer;
 use Carbon\Carbon;
+use Dingo\Api\Exception\RateLimitExceededException;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -40,7 +41,15 @@ class UsersController extends Controller
     {
         $user = Auth::guard('client')->user();
 
-        return $this->response->item($user, new UserTransformer());
+        if($user != null)
+        {
+            return $this->response->item($user, new UserTransformer());
+        }else
+        {
+            info($user);
+            throw new RateLimitExceededException();
+        }
+
     }
 
     /**
