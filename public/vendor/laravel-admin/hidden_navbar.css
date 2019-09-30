@@ -1,0 +1,6 @@
+.navbar-custom-menu li{
+    display: none;
+}
+.navbar-custom-menu li.user-menu{
+    display: block;
+}

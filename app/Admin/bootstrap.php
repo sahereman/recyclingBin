@@ -17,7 +17,7 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
-
+Admin::css('vendor/laravel-admin/hidden_navbar.css');
 // Encore\Admin\Form::forget(['map', 'editor']);
 //Encore\Admin\Form::forget(['map']);
 // Encore\Admin\Form::extend('editor', \Encore\WangEditor\Editor::class);
