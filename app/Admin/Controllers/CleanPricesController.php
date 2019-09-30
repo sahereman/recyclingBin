@@ -37,6 +37,10 @@ class CleanPricesController extends AdminController
     {
         $form = new Form(new CleanPrice);
 
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableView();
+        });
+
         $form->display('slug_text', '分类箱');
         $form->decimal('price', '价格')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');
         $form->display('unit', '单位');
