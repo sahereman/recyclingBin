@@ -61,7 +61,7 @@ class BinsController extends Controller
             $current_page = 1;
         }
 
-        $item = $bins->forPage(($current_page - 1) * $perPage, $perPage); //切分出当前页的数据
+        $item = $bins->forPage($current_page, $perPage); //切分出当前页的数据
 
 
         $total = $bins->count();// 查询总数
