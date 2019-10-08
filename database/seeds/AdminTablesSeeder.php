@@ -115,10 +115,17 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 14,
-                'order' => 5,
+                'order' => 4,
                 'title' => '投递订单列表',
                 'icon' => 'fa-list',
                 'uri' => 'client_orders',
+            ],
+            [
+                'parent_id' => 14,
+                'order' => 5,
+                'title' => '群发站内信',
+                'icon' => 'fa-file-text',
+                'uri' => 'users/send_message',
             ],
 
             //回收员管理
@@ -138,10 +145,17 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 15,
-                'order' => 5,
+                'order' => 4,
                 'title' => '回收订单列表',
                 'icon' => 'fa-list',
                 'uri' => 'clean_orders',
+            ],
+            [
+                'parent_id' => 15,
+                'order' => 5,
+                'title' => '群发站内信',
+                'icon' => 'fa-file-text',
+                'uri' => 'recyclers/send_message',
             ],
 
             //回收箱管理

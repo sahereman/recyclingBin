@@ -6,6 +6,7 @@ use App\Models\Bin;
 use App\Models\Recycler;
 use App\Http\Requests\Request;
 use App\Models\RecyclerWithdraw;
+use App\Notifications\Client\AdminCustomNotification;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -61,7 +62,7 @@ class RecyclersController extends AdminController
         });
         $grid->column('manage', '管理')->display(function () {
             $buttons = '';
-            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.show', ['tid' => $this->id]) . '">发送通知</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.send_message.show', ['id' => $this->id]) . '">发送通知</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.clean_orders.index', ['recycler_id' => $this->id]) . '">回收订单</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.assignment.show', $this->id) . '">分配回收箱</a>';
             return $buttons;
@@ -136,8 +137,7 @@ class RecyclersController extends AdminController
             $withdraw->money('金额');
             $withdraw->info('提现预留信息')->display(function ($info) {
                 $str = '';
-                switch ($this->type)
-                {
+                switch ($this->type) {
                     case RecyclerWithdraw::TYPE_UNION_PAY:
                         $str = "户名:$info[name]<br/>账号:$info[account]<br/>银行:$info[bank]<br/>开户行:$info[bank_name]<br/>";
                         break;
@@ -173,8 +173,7 @@ class RecyclersController extends AdminController
         $form->ignore(['password_confirmation']);
 
         $form->saving(function (Form $form) {
-            if ($form->password && $form->model()->password != $form->password)
-            {
+            if ($form->password && $form->model()->password != $form->password) {
                 $form->password = bcrypt($form->password);
             }
         });
@@ -193,7 +192,7 @@ class RecyclersController extends AdminController
     protected function assignmentForm($id)
     {
         $form = new Form(new Recycler);
-        $form->setAction(route('admin.recyclers.assignment.store',$id));
+        $form->setAction(route('admin.recyclers.assignment.store', $id));
 
         $form->tools(function (Form\Tools $tools) {
             $tools->disableDelete();
@@ -209,5 +208,73 @@ class RecyclersController extends AdminController
     public function assignmentStore($id)
     {
         return $this->assignmentForm($id)->update($id);
+    }
+
+    // GET: 群发站内信 页面
+    public function sendMessageShow(Content $content, $id = null)
+    {
+        return $content
+            ->header('发送站内信')
+            ->body($this->sendMessageForm($id));
+    }
+
+    protected function sendMessageForm($id)
+    {
+        $form = new Form(new Recycler());
+        $form->setAction(route('admin.recyclers.send_message.store'));
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableList();
+            $tools->disableDelete();
+            $tools->disableView();
+        });
+
+        if ($id == null) {
+            $form->listbox('recycler_ids', '选择回收员')->options(Recycler::all()->pluck('name', 'id'));
+        } else {
+            $form->listbox('recycler_ids', '选择回收员')->options(Recycler::where('id', $id)->get()->pluck('name', 'id'))->default($id);
+        }
+
+        $form->text('title', '标题');
+        $form->textarea('info', '内容');
+        $form->text('link', '链接');
+
+        return $form;
+    }
+
+    // POST: 群发站内信 请求处理
+    public function sendMessageStore(Request $request, Content $content)
+    {
+        $data = $this->validate($request, [
+            'recycler_ids' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (Recycler::whereIn('id', request()->input($attribute))->count() == 0) {
+                        $fail('请选择回收员');
+                    }
+                },
+            ],
+            'title' => ['required'],
+            'info' => ['required'],
+            'link' => ['nullable', 'url'],
+        ], [], [
+            'recycler_ids' => '回收员',
+            'title' => '标题',
+            'info' => '内容',
+            'link' => '链接',
+        ]);
+
+        $recyclers = Recycler::whereIn('id', $data['recycler_ids'])->get();
+
+        $recyclers->each(function ($recycler) use ($data) {
+            $recycler->notify(new AdminCustomNotification(array(
+                'title' => $data['title'],
+                'info' => $data['info'],
+                'link' => $data['link'],
+            )));
+        });
+
+        return $content
+            ->row("<center><h3>发送站内信成功</h3></center>")
+            ->row("<center><a href='" . route('admin.recyclers.index') . "'>返回回收员列表</a></center>");
     }
 }

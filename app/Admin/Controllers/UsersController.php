@@ -4,21 +4,26 @@ namespace App\Admin\Controllers;
 
 use App\Models\User;
 use App\Models\UserWithdraw;
+use App\Notifications\Client\AdminCustomNotification;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class UsersController extends AdminController
 {
+    use ValidatesRequests;
+
     /**
      * Title for current resource.
      * @var string
      */
     protected $title = '用户';
-    
+
     /**
      * Make a grid builder.
      * @return Grid
@@ -40,8 +45,7 @@ class UsersController extends AdminController
                 $filter->between('created_at', '创建时间')->datetime();
                 $filter->between('money', '奖励金');
                 $filter->where(function ($query) {
-                    switch ($this->input)
-                    {
+                    switch ($this->input) {
                         case 'yes':
                             $query->where('real_authenticated_at', '!=', null);
                             break;
@@ -60,9 +64,8 @@ class UsersController extends AdminController
         // grid
         $grid->column('id', 'ID')->sortable();
         $grid->avatar('头像')->image('', 40);
-        $grid->name('昵称')->display(function ($name)
-        {
-            return "<a href='".route('admin.users.show',$this->id)."'>$name</a>";
+        $grid->name('昵称')->display(function ($name) {
+            return "<a href='" . route('admin.users.show', $this->id) . "'>$name</a>";
         });
         $grid->column('gender', '性别')->sortable();
         $grid->column('phone', '手机号');
@@ -70,9 +73,9 @@ class UsersController extends AdminController
         $grid->column('total_client_order_count', '累计投递订单次数')->sortable();
         $grid->column('created_at', '创建时间')->sortable();
 
-        $grid->column('manage','管理')->display(function () {
+        $grid->column('manage', '管理')->display(function () {
             $buttons = '';
-            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.users.show', ['tid' => $this->id]) . '">发送通知</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.users.send_message.show', ['id' => $this->id]) . '">发送通知</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.client_orders.index', ['user_id' => $this->id]) . '">投递订单</a>';
             return $buttons;
         });
@@ -127,11 +130,10 @@ class UsersController extends AdminController
 
             // grid
             $notify->created_at('时间');
-            $notify->column('data','通知')->display(function ($data)
-            {
+            $notify->column('data', '通知')->display(function ($data) {
                 return "$data[title]<br/>$data[info]<br/>";
             });
-            $notify->column('read_at','已读')->bool();
+            $notify->column('read_at', '已读')->bool();
         });
 
         $show->moneyBills('账单记录', function ($moneyBill) {
@@ -166,8 +168,7 @@ class UsersController extends AdminController
             $withdraw->money('金额');
             $withdraw->info('提现预留信息')->display(function ($info) {
                 $str = '';
-                switch ($this->type)
-                {
+                switch ($this->type) {
                     case UserWithdraw::TYPE_UNION_PAY:
                         $str = "户名:$info[name]<br/>账号:$info[account]<br/>银行:$info[bank]<br/>开户行:$info[bank_name]<br/>";
                         break;
@@ -207,17 +208,83 @@ class UsersController extends AdminController
         $form->display('real_id', '身份证号');
         $form->display('real_name', '真实姓名');
         $form->display('real_authenticated_at', '实名认证时间');
-//        $form->switch('is_authenticated', '已实名')->states([
-//            'on' => ['value' => 1, 'text' => 'YES', 'color' => 'primary'],
-//            'off' => ['value' => 0, 'text' => 'NO', 'color' => 'default'],
-//        ]);
+        /*$form->switch('is_authenticated', '已实名')->states([
+            'on' => ['value' => 1, 'text' => 'YES', 'color' => 'primary'],
+            'off' => ['value' => 0, 'text' => 'NO', 'color' => 'default'],
+        ]);*/
         // $form->email('email', 'Email');
-        //        $form->display('email', 'Email');
+        // $form->display('email', 'Email');
         // $form->datetime('email_verified_at', 'Email verified at'))->default(date('Y-m-d H:i:s');
         // $form->password('password', 'Password');
 
         return $form;
     }
 
+    // GET: 群发站内信 页面
+    public function sendMessageShow(Content $content, $id = null)
+    {
+        return $content
+            ->header('发送站内信')
+            ->body($this->sendMessageForm($id));
+    }
 
+    protected function sendMessageForm($id)
+    {
+        $form = new Form(new User());
+        $form->setAction(route('admin.users.send_message.store'));
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableList();
+            $tools->disableDelete();
+            $tools->disableView();
+        });
+
+        if ($id == null) {
+            $form->listbox('user_ids', '选择用户')->options(User::all()->pluck('name', 'id'));
+        } else {
+            $form->listbox('user_ids', '选择用户')->options(User::where('id', $id)->get()->pluck('name', 'id'))->default($id);
+        }
+
+        $form->text('title', '标题');
+        $form->textarea('info', '内容');
+        $form->text('link', '链接');
+
+        return $form;
+    }
+
+    // POST: 群发站内信 请求处理
+    public function sendMessageStore(Request $request, Content $content)
+    {
+        $data = $this->validate($request, [
+            'user_ids' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (User::whereIn('id', request()->input($attribute))->count() == 0) {
+                        $fail('请选择用户');
+                    }
+                },
+            ],
+            'title' => ['required'],
+            'info' => ['required'],
+            'link' => ['nullable', 'url'],
+        ], [], [
+            'user_ids' => '用户',
+            'title' => '标题',
+            'info' => '内容',
+            'link' => '链接',
+        ]);
+
+        $users = User::whereIn('id', $data['user_ids'])->get();
+
+        $users->each(function ($user) use ($data) {
+            $user->notify(new AdminCustomNotification(array(
+                'title' => $data['title'],
+                'info' => $data['info'],
+                'link' => $data['link'],
+            )));
+        });
+
+        return $content
+            ->row("<center><h3>发送站内信成功</h3></center>")
+            ->row("<center><a href='" . route('admin.users.index') . "'>返回用户列表</a></center>");
+    }
 }

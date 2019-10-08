@@ -22,6 +22,8 @@ Route::group([
     $router->post('configs/submit', 'ConfigsController@submit')->name('admin.configs.submit');/*提交*/
 
     /*用户*/
+    $router->get('users/send_message/{id?}', 'UsersController@sendMessageShow')->name('admin.users.send_message.show'); /*群发站内信 页面*/
+    $router->post('users/send_message', 'UsersController@sendMessageStore')->name('admin.users.send_message.store'); /*群发站内信 请求处理*/
     $router->get('users', 'UsersController@index')->name('admin.users.index');
     $router->get('users/{id}', 'UsersController@show')->name('admin.users.show');
     $router->get('users/{id}/edit', 'UsersController@edit')->name('admin.users.edit');
@@ -32,7 +34,6 @@ Route::group([
     $router->get('user_withdraws', 'UserWithdrawsController@index')->name('admin.user_withdraws');
     $router->post('user_withdraws/{withdraw}/agree', 'UserWithdrawsController@agree')->name('admin.user_withdraws.agree');/*同意*/
     $router->post('user_withdraws/{withdraw}/deny', 'UserWithdrawsController@deny')->name('admin.user_withdraws.deny');/*拒绝*/
-
 
     /*服务城市*/
     $router->resource('service_sites', 'ServiceSitesController');
@@ -61,13 +62,14 @@ Route::group([
     /*回收员*/
     $router->get('recyclers/{id}/assignment', 'RecyclersController@assignmentShow')->name('admin.recyclers.assignment.show'); /*分配回收箱 页面*/
     $router->put('recyclers/{id}/assignment', 'RecyclersController@assignmentStore')->name('admin.recyclers.assignment.store'); /*分配回收箱 请求处理*/
+    $router->get('recyclers/send_message/{id?}', 'RecyclersController@sendMessageShow')->name('admin.recyclers.send_message.show'); /*群发站内信 页面*/
+    $router->post('recyclers/send_message', 'RecyclersController@sendMessageStore')->name('admin.recyclers.send_message.store'); /*群发站内信 请求处理*/
     $router->resource('recyclers', 'RecyclersController')->names('admin.recyclers');
 
     /*回收员提现*/
     $router->get('recycler_withdraws', 'RecyclerWithdrawsController@index')->name('admin.recycler_withdraws');
     $router->post('recycler_withdraws/{withdraw}/agree', 'RecyclerWithdrawsController@agree')->name('admin.recycler_withdraws.agree');/*同意*/
     $router->post('recycler_withdraws/{withdraw}/deny', 'RecyclerWithdrawsController@deny')->name('admin.recycler_withdraws.deny');/*拒绝*/
-
 
     // $router->resource('example', ExampleController::class)->names('admin.example');
     // $router->get('example', 'ExampleController@index')->name('admin.example.index');
