@@ -8,5 +8,6 @@ $factory->define(\App\Models\BinTypePaper::class, function (Faker $faker) {
         'status' => $faker->randomElement(array_keys(\App\Models\BinTypePaper::$StatusMap)),
         'number' => $faker->randomFloat(2, 1, 100),
         'unit' => '公斤',
+        'threshold' => 100.00,
     ];
 });

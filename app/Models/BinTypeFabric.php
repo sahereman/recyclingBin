@@ -29,6 +29,7 @@ class BinTypeFabric extends Model
         'status',
         'number',
         'unit',
+        'threshold',
         'client_price_id',
         'clean_price_id',
     ];
@@ -67,6 +68,11 @@ class BinTypeFabric extends Model
     public function getStatusTextAttribute()
     {
         return self::$StatusMap[$this->attributes['status']];
+    }
+
+    public function getThresholdAttribute()
+    {
+        return $this->attributes['threshold'] ?: Config::config('fabric_threshold');
     }
 
     public function getClientPriceValueAttribute()

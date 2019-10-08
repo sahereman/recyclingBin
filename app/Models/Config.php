@@ -37,7 +37,7 @@ class Config extends Model
 
     public static $cache_key;
 
-    protected static $cache_expire_in_minutes = 1440;//24小时
+    protected static $cache_expire_in_minutes = 1440; // 24小时
 
     /**
      * The "booting" method of the model.
@@ -71,6 +71,7 @@ class Config extends Model
                 return \Storage::disk('public')->url($config->value);
             }
         }
+
         return self::configs()->where('code', $code)->first()->value;
     }
 }

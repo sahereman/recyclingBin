@@ -27,15 +27,21 @@ class ServiceSitesController extends AdminController
         $grid = new Grid(new ServiceSite);
         $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
 
+        /*自定义筛选框*/
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter(); // 去掉默认的id过滤器
+            $filter->like('name', '回收站点名称');
+        });
+
         $grid->column('id', 'Id')->sortable();
-        $grid->column('name', 'Name');
-        $grid->column('county', 'County');
-        $grid->column('province', 'Province');
-        // $grid->column('province_simple', 'Province simple');
-        $grid->column('city', 'City');
-        // $grid->column('city_simple', 'City simple');
-        // $grid->column('created_at', 'Created at');
-        // $grid->column('updated_at', 'Updated at');
+        $grid->column('name', '回收站点名称');
+        $grid->column('county', '国家');
+        $grid->column('province', '省份');
+        // $grid->column('province_simple', '省份简称');
+        $grid->column('city', '城市');
+        // $grid->column('city_simple', '城市简称');
+        // $grid->column('created_at', '创建时间');
+        // $grid->column('updated_at', '更新时间');
 
         return $grid;
     }
@@ -51,14 +57,14 @@ class ServiceSitesController extends AdminController
         $show = new Show(ServiceSite::findOrFail($id));
 
         $show->field('id', 'Id');
-        $show->field('name', 'Name');
-        $show->field('county', 'County');
-        $show->field('province', 'Province');
-        $show->field('province_simple', 'Province simple');
-        $show->field('city', 'City');
-        $show->field('city_simple', 'City simple');
-        $show->field('created_at', 'Created at');
-        $show->field('updated_at', 'Updated at');
+        $show->field('name', '回收站点名称');
+        $show->field('county', '国家');
+        $show->field('province', '省份');
+        $show->field('province_simple', '省份简称');
+        $show->field('city', '城市');
+        $show->field('city_simple', '城市简称');
+        $show->field('created_at', '创建时间');
+        $show->field('updated_at', '更新时间');
 
         return $show;
     }
@@ -72,12 +78,12 @@ class ServiceSitesController extends AdminController
     {
         $form = new Form(new ServiceSite);
 
-        $form->text('name', 'Name')->rules('required|string');
-        $form->text('county', 'County')->rules('required|string');
-        $form->text('province', 'Province')->rules('required|string');
-        $form->text('province_simple', 'Province simple')->rules('required|string');
-        $form->text('city', 'City')->rules('required|string');
-        $form->text('city_simple', 'City simple')->rules('required|string');
+        $form->text('name', '回收站点名称')->rules('required|string');
+        $form->text('county', '国家')->rules('required|string');
+        $form->text('province', '省份')->rules('required|string');
+        $form->text('province_simple', '省份简称')->rules('required|string');
+        $form->text('city', '城市')->rules('required|string');
+        $form->text('city_simple', '城市简称')->rules('required|string');
 
         return $form;
     }

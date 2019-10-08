@@ -30,6 +30,7 @@ class BinTypePaper extends Model
         'status',
         'number',
         'unit',
+        'threshold',
         'client_price_id',
         'clean_price_id',
     ];
@@ -72,6 +73,11 @@ class BinTypePaper extends Model
     public function getStatusTextAttribute()
     {
         return self::$StatusMap[$this->attributes['status']];
+    }
+
+    public function getThresholdAttribute()
+    {
+        return $this->attributes['threshold'] ?: Config::config('paper_threshold');
     }
 
     public function getClientPriceValueAttribute()

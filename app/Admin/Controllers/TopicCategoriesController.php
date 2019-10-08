@@ -27,14 +27,20 @@ class TopicCategoriesController extends AdminController
         $grid = new Grid(new TopicCategory);
         $grid->model()->orderBy('sort', 'desc'); // 设置初始排序条件
 
+        /*自定义筛选框*/
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter(); // 去掉默认的id过滤器
+            $filter->like('name', '话题分类名称');
+        });
+
         $grid->column('id', 'Id')->sortable();
-        $grid->column('name', 'Name')->sortable();
-        $grid->column('sort', 'Sort')->sortable();
+        $grid->column('name', '话题分类名称')->sortable();
+        $grid->column('sort', '排序值')->sortable();
         $grid->column('topics', '话题数目')->display(function ($topics) {
             return count($topics);
         });
-        // $grid->column('created_at', 'Created at');
-        // $grid->column('updated_at', 'Updated at');
+        // $grid->column('created_at', '创建时间');
+        // $grid->column('updated_at', '更新时间');
 
         return $grid;
     }
@@ -50,10 +56,10 @@ class TopicCategoriesController extends AdminController
         $show = new Show(TopicCategory::findOrFail($id));
 
         // $show->field('id', 'Id');
-        $show->field('name', 'Name');
-        $show->field('sort', 'Sort');
-        $show->field('created_at', 'Created at');
-        $show->field('updated_at', 'Updated at');
+        $show->field('name', '话题分类名称');
+        $show->field('sort', '排序值');
+        $show->field('created_at', '创建时间');
+        $show->field('updated_at', '更新时间');
 
         return $show;
     }
@@ -67,8 +73,8 @@ class TopicCategoriesController extends AdminController
     {
         $form = new Form(new TopicCategory);
 
-        $form->text('name', 'Name')->rules('required|string');
-        $form->number('sort', 'Sort')->default(9)->rules('required|integer|min:0')->help('默认倒序排列：数值越大越靠前');
+        $form->text('name', '话题分类名称')->rules('required|string');
+        $form->number('sort', '排序值')->default(9)->rules('required|integer|min:0')->help('默认倒序排列：数值越大越靠前');
 
         return $form;
     }
