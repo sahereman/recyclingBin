@@ -267,14 +267,14 @@ class UsersController extends AdminController
 
         if ($id == null)
         {
-            $form->listbox('user_ids', '选择用户')->options(User::all()->pluck('name', 'id'));
+            $form->listbox('user_ids', '选择用户')->options(User::all()->pluck('name', 'id'))->required();
         } else
         {
-            $form->listbox('user_ids', '选择用户')->options(User::where('id', $id)->get()->pluck('name', 'id'))->default($id);
+            $form->listbox('user_ids', '选择用户')->options(User::where('id', $id)->get()->pluck('name', 'id'))->default($id)->required();
         }
 
-        $form->text('title', '标题');
-        $form->textarea('info', '内容');
+        $form->text('title', '标题')->required();
+        $form->textarea('info', '内容')->required();
         $form->text('link', '链接');
 
         return $form;
@@ -295,7 +295,7 @@ class UsersController extends AdminController
             ],
             'title' => ['required'],
             'info' => ['required'],
-            'link' => ['nullable', 'url'],
+            'link' => ['nullable'],
         ], [], [
             'user_ids' => '用户',
             'title' => '标题',

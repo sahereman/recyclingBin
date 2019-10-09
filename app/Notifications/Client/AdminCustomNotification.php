@@ -31,8 +31,7 @@ class AdminCustomNotification extends Notification
             'info' => $this->custom['info'],
             'relation_model' => '',
             'relation_id' => 0,
-            'link' => $this->custom['link'],
-            'model' => null,
+            'link' => $this->custom['link'] ? $this->custom['link'] : '',
         ];
     }
 

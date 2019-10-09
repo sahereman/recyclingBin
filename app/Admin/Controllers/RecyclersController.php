@@ -229,13 +229,13 @@ class RecyclersController extends AdminController
         });
 
         if ($id == null) {
-            $form->listbox('recycler_ids', '选择回收员')->options(Recycler::all()->pluck('name', 'id'));
+            $form->listbox('recycler_ids', '选择回收员')->options(Recycler::all()->pluck('name', 'id'))->required();
         } else {
-            $form->listbox('recycler_ids', '选择回收员')->options(Recycler::where('id', $id)->get()->pluck('name', 'id'))->default($id);
+            $form->listbox('recycler_ids', '选择回收员')->options(Recycler::where('id', $id)->get()->pluck('name', 'id'))->default($id)->required();
         }
 
-        $form->text('title', '标题');
-        $form->textarea('info', '内容');
+        $form->text('title', '标题')->required();
+        $form->textarea('info', '内容')->required();
         $form->text('link', '链接');
 
         return $form;
@@ -255,7 +255,7 @@ class RecyclersController extends AdminController
             ],
             'title' => ['required'],
             'info' => ['required'],
-            'link' => ['nullable', 'url'],
+            'link' => ['nullable'],
         ], [], [
             'recycler_ids' => '回收员',
             'title' => '标题',
