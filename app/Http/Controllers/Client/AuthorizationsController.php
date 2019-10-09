@@ -51,10 +51,6 @@ class AuthorizationsController extends Controller
         $decryptData = $app->encryptor->decryptData($wx_session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
         $user = User::where('wx_openid', $decryptData['openId'])->first();
-        if($user->disabled_at != null)
-        {
-            $this->response->errorForbidden();
-        }
         //        info($decryptData);
 
         if (!$user)
@@ -73,6 +69,11 @@ class AuthorizationsController extends Controller
             ]);
         } else
         {
+            if($user->disabled_at != null)
+            {
+                $this->response->errorForbidden();
+            }
+            
             $user->update([
                 'wx_session_key' => $wx_session['session_key'],
                 'name' => $decryptData['nickName'],
