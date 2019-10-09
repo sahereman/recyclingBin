@@ -22,8 +22,10 @@ class CreateUsersTable extends Migration
 
             $table->decimal('money')->default(0)->comment('奖励金');
             $table->decimal('frozen_money')->default(0)->comment('冻结的奖励金,用于提现中金额');
+
             $table->decimal('total_client_order_money')->default(0)->comment('累计投递订单金额');
             $table->unsignedInteger('total_client_order_count')->default(0)->comment('累计投递订单次数');
+            $table->decimal('total_client_order_number')->default(0)->comment('累计投递订单重量');
 
             $table->string('wx_openid')->nullable()->comment('微信授权id');
             $table->string('wx_session_key')->nullable()->comment('微信会话秘钥');
