@@ -29,6 +29,8 @@ Route::group([
     $router->get('users/{id}/edit', 'UsersController@edit')->name('admin.users.edit');
     $router->put('users/{id}', 'UsersController@update')->name('admin.users.update');
     $router->delete('users/{id}', 'UsersController@destroy')->name('admin.users.destroy');
+    $router->post('users/{user}/disable', 'UsersController@disable')->name('admin.users.disable');/*加入黑名单*/
+    $router->post('users/{user}/enable', 'UsersController@enable')->name('admin.users.enable');/*移除黑名单*/
 
     /*用户提现*/
     $router->get('user_withdraws', 'UserWithdrawsController@index')->name('admin.user_withdraws');

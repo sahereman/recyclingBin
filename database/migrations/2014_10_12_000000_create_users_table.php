@@ -37,6 +37,8 @@ class CreateUsersTable extends Migration
 
             $table->unsignedInteger('notification_count')->default(0)->comment('通知未读数');
 
+            $table->timestamp('disabled_at')->nullable()->comment('禁用时间');
+
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
 

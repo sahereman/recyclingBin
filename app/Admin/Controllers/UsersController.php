@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Ajax\Ajax_Button;
 use App\Models\User;
 use App\Models\UserWithdraw;
 use App\Notifications\Client\AdminCustomNotification;
@@ -45,7 +46,8 @@ class UsersController extends AdminController
                 $filter->between('created_at', '创建时间')->datetime();
                 $filter->between('money', '奖励金');
                 $filter->where(function ($query) {
-                    switch ($this->input) {
+                    switch ($this->input)
+                    {
                         case 'yes':
                             $query->where('real_authenticated_at', '!=', null);
                             break;
@@ -54,6 +56,21 @@ class UsersController extends AdminController
                             break;
                     }
                 }, '已实名')->radio([
+                    'all' => '不选择',
+                    'yes' => '是',
+                    'no' => '否',
+                ]);
+                $filter->where(function ($query) {
+                    switch ($this->input)
+                    {
+                        case 'yes':
+                            $query->where('disabled_at', '!=', null);
+                            break;
+                        case 'no':
+                            $query->where('disabled_at', null);
+                            break;
+                    }
+                }, '黑名单')->radio([
                     'all' => '不选择',
                     'yes' => '是',
                     'no' => '否',
@@ -77,6 +94,15 @@ class UsersController extends AdminController
             $buttons = '';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.users.send_message.show', ['id' => $this->id]) . '">发送通知</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.client_orders.index', ['user_id' => $this->id]) . '">投递订单</a>';
+
+            if ($this->disabled_at == null)
+            {
+                $buttons .= new Ajax_Button(route('admin.users.disable', $this->id), [], '加入黑名单');
+            } else
+            {
+                $buttons .= new Ajax_Button(route('admin.users.enable', $this->id), [], '移除黑名单');
+            }
+
             return $buttons;
         });
 
@@ -168,7 +194,8 @@ class UsersController extends AdminController
             $withdraw->money('金额');
             $withdraw->info('提现预留信息')->display(function ($info) {
                 $str = '';
-                switch ($this->type) {
+                switch ($this->type)
+                {
                     case UserWithdraw::TYPE_UNION_PAY:
                         $str = "户名:$info[name]<br/>账号:$info[account]<br/>银行:$info[bank]<br/>开户行:$info[bank_name]<br/>";
                         break;
@@ -238,9 +265,11 @@ class UsersController extends AdminController
             $tools->disableView();
         });
 
-        if ($id == null) {
+        if ($id == null)
+        {
             $form->listbox('user_ids', '选择用户')->options(User::all()->pluck('name', 'id'));
-        } else {
+        } else
+        {
             $form->listbox('user_ids', '选择用户')->options(User::where('id', $id)->get()->pluck('name', 'id'))->default($id);
         }
 
@@ -258,7 +287,8 @@ class UsersController extends AdminController
             'user_ids' => [
                 'required',
                 function ($attribute, $value, $fail) {
-                    if (User::whereIn('id', request()->input($attribute))->count() == 0) {
+                    if (User::whereIn('id', request()->input($attribute))->count() == 0)
+                    {
                         $fail('请选择用户');
                     }
                 },
@@ -286,5 +316,29 @@ class UsersController extends AdminController
         return $content
             ->row("<center><h3>发送站内信成功</h3></center>")
             ->row("<center><a href='" . route('admin.users.index') . "'>返回用户列表</a></center>");
+    }
+
+    public function disable(Request $request, User $user)
+    {
+        $user->update([
+            'disabled_at' => now(),
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => '加入黑名单成功'
+        ]);
+    }
+
+    public function enable(Request $request, User $user)
+    {
+        $user->update([
+            'disabled_at' => null,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => '移除黑名单成功'
+        ]);
     }
 }

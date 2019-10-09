@@ -51,7 +51,10 @@ class AuthorizationsController extends Controller
         $decryptData = $app->encryptor->decryptData($wx_session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
         $user = User::where('wx_openid', $decryptData['openId'])->first();
-
+        if($user->disabled_at != null)
+        {
+            $this->response->errorForbidden();
+        }
         //        info($decryptData);
 
         if (!$user)
@@ -128,6 +131,13 @@ class AuthorizationsController extends Controller
                 // 如果捕获到此异常，即代表 refresh 也过期了，用户无法刷新令牌，需要重新登录。
                 throw new UnauthorizedHttpException('jwt-auth', $exception->getMessage());
             }
+        }
+
+
+        $user = Auth::guard('client')->setToken($token)->user();
+        if($user->disabled_at != null)
+        {
+            $this->response->errorForbidden();
         }
 
         return $this->respondWithToken($token);
