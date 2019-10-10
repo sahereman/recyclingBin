@@ -46,6 +46,7 @@ $api->version('v1', [
 
             // 订单
             $api->get('orders', 'OrdersController@index')->name('clean.orders.index');/*获取订单列表*/
+            $api->get('orders/{order}', 'OrdersController@show')->name('clean.orders.show');/*获取订单详情*/
 
             // 回收价格
             $api->get('cleanPrices', 'CleanPricesController@index')->name('clean.cleanPrices.index');/*获取回收价格列表*/
