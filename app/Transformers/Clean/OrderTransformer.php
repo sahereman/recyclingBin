@@ -16,6 +16,7 @@ class OrderTransformer extends TransformerAbstract
             'status' => $order->status,
             'status_text' => $order->status_text,
             'bin_name' => $order->bin_snapshot['name'],
+            'bin_address' => $order->bin_snapshot['address'],
             'total' => $order->total,
             'created_at' => $order->created_at->format('Y年m月d日 H:i'),
             'items' => $order->items,
