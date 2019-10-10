@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64421fac2c338d85a8077294734653bf",
+    "content-hash": "7e28403de2eb4411bdd921497d20f7fa",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -658,6 +658,65 @@
                 "performance"
             ],
             "time": "2019-05-27T17:52:04+00:00"
+        },
+        {
+            "name": "cyd622/laravel-admin-ext-echarts",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cyd622/laravel-admin-ext-echarts.git",
+                "reference": "4311388d499a9f1c68f5c645a6e9352f36fa6e92"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cyd622/laravel-admin-ext-echarts/zipball/4311388d499a9f1c68f5c645a6e9352f36fa6e92",
+                "reference": "4311388d499a9f1c68f5c645a6e9352f36fa6e92",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\Admin\\Widgets\\Echarts\\EchartsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\Admin\\Widgets\\Echarts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "cyd622",
+                    "email": "luffywang622@gmail.com"
+                }
+            ],
+            "description": "Use Echarts in laravel-admin",
+            "homepage": "https://github.com/cyd622/laravel-admin-ext-echarts",
+            "keywords": [
+                "echarts",
+                "extension",
+                "laravel-admin"
+            ],
+            "time": "2019-04-10T08:24:24+00:00"
         },
         {
             "name": "dingo/api",

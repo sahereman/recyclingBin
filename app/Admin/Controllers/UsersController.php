@@ -32,7 +32,7 @@ class UsersController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new User);
-        //        $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+        // $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
         $grid->disableCreateButton();
 
         /*筛选*/
@@ -46,8 +46,7 @@ class UsersController extends AdminController
                 $filter->between('created_at', '创建时间')->datetime();
                 $filter->between('money', '奖励金');
                 $filter->where(function ($query) {
-                    switch ($this->input)
-                    {
+                    switch ($this->input) {
                         case 'yes':
                             $query->where('real_authenticated_at', '!=', null);
                             break;
@@ -61,8 +60,7 @@ class UsersController extends AdminController
                     'no' => '否',
                 ]);
                 $filter->where(function ($query) {
-                    switch ($this->input)
-                    {
+                    switch ($this->input) {
                         case 'yes':
                             $query->where('disabled_at', '!=', null);
                             break;
@@ -95,11 +93,9 @@ class UsersController extends AdminController
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.users.send_message.show', ['id' => $this->id]) . '">发送通知</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.client_orders.index', ['user_id' => $this->id]) . '">投递订单</a>';
 
-            if ($this->disabled_at == null)
-            {
+            if ($this->disabled_at == null) {
                 $buttons .= new Ajax_Button(route('admin.users.disable', $this->id), [], '加入黑名单');
-            } else
-            {
+            } else {
                 $buttons .= new Ajax_Button(route('admin.users.enable', $this->id), [], '移除黑名单');
             }
 
@@ -139,8 +135,8 @@ class UsersController extends AdminController
         $show->field('real_id', '身份证号');
         $show->field('real_name', '真实姓名');
         $show->field('real_authenticated_at', '实名认证时间');
-        //        $show->field('email', 'Email');
-        //        $show->field('email_verified_at', 'Email verified at');
+        // $show->field('email', 'Email');
+        // $show->field('email_verified_at', 'Email verified at');
         // $show->field('password', 'Password');
         // $show->field('created_at', 'Created at');
         // $show->field('updated_at', 'Updated at');
@@ -194,8 +190,7 @@ class UsersController extends AdminController
             $withdraw->money('金额');
             $withdraw->info('提现预留信息')->display(function ($info) {
                 $str = '';
-                switch ($this->type)
-                {
+                switch ($this->type) {
                     case UserWithdraw::TYPE_UNION_PAY:
                         $str = "户名:$info[name]<br/>账号:$info[account]<br/>银行:$info[bank]<br/>开户行:$info[bank_name]<br/>";
                         break;
@@ -265,11 +260,9 @@ class UsersController extends AdminController
             $tools->disableView();
         });
 
-        if ($id == null)
-        {
+        if ($id == null) {
             $form->listbox('user_ids', '选择用户')->options(User::all()->pluck('name', 'id'))->required();
-        } else
-        {
+        } else {
             $form->listbox('user_ids', '选择用户')->options(User::where('id', $id)->get()->pluck('name', 'id'))->default($id)->required();
         }
 
@@ -287,8 +280,7 @@ class UsersController extends AdminController
             'user_ids' => [
                 'required',
                 function ($attribute, $value, $fail) {
-                    if (User::whereIn('id', request()->input($attribute))->count() == 0)
-                    {
+                    if (User::whereIn('id', request()->input($attribute))->count() == 0) {
                         $fail('请选择用户');
                     }
                 },

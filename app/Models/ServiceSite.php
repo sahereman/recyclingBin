@@ -37,4 +37,10 @@ class ServiceSite extends Model
     protected $dates = [
         //
     ];
+
+    /* Eloquent Relationships */
+    public function bins()
+    {
+        return $this->hasMany(Bin::class, 'site_id');
+    }
 }

@@ -19,6 +19,7 @@ class Topic extends Model
         'image',
         'content',
         'is_index',
+        'view_count',
     ];
 
     /**

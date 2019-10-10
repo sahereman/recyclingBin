@@ -56,6 +56,7 @@ class TopicsController extends AdminController
         // $grid->column('category_id', 'Category id');
         $grid->column('category_name', '话题分类');
         $grid->column('title', '话题标题');
+        $grid->column('view_count', '浏览量');
         // $grid->column('thumb', '缩略图')->image('', 40);
         // $grid->column('image', '图片');
         // $grid->column('content', '话题内容');
@@ -83,6 +84,7 @@ class TopicsController extends AdminController
         // $show->field('category_id', 'Category id');
         $show->field('category_name', '话题分类');
         $show->field('title', '话题标题');
+        $show->field('view_count', '浏览量');
         $show->field('thumb', '缩略图')->image('', 60);
         $show->field('image', '图片')->image('', 120);
         $show->content('话题内容');
@@ -110,6 +112,7 @@ class TopicsController extends AdminController
         $categories = TopicCategory::all()->pluck('name', 'id')->toArray();
         $form->select('category_id', '话题分类')->options($categories);
         $form->text('title', '话题标题')->rules('required|string');
+        $form->number('view_count', '浏览量')->rules('required|integer');
         // $form->image('thumb', '缩略图')->move('topic/thumbs/' . date('Ym', time()))->rules('required|image');
         $form->image('image', '图片')->move('topic/images/' . date('Ym', time()))->rules('required|image');
         // $form->textarea('content', '话题内容');
