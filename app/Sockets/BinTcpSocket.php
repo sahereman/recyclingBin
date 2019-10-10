@@ -154,6 +154,7 @@ class BinTcpSocket extends TcpSocket
             'money' => bcadd($user->money, $subtotal, 2),
             'total_client_order_money' => bcadd($user->total_client_order_money, $subtotal, 2),
             'total_client_order_count' => bcadd($user->total_client_order_count, 1),
+            'total_client_order_number' => bcadd($user->total_client_order_number, $weight,2),
         ]);
 
         GenerateClientOrderSnapshot::dispatch($order, $bin);
