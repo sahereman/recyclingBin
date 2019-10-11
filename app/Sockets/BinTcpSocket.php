@@ -170,6 +170,7 @@ class BinTcpSocket extends TcpSocket
             'static_no' => self::CLIENT_TRANSACTION,
             'delivery_price' => bcmul($price['price'], 100),
             'delivery_money' => bcmul($subtotal, 100),
+            'money' => bcmul($user['money'], 100),
             'result_code' => '200',
         ]));
     }
