@@ -99,7 +99,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"7","delivery_type":"1","delivery_weight":"3000","delivery_price":"50","delivery_money":"10","delivery_time":"20190923140001"}
+     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"7","delivery_type":"1","delivery_weight":"3000","delivery_time":"20190923140001"}
      */
     public function clientTransactionAction($server, $fd, $data)
     {
