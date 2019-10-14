@@ -8,10 +8,33 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Facades\Auth;
+
 
 class Recycler extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable
+    {
+        notify as protected laravelNotify;
+    }
+
+    public function notify($instance)
+    {
+        // 如果要通知的人是当前用户，就不必通知了！
+        if ($this->id == Auth::guard('clean')->id())
+        {
+            return;
+        }
+        $this->increment('notification_count');
+        $this->laravelNotify($instance);
+    }
+
+    public function markAsRead()
+    {
+        $this->notification_count = 0;
+        $this->save();
+        $this->unreadNotifications->markAsRead();
+    }
 
     public function getJWTIdentifier()
     {
@@ -28,24 +51,29 @@ class Recycler extends Authenticatable implements JWTSubject
         'money',
         'phone',
         'name',
+        'notification_count',
+        'disabled_at',
+        'avatar',
+        'contract_start_time',
+        'contract_end_time',
+
+        'wx_openid',
+        'wx_session_key',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     * @var array
-     */
     protected $hidden = [
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     * @var array
-     */
     protected $casts = [
     ];
 
     protected $appends = [
         'avatar_url',
+    ];
+
+    protected $dates = [
+        'contract_start_time',
+        'contract_end_time',
     ];
 
     /* Accessors */

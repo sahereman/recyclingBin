@@ -18,13 +18,12 @@ class CreateRecyclerDepositsTable extends Migration
             $table->unsignedInteger('recycler_id')->comment('recycler_id');
             $table->foreign('recycler_id')->references('id')->on('recyclers')->onDelete('cascade');
 
-            $table->string('sn')->comment('充值单号');
+            $table->unsignedInteger('payment_id')->comment('payment_id');
+            $table->foreign('payment_id')->references('id')->on('recycler_payments')->onDelete('cascade');
+
             $table->string('status')->comment('状态: paying|completed');
-            $table->string('method')->comment('充值方式: wechat');
             $table->unsignedDecimal('money')->comment('充值金额');
 
-            $table->string('payment_sn')->nullable()->comment('支付单号');
-            $table->timestamp('paid_at')->nullable()->comment('支付时间');
 
             $table->timestamps();
         });

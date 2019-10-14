@@ -137,7 +137,8 @@ class RecyclersController extends AdminController
             $withdraw->money('金额');
             $withdraw->info('提现预留信息')->display(function ($info) {
                 $str = '';
-                switch ($this->type) {
+                switch ($this->type)
+                {
                     case RecyclerWithdraw::TYPE_UNION_PAY:
                         $str = "户名:$info[name]<br/>账号:$info[account]<br/>银行:$info[bank]<br/>开户行:$info[bank_name]<br/>";
                         break;
@@ -160,7 +161,7 @@ class RecyclersController extends AdminController
 
         $form->text('name', '昵称');
         $form->mobile('phone', '手机号');
-        $form->image('avatar', '头像')->uniqueName()->move('avatars/' . date('Ym', time()))->rules('required|image');
+        //        $form->image('avatar', '头像')->uniqueName()->move('avatars/' . date('Ym', time()))->rules('required|image');
         $form->decimal('money', '余额')->default(0.00);
         $form->decimal('frozen_money', '冻结金额')->default(0.00);
         // $form->password('password', 'Password');
@@ -173,7 +174,14 @@ class RecyclersController extends AdminController
         $form->ignore(['password_confirmation']);
 
         $form->saving(function (Form $form) {
-            if ($form->password && $form->model()->password != $form->password) {
+            if ($form->model()->avatar == null)
+            {
+                $form->model()->avatar = url('defaults/recycler_avatar.png');
+            }
+
+
+            if ($form->password && $form->model()->password != $form->password)
+            {
                 $form->password = bcrypt($form->password);
             }
         });
@@ -228,9 +236,11 @@ class RecyclersController extends AdminController
             $tools->disableView();
         });
 
-        if ($id == null) {
+        if ($id == null)
+        {
             $form->listbox('recycler_ids', '选择回收员')->options(Recycler::all()->pluck('name', 'id'))->required();
-        } else {
+        } else
+        {
             $form->listbox('recycler_ids', '选择回收员')->options(Recycler::where('id', $id)->get()->pluck('name', 'id'))->default($id)->required();
         }
 
@@ -248,7 +258,8 @@ class RecyclersController extends AdminController
             'recycler_ids' => [
                 'required',
                 function ($attribute, $value, $fail) {
-                    if (Recycler::whereIn('id', request()->input($attribute))->count() == 0) {
+                    if (Recycler::whereIn('id', request()->input($attribute))->count() == 0)
+                    {
                         $fail('请选择回收员');
                     }
                 },

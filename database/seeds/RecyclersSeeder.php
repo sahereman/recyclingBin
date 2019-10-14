@@ -21,26 +21,6 @@ class RecyclersSeeder extends Seeder
         $recycler->phone = '18600982820';
         $recycler->save();
 
-        // 充值数据
-        for ($i = 1; $i <= 10; $i++)
-        {
-            $deposit = factory(RecyclerDeposit::class)->create([
-                'recycler_id' => $recycler,
-            ]);
-
-            switch ($deposit->status)
-            {
-                case RecyclerDeposit::STATUS_COMPLETED :
-                    $deposit->update([
-                        'payment_sn' => str_random(16),
-                        'paid_at' => now(),
-                    ]);
-                    RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLER_DEPOSIT, $deposit->money, $deposit);
-                    break;
-            }
-
-        }
-
         // 提现数据
         for ($i = 1; $i <= 10; $i++)
         {

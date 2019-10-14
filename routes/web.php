@@ -19,4 +19,4 @@ Horizon::auth(function ($request) {
     return Auth::guard('admin')->check();
 });
 
-Route::post('github/webhook', 'Controller@githubWebhook');
+Route::post('github/webhook', 'Controller@githubWebhook')->name('github.webhook');

@@ -11,7 +11,7 @@ $factory->define(App\Models\Recycler::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'phone' => $faker->phoneNumber,
-        'avatar' => $faker->imageUrl(),
+        'avatar' => url('defaults/recycler_avatar.png'),
         'money' => $faker->randomFloat(2, 100, 1000),
         'frozen_money' => 0,
 

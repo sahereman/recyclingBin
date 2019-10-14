@@ -17,12 +17,20 @@ class CreateRecyclersTable extends Migration
             $table->increments('id');
 
             $table->string('name')->comment('昵称');
+            $table->string('password');
             $table->string('phone')->comment('手机');
             $table->string('avatar')->nullable()->comment('头像');
             $table->decimal('money')->default(0)->comment('余额');
             $table->decimal('frozen_money')->default(0)->comment('冻结的余额,用于提现中金额');
 
-            $table->string('password');
+            $table->unsignedInteger('notification_count')->default(0)->comment('通知未读数');
+            $table->timestamp('disabled_at')->nullable()->comment('禁用时间');
+
+            $table->timestamp('contract_start_time')->nullable()->comment('合约开始时间');
+            $table->timestamp('contract_end_time')->nullable()->comment('合约结束时间');
+
+            $table->string('wx_openid')->nullable()->comment('微信授权id');
+            $table->string('wx_session_key')->nullable()->comment('微信会话秘钥');
 
             $table->timestamps();
         });

@@ -24,7 +24,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'name' => $faker->name,
         'gender' => $faker->randomElement(['男', '女']),
         'phone' => $faker->phoneNumber,
-        'avatar' => $faker->imageUrl(),
+        'avatar' => url('defaults/user_avatar.png'),
         'money' => $faker->randomFloat(2, 100, 1000),
 
         'total_client_order_money' => $faker->randomFloat(2, 100, 1000),
