@@ -74,7 +74,7 @@ class PaymentsController extends Controller
 
                                 // 增加用户余额
                                 $recycler->update([
-                                    'money' => bcadd($recycler, $deposit->money, 2)
+                                    'money' => bcadd($recycler->money, $deposit->money, 2)
                                 ]);
 
                                 // 生成账单
