@@ -26,7 +26,7 @@ class RecyclersController extends Controller
      * @catalog 回收端/回收员相关
      * @title POST 微信授权关联
      * @method POST
-     * @url recyclers/wechat/authorization
+     * @url recyclers/wechatAuthorization
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param jsCode 必选 string wx.login获取的code
      * @param iv 必选 string wx.getUserInfo获取的iv

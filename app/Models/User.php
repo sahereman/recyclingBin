@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Exceptions\UserDisabledException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -131,8 +130,7 @@ class User extends Authenticatable implements JWTSubject
 
     public static function userDisabledException()
     {
-//        abort(444,'The user is disabled');
-        throw new UserDisabledException();
+        abort(403,'The user is disabled');
     }
 
     /* Eloquent Relationships */
