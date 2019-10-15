@@ -9,7 +9,7 @@ class DepositWechatRequest extends FormRequest
     public function rules()
     {
         return [
-            'money' => ['required','integer','min:0.01'],
+            'money' => ['required','numeric','min:0.01'],
         ];
     }
 
