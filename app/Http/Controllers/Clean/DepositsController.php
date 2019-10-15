@@ -42,7 +42,8 @@ class DepositsController extends Controller
     {
         $recycler = Auth::guard('clean')->user();
 
-        info('deposits/wechat', $recycler);
+        info('deposits/wechat');
+        info($recycler);
 
         if ($recycler->wx_openid == null)
         {
