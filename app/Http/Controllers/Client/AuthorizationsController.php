@@ -71,7 +71,7 @@ class AuthorizationsController extends Controller
         {
             if($user->disabled_at != null)
             {
-                $this->response->errorForbidden();
+                User::userDisabledException();
             }
             
             $user->update([
@@ -138,7 +138,7 @@ class AuthorizationsController extends Controller
         $user = Auth::guard('client')->setToken($token)->user();
         if($user->disabled_at != null)
         {
-            $this->response->errorForbidden();
+            User::userDisabledException();
         }
 
         return $this->respondWithToken($token);

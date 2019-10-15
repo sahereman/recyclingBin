@@ -9,6 +9,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -123,6 +125,12 @@ class User extends Authenticatable implements JWTSubject
     public function setAvatarUrlAttribute($value)
     {
         unset($this->attributes['avatar_url']);
+    }
+
+
+    public static function userDisabledException()
+    {
+        throw new HttpException(444, 'The user is disabled');
     }
 
     /* Eloquent Relationships */

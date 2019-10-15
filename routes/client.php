@@ -36,7 +36,7 @@ $api->version('v1', [
         $api->get('banners/{slug}', 'BannersController@index')->name('client.banners.index');/*获取Banner图列表*/
 
         /*需要 token 验证的接口*/
-        $api->group(['middleware' => 'api.auth:client'], function ($api) {
+        $api->group(['middleware' => ['api.auth:client', 'client.checkDisabledUser']], function ($api) {
 
 
             // 用户
