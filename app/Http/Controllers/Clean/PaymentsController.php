@@ -70,11 +70,18 @@ class PaymentsController extends Controller
                                 $deposit = RecyclerDeposit::where('payment_id', $payment->id)->first();
                                 $deposit->status = RecyclerDeposit::STATUS_COMPLETED;
 
+                                $recycler = $deposit->recycler;
+
+                                // 增加用户余额
+                                $recycler->update([
+                                    'money' => bcadd($recycler, $deposit->money, 2)
+                                ]);
+
                                 // 生成账单
-                                RecyclerMoneyBill::change($deposit->recycler, RecyclerMoneyBill::TYPE_RECYCLER_DEPOSIT, $deposit->money, $deposit);
+                                RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLER_DEPOSIT, $deposit->money, $deposit);
 
                                 // 通知用户
-                                $deposit->recycler->notify(new RecyclerDepositSuccessNotification($deposit));
+                                $recycler->notify(new RecyclerDepositSuccessNotification($deposit));
                                 break;
                             default:
                                 Log::error('订单关联异常');
