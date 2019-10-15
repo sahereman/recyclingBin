@@ -85,9 +85,9 @@ class UsersController extends AdminController
         $grid->column('gender', '性别')->sortable();
         $grid->column('phone', '手机号');
         $grid->column('money', '奖励金')->sortable();
-        $grid->column('total_client_order_count', '累计投递订单次数')->sortable();
-        $grid->column('total_client_order_number', '累计投递订单重量')->sortable();
-        $grid->column('total_client_order_money', '累计投递订单金额')->sortable();
+        $grid->column('total_client_order_count', '累计次数')->sortable();
+        $grid->column('total_client_order_number', '累计重量')->sortable();
+        $grid->column('total_client_order_money', '累计金额')->sortable();
         $grid->column('created_at', '创建时间')->sortable();
 
         $grid->column('manage', '管理')->display(function () {
