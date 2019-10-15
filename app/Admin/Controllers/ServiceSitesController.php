@@ -26,6 +26,7 @@ class ServiceSitesController extends AdminController
     {
         $grid = new Grid(new ServiceSite);
         $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->disableExport();
 
         /*自定义筛选框*/
         $grid->filter(function ($filter) {

@@ -31,6 +31,7 @@ class UserWithdrawsController extends AdminController
         $grid->disableCreateButton();
         $grid->disableActions();
         $grid->disableBatchActions();
+        $grid->disableExport();
 
         /*筛选*/
         $grid->filter(function ($filter) {

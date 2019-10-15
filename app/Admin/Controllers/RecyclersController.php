@@ -33,6 +33,7 @@ class RecyclersController extends AdminController
     {
         $grid = new Grid(new Recycler);
         // $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->disableExport();
 
         /*筛选*/
         $grid->filter(function ($filter) {

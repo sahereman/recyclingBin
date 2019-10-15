@@ -24,6 +24,7 @@ class RecyclerWithdrawsController extends AdminController
     {
         $grid = new Grid(new RecyclerWithdraw);
         $grid->model()->orderBy('status', 'desc')->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->disableExport();
 
         /*禁用*/
         $grid->disableCreateButton();

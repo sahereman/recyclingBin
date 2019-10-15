@@ -34,6 +34,7 @@ class UsersController extends AdminController
         $grid = new Grid(new User);
         // $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
         $grid->disableCreateButton();
+        $grid->disableExport();
 
         /*筛选*/
         $grid->filter(function ($filter) {

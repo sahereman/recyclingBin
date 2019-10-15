@@ -41,6 +41,7 @@ class BinsController extends AdminController
         /*if ($recycler instanceof Recycler) {
             // $grid->model()->recyclers()->where('recycler_id', $recycler->id);
         }*/
+        $grid->disableExport();
 
         /*筛选*/
         $grid->filter(function ($filter) {

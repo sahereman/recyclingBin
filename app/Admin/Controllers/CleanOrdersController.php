@@ -19,6 +19,8 @@ class CleanOrdersController extends AdminController
     {
         $grid = new Grid(new CleanOrder);
         $grid->model()->with(['items', 'bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->disableExport();
+
         $recycler = Recycler::find(request()->input('recycler_id'));
         $bin = Bin::find(request()->input('bin_id'));
         if ($recycler instanceof Recycler)
