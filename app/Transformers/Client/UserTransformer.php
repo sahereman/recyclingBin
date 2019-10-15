@@ -17,6 +17,7 @@ class UserTransformer extends TransformerAbstract
             'phone' => $user->phone,
             'avatar_url' => $user->avatar_url,
             'money' => $user->money,
+            'notification_count'=>$user->notification_count,
 
             'total_client_order_money' => $user->total_client_order_money,
             'total_client_order_count' => $user->total_client_order_count,

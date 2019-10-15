@@ -32,7 +32,7 @@ class UsersController extends Controller
      * @method GET
      * @url users/show
      * @param Headers.Authorization 必选 headers 用户凭证
-     * @return {"id":1,"wx_openid":"7GSjvYxzNoVgluIK","name":"鄢金凤","gender":"男","phone":"18600982820","avatar_url":"https://lorempixel.com/640/480/?99944","money":"677.36","total_client_order_money":"626.03","total_client_order_count":"66.00","real_authenticated_at":null,"real_name":"","real_id":"","created_at":"2019-09-12 04:46:34","updated_at":"2019-09-12 09:40:12"}
+     * @return {"id":1,"wx_openid":"jWhoCXr0YOGemt4d","name":"华坤","gender":"女","phone":"18600982820","avatar_url":"http://bin.test/defaults/user_avatar.png","money":"901.94","notification_count":33,"total_client_order_money":"922.97","total_client_order_count":23,"real_authenticated_at":null,"real_name":"","real_id":"","created_at":"2019-10-09 01:01:59","updated_at":"2019-10-15 10:01:04"}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param * json 用户信息
      * @number 60
