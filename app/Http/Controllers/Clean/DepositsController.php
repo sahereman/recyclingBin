@@ -30,7 +30,7 @@ class DepositsController extends Controller
      * @catalog 回收端/回收员相关
      * @title POST 回收员充值
      * @method POST
-     * @url recyclers/wechat/authorization
+     * @url deposits/wechat
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param money 必选 string 充值金额
      * @return {"wx_pay":{"appId":"wx1f30dc232736f812","nonceStr":"5da433231639f","package":"prepay_id=wx14163443090246d0c5b5fc3f1611775400","signType":"MD5","paySign":"E1ADC9E5D9A959EC10F04699F7C6256F","timestamp":"1571042083"}}

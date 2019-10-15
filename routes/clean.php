@@ -34,7 +34,7 @@ $api->version('v1', [
         $api->delete('authorizations', 'AuthorizationsController@destroy')->name('clean.authorizations.destroy');/*删除授权token*/
 
         // 支付回调
-        $api->any('payments/wechat_notify', 'PaymentsController@wechatNotify')->name('clean.payments.wechatNotify');/*微信支付回调*/
+        $api->any('payments/wechatNotify', 'PaymentsController@wechatNotify')->name('clean.payments.wechatNotify');/*微信支付回调*/
 
         /*需要 token 验证的接口*/
         $api->group(['middleware' => 'api.auth:clean'], function ($api) {
