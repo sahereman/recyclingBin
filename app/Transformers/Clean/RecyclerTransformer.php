@@ -15,6 +15,7 @@ class RecyclerTransformer extends TransformerAbstract
             'phone' => $recycler->phone,
             'avatar_url' => $recycler->avatar_url,
             'money' => $recycler->money,
+            'frozen_money' => $recycler->frozen_money,
             'wx_openid'=>$recycler->wx_openid,
 
             'created_at' => $recycler->created_at->toDateTimeString(),
