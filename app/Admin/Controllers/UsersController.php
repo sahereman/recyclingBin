@@ -86,6 +86,8 @@ class UsersController extends AdminController
         $grid->column('phone', '手机号');
         $grid->column('money', '奖励金')->sortable();
         $grid->column('total_client_order_count', '累计投递订单次数')->sortable();
+        $grid->column('total_client_order_number', '累计投递订单重量')->sortable();
+        $grid->column('total_client_order_money', '累计投递订单金额')->sortable();
         $grid->column('created_at', '创建时间')->sortable();
 
         $grid->column('manage', '管理')->display(function () {
@@ -126,8 +128,9 @@ class UsersController extends AdminController
         $show->field('phone', '手机号');
         $show->field('money', '奖励金');
         $show->field('frozen_money', '冻结金额');
-        $show->field('total_client_order_money', '累计投递订单金额');
         $show->field('total_client_order_count', '累计投递订单次数');
+        $show->field('total_client_order_number', '累计投递订单重量');
+        $show->field('total_client_order_money', '累计投递订单金额');
         $show->field('wx_openid', '微信 OpenId');
         $show->field('wx_country', '微信 Country');
         $show->field('wx_province', '微信 Province');
