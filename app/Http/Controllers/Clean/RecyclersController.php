@@ -151,7 +151,7 @@ class RecyclersController extends Controller
     {
         $recycler = Auth::guard('clean')->user();
 
-        $bills = $recycler->moneyBills()->paginate(5);
+        $bills = $recycler->moneyBills()->paginate(10);
 
         return $this->response->paginator($bills, new RecyclerMoneyBillTransformer());
     }
