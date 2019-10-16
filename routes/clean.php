@@ -32,9 +32,11 @@ $api->version('v1', [
         $api->post('authorizations', 'AuthorizationsController@store')->name('clean.authorizations.store');/*登录授权token*/
         $api->put('authorizations', 'AuthorizationsController@update')->name('clean.authorizations.update');/*刷新授权token*/
         $api->delete('authorizations', 'AuthorizationsController@destroy')->name('clean.authorizations.destroy');/*删除授权token*/
+        $api->put('recyclers/passwordReset', 'RecyclersController@passwordReset')->name('clean.recyclers.passwordReset');/*回收员重置密码*/
 
         // 支付回调
         $api->any('payments/wechatNotify', 'PaymentsController@wechatNotify')->name('clean.payments.wechatNotify');/*微信支付回调*/
+
 
         /*需要 token 验证的接口*/
         $api->group(['middleware' => 'api.auth:clean'], function ($api) {
@@ -45,7 +47,6 @@ $api->version('v1', [
             $api->get('recyclers/bins', 'RecyclersController@bins')->name('clean.recyclers.bins');/*获取我的回收箱*/
             $api->get('recyclers/moneyBill', 'RecyclersController@moneyBill')->name('clean.recyclers.moneyBill');/*获取金钱账单列表*/
             $api->post('recyclers/withdraw/unionPay', 'RecyclersController@WithdrawUnionPay')->name('clean.recyclers.withdraw.unionPay');/*回收员银联提现*/
-            $api->put('recyclers/passwordReset', 'RecyclersController@passwordReset')->name('clean.recyclers.passwordReset');/*回收员重置密码*/
             $api->get('recyclers/notifications', 'RecyclersController@notifications')->name('clean.recyclers.notifications');/*获取消息通知*/
             $api->post('recyclers/wechatAuthorization', 'RecyclersController@wechatAuthorization')->name('clean.recyclers.wechatAuthorization');/*微信授权关联*/
 

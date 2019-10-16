@@ -103,7 +103,6 @@ class RecyclersController extends Controller
      * @title PUT 回收员重置密码
      * @method PUT
      * @url recyclers/passwordReset
-     * @param Headers.Authorization 必选 headers 用户凭证
      * @param phone 必选 string 手机号
      * @param verification_key 必选 string 短信验证码key
      * @param verification_code 必选 string 短信验证码
@@ -125,7 +124,7 @@ class RecyclersController extends Controller
             ]);
         }
 
-        $recycler = Auth::guard('clean')->user();
+        $recycler = Recycler::where('phone', $verify_data['phone'])->first();
         $recycler->password = bcrypt($request->password);
         $recycler->save();
 
