@@ -99,7 +99,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"7","delivery_type":"1","delivery_weight":"3000","delivery_time":"20190923140001"}
+     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"6","delivery_type":"1","delivery_weight":"0","delivery_time":"20190923140001"}
      */
     public function clientTransactionAction($server, $fd, $data)
     {
@@ -107,7 +107,7 @@ class BinTcpSocket extends TcpSocket
         $user = User::find($data['user_card']);
         $client_prices = ClientPrice::all();
 
-        if (!$bin || !$user || !in_array($data['delivery_type'], [1, 2]))
+        if (!$bin || !$user || !$bin->token || !in_array($data['delivery_type'], [1, 2]))
         {
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
@@ -159,7 +159,7 @@ class BinTcpSocket extends TcpSocket
 
         GenerateClientOrderSnapshot::dispatch($order, $bin);
         UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
-        $order->user->notify(new ClientOrderCompletedNotification($order));
+        $user->notify(new ClientOrderCompletedNotification($order));
 
         $bin->token->update([
             'related_model' => $order->getMorphClass(),
