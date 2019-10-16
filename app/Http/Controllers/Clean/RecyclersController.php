@@ -128,8 +128,6 @@ class RecyclersController extends Controller
         $recycler->password = bcrypt($request->password);
         $recycler->save();
 
-        Auth::guard('clean')->logout();
-
         return $this->response->array([
             '密码重置成功,请重新登录'
         ]);
