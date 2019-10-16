@@ -56,6 +56,7 @@ class Recycler extends Authenticatable implements JWTSubject
         'avatar',
         'contract_start_time',
         'contract_end_time',
+        'password',
 
         'wx_openid',
         'wx_session_key',
