@@ -15,6 +15,7 @@ use App\Models\UserMoneyBill;
 use App\Notifications\Client\ClientOrderCompletedNotification;
 use Hhxsv5\LaravelS\Swoole\Socket\TcpSocket;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Swoole\Server;
@@ -117,6 +118,7 @@ class BinTcpSocket extends TcpSocket
             if ($token->user_id != $user->id)
             {
                 info('$token->auth_id != $user->id');
+                info($token);
             }
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
@@ -168,7 +170,7 @@ class BinTcpSocket extends TcpSocket
 
         GenerateClientOrderSnapshot::dispatch($order, $bin);
         UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
-        $user->notify(new ClientOrderCompletedNotification($order));
+        Notification::send($user,new ClientOrderCompletedNotification($order));
 
         $bin->token->update([
             'related_model' => $order->getMorphClass(),
