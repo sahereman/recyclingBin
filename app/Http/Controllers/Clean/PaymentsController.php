@@ -35,6 +35,24 @@ class PaymentsController extends Controller
         {
             $response = $app->handlePaidNotify(function ($message, $fail) {
 
+                // $message array
+                //'appid' => 'wx907598*****',
+                //'bank_type' => 'CFT',
+                //'cash_fee' => '1',
+                //'fee_type' => 'CNY',
+                //'is_subscribe' => 'N',
+                //'mch_id' => '1555991491',
+                //'nonce_str' => '5da7e05ad1f5a',
+                //'openid' => 'oN3zU5Lw-Defg3yCSx2N3Rmkn21Q',
+                //'out_trade_no' => '20191017113034665466',
+                //'result_code' => 'SUCCESS',
+                //'return_code' => 'SUCCESS',
+                //'sign' => 'EEFDFE15ED24C5BD107C279E07F65A9D',
+                //'time_end' => '20191017113039',
+                //'total_fee' => '1',
+                //'trade_type' => 'JSAPI',
+                //'transaction_id' => '4200000448201910179938317765',
+
                 // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
                 $payment = RecyclerPayment::where('sn', $message['out_trade_no'])->first();
 
@@ -56,11 +74,9 @@ class PaymentsController extends Controller
                     // 用户是否支付成功
                     if (array_get($message, 'result_code') === 'SUCCESS' && $payment->amount == bcdiv($message['total_fee'], 100, 2))
                     {
-                        info($message);
-                        
                         // 更新支付成功时间
                         $payment->update([
-                            'payment_sn' => str_random(16),
+                            'payment_sn' => array_get($message, 'transaction_id', ''),
                             'paid_at' => now(),
                         ]);
 

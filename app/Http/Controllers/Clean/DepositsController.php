@@ -42,10 +42,8 @@ class DepositsController extends Controller
     {
         $recycler = Auth::guard('clean')->user();
 
-        info('deposits/wechat');
-        info($recycler);
 
-        if ($recycler->wx_openid == null)
+        if (!$recycler || $recycler->wx_openid == null)
         {
             throw new StoreResourceFailedException(null, [
                 'money' => '用户未微信授权'
