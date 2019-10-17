@@ -111,11 +111,19 @@ class BinTcpSocket extends TcpSocket
 
         if (!$bin || !$user || !$token || $token->auth_id != $user->id || $data['delivery_weight'] < 0 || !in_array($data['delivery_type'], [1, 2]))
         {
+            if (!$bin)
+            {
+                info('$bin not find');
+            }
+            if (!$user)
+            {
+                info('$user not find');
+            }
             if (!$token)
             {
                 info('$token not find');
             }
-            if ($token->auth_id != $user->id)
+            if ($token || $token->auth_id != $user->id)
             {
                 info('$token->auth_id != $user->id');
                 info($token);
