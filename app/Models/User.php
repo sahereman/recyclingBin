@@ -81,6 +81,7 @@ class User extends Authenticatable implements JWTSubject
 
         'total_client_order_money',
         'total_client_order_count',
+        'total_client_order_number',
     ];
 
     /**
