@@ -108,7 +108,7 @@ class BinTcpSocket extends TcpSocket
         $client_prices = ClientPrice::all();
         $token = $bin->token;
 
-        if (!$bin || !$user || !$token || $token->user_id != $user->id || !in_array($data['delivery_type'], [1, 2]))
+        if (!$bin || !$user || !$token || $token->auth_id != $user->id || !in_array($data['delivery_type'], [1, 2]))
         {
             if (!$token)
             {
@@ -116,7 +116,7 @@ class BinTcpSocket extends TcpSocket
             }
             if ($token->user_id != $user->id)
             {
-                info('$token->user_id != $user->id');
+                info('$token->auth_id != $user->id');
             }
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
