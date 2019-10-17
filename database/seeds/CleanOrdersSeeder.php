@@ -16,7 +16,7 @@ class CleanOrdersSeeder extends Seeder
         $recyclers->each(function ($recycler) {
             $bins = $recycler->bins;
 
-            if($bins)
+            if(!empty($bins))
             {
                 for ($i = 1; $i <= 20; $i++)
                 {
