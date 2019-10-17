@@ -22,10 +22,10 @@ class CreateBinTypeFabricsTable extends Migration
             $table->string('name')->comment('种类名称');
             $table->string('status')->comment('状态');
 
-            $table->decimal('number')->comment('数量');
+            $table->unsignedDecimal('number')->comment('数量');
             $table->string('unit')->comment('计量单位');
 
-            $table->decimal('threshold')->nullable()->comment('阈值');
+            $table->unsignedDecimal('threshold')->nullable()->comment('阈值');
 
             $table->unsignedInteger('client_price_id')->comment('客户端价格');
             $table->foreign('client_price_id')->references('id')->on('client_prices')->onDelete('cascade');

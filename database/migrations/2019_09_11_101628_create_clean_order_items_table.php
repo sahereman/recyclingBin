@@ -22,10 +22,10 @@ class CreateCleanOrderItemsTable extends Migration
             $table->string('type_slug')->comment('回收分类标示');
             $table->string('type_name')->comment('回收分类名称');
 
-            $table->decimal('number')->comment('数量');
+            $table->unsignedDecimal('number')->comment('数量');
             $table->string('unit')->comment('计量单位');
 
-            $table->string('subtotal')->comment('小计');
+            $table->unsignedDecimal('subtotal')->comment('小计');
         });
     }
 

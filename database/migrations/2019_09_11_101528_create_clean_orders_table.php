@@ -27,7 +27,7 @@ class CreateCleanOrdersTable extends Migration
 
             $table->json('bin_snapshot')->comment('回收箱快照');
 
-            $table->decimal('total')->comment('合计');
+            $table->unsignedDecimal('total')->comment('合计');
 
             $table->timestamps();
         });

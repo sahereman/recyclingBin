@@ -17,7 +17,7 @@ class CreateCleanPricesTable extends Migration
             $table->increments('id');
 
             $table->string('slug')->unique()->comment('标示位');
-            $table->decimal('price')->comment('回收端价格');
+            $table->unsignedDecimal('price')->comment('回收端价格');
             $table->string('unit')->comment('计量单位');
         });
     }

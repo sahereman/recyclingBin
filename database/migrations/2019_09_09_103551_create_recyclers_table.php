@@ -20,8 +20,8 @@ class CreateRecyclersTable extends Migration
             $table->string('password');
             $table->string('phone')->comment('手机');
             $table->string('avatar')->nullable()->comment('头像');
-            $table->decimal('money')->default(0)->comment('余额');
-            $table->decimal('frozen_money')->default(0)->comment('冻结的余额,用于提现中金额');
+            $table->unsignedDecimal('money')->default(0)->comment('余额');
+            $table->unsignedDecimal('frozen_money')->default(0)->comment('冻结的余额,用于提现中金额');
 
             $table->unsignedInteger('notification_count')->default(0)->comment('通知未读数');
             $table->timestamp('disabled_at')->nullable()->comment('禁用时间');

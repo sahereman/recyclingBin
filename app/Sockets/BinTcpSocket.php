@@ -109,7 +109,7 @@ class BinTcpSocket extends TcpSocket
         $client_prices = ClientPrice::all();
         $token = $bin->token;
 
-        if (!$bin || !$user || !$token || $token->auth_id != $user->id || !in_array($data['delivery_type'], [1, 2]))
+        if (!$bin || !$user || !$token || $token->auth_id != $user->id || $data['delivery_weight'] < 0 || !in_array($data['delivery_type'], [1, 2]))
         {
             if (!$token)
             {
@@ -170,7 +170,7 @@ class BinTcpSocket extends TcpSocket
 
         GenerateClientOrderSnapshot::dispatch($order, $bin);
         UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
-        Notification::send($user,new ClientOrderCompletedNotification($order));
+        Notification::send($user, new ClientOrderCompletedNotification($order));
 
         $bin->token->update([
             'related_model' => $order->getMorphClass(),

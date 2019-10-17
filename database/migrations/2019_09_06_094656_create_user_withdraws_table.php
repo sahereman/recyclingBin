@@ -21,7 +21,7 @@ class CreateUserWithdrawsTable extends Migration
             $table->string('type')->comment('提现申请类型: 银联,微信,支付宝');
             $table->string('status')->comment('提现状态: 待审核,已通过,已拒绝');
 
-            $table->string('money')->comment('金额');
+            $table->unsignedDecimal('money')->comment('金额');
 
             $table->json('info')->comment('提现预留信息');
 

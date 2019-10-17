@@ -17,7 +17,7 @@ class CreateClientPricesTable extends Migration
             $table->increments('id');
 
             $table->string('slug')->unique()->comment('标示位');
-            $table->decimal('price')->comment('客户端价格');
+            $table->unsignedDecimal('price')->comment('客户端价格');
             $table->string('unit')->comment('计量单位');
         });
     }

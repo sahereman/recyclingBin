@@ -24,7 +24,7 @@ class CreateRecyclerMoneyBillsTable extends Migration
             $table->string('description')->default('')->comment('描述');
 
             $table->string('operator')->comment('运算符');
-            $table->decimal('number')->comment('金额数目');
+            $table->unsignedDecimal('number')->comment('金额数目');
 
             $table->string('related_model')->nullable()->default(null)->comment('关联模型');
             $table->unsignedInteger('related_id')->nullable()->default(null)->comment('关联模型ID');
