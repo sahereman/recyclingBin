@@ -11,22 +11,27 @@ class CleanOrdersSeeder extends Seeder
 {
     public function run()
     {
-        $recycler = Recycler::find(1);
-        $bins = $recycler->bins;
+        $recyclers = Recycler::all();
 
-        for ($i = 1; $i <= 20; $i++) {
-            $bin = $bins->random();
-            $order = factory(CleanOrder::class)->create([
-                'bin_id' => $bin->id,
-                'recycler_id' => $recycler->id,
-            ]);
+        $recyclers->each(function ($recycler) {
+            $bins = $recycler->bins;
 
-            factory(CleanOrderItem::class, random_int(1, 2))->create([
-                'order_id' => $order->id,
-            ]);
+            for ($i = 1; $i <= 20; $i++)
+            {
+                $bin = $bins->random();
+                $order = factory(CleanOrder::class)->create([
+                    'bin_id' => $bin->id,
+                    'recycler_id' => $recycler->id,
+                ]);
 
-            GenerateRecycleOrderSnapshot::dispatch($order, $bin);
-            RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLE_ORDER, $order->total, $order);
-        }
+                factory(CleanOrderItem::class, random_int(1, 2))->create([
+                    'order_id' => $order->id,
+                ]);
+
+                GenerateRecycleOrderSnapshot::dispatch($order, $bin);
+                RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLE_ORDER, $order->total, $order);
+            }
+        });
+
     }
 }
