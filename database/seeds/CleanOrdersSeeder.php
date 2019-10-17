@@ -6,6 +6,8 @@ use App\Models\CleanOrderItem;
 use App\Models\RecyclerMoneyBill;
 use App\Models\Recycler;
 use App\Jobs\GenerateRecycleOrderSnapshot;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\Clean\CleanOrderCompletedNotification;
 
 class CleanOrdersSeeder extends Seeder
 {
@@ -16,7 +18,7 @@ class CleanOrdersSeeder extends Seeder
         $recyclers->each(function ($recycler) {
             $bins = $recycler->bins;
 
-            if($bins->isNotEmpty())
+            if ($bins->isNotEmpty())
             {
                 for ($i = 1; $i <= 20; $i++)
                 {
@@ -32,6 +34,7 @@ class CleanOrdersSeeder extends Seeder
 
                     GenerateRecycleOrderSnapshot::dispatch($order, $bin);
                     RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLE_ORDER, $order->total, $order);
+                    Notification::send($recycler, new CleanOrderCompletedNotification($order));
                 }
             }
 
