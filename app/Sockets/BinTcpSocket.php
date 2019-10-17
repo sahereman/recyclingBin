@@ -106,8 +106,9 @@ class BinTcpSocket extends TcpSocket
         $bin = Bin::where('no', $data['equipment_no'])->first();
         $user = User::find($data['user_card']);
         $client_prices = ClientPrice::all();
+        $token = $bin->token;
 
-        if (!$bin || !$user || !$bin->token || !in_array($data['delivery_type'], [1, 2]))
+        if (!$bin || !$user || !$token || $token->user_id != $user->id || !in_array($data['delivery_type'], [1, 2]))
         {
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
