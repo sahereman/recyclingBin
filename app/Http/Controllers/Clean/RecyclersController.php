@@ -194,6 +194,7 @@ class RecyclersController extends Controller
                     'name' => $request->input('name'),
                     'bank' => $request->input('bank'),
                     'account' => $request->input('account'),
+                    'bank_name' => $request->input('bank_name')
                 ]
             ]);
 

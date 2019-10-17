@@ -12,7 +12,8 @@ class WithdrawUnionPayRequest extends FormRequest
             'name' => ['required'],
             'bank' => ['required'],
             'account' => ['required'],
-            'money' => ['required', 'integer','min:10', 'max:5000']
+            'bank_name' => ['required'],
+            'money' => ['required', 'numeric','min:5', 'max:5000']
         ];
     }
 
@@ -23,6 +24,7 @@ class WithdrawUnionPayRequest extends FormRequest
             'bank' => '银行',
             'account' => '账号',
             'money' => '金额',
+            'bank_name' => '开户行',
         ];
     }
 }
