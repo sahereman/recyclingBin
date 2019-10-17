@@ -115,7 +115,7 @@ class BinTcpSocket extends TcpSocket
             {
                 info('$token not find');
             }
-            if ($token->user_id != $user->id)
+            if ($token->auth_id != $user->id)
             {
                 info('$token->auth_id != $user->id');
                 info($token);
