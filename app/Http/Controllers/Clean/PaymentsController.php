@@ -56,15 +56,18 @@ class PaymentsController extends Controller
                     // 用户是否支付成功
                     if (array_get($message, 'result_code') === 'SUCCESS' && $payment->amount == bcdiv($message['total_fee'], 100, 2))
                     {
-                        // 支付成功处理
+                        info($message);
+                        
+                        // 更新支付成功时间
+                        $payment->update([
+                            'payment_sn' => str_random(16),
+                            'paid_at' => now(),
+                        ]);
+
+                        // 支付类型处理
                         switch ($payment->related_model)
                         {
                             case RecyclerDeposit::class:
-                                // 更新支付成功时间
-                                $payment->update([
-                                    'payment_sn' => str_random(16),
-                                    'paid_at' => now(),
-                                ]);
 
                                 // 修改充值状态
                                 $deposit = RecyclerDeposit::where('payment_id', $payment->id)->first();
