@@ -173,7 +173,7 @@ class BinTcpSocket extends TcpSocket
                 'static_no' => self::CLEAN_TRANSACTION,
                 'open_door' => false,
                 'description' => '2',
-                'money' => $recycler->money,
+                'money' => bcmul($recycler['money'], 100),
                 'result_code' => '200',
             ]));
             return false;
@@ -186,7 +186,7 @@ class BinTcpSocket extends TcpSocket
                 'static_no' => self::CLEAN_TRANSACTION,
                 'open_door' => false,
                 'description' => '3',
-                'money' => $recycler->money,
+                'money' => bcmul($recycler['money'], 100),
                 'result_code' => '200',
             ]));
             return false;
