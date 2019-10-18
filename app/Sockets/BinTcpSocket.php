@@ -134,7 +134,7 @@ class BinTcpSocket extends TcpSocket
             {
                 info('$token not find');
             }
-            if ($token && $token->auth_id != $recycler->id)
+            if ($token && $recycler && $token->auth_id != $recycler->id)
             {
                 info('$token->auth_id != $recycler->id');
                 info($token);
@@ -252,7 +252,7 @@ class BinTcpSocket extends TcpSocket
             {
                 info('$token not find');
             }
-            if ($token && $token->auth_id != $user->id)
+            if ($token && $user && $token->auth_id != $user->id)
             {
                 info('$token->auth_id != $user->id');
                 info($token);
