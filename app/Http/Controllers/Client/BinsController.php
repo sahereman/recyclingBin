@@ -126,7 +126,7 @@ class BinsController extends Controller
         if ($token->auth_id != null)
         {
             throw new StoreResourceFailedException(null, [
-                'token' => '令牌已使用,请重新获取'
+                'token' => '二维码已使用'
             ]);
         }
 

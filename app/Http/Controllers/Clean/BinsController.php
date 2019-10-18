@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Clean;
 
 use App\Handlers\SocketJsonHandler;
-use App\Http\Requests\Client\BinTokenRequest;
+use App\Http\Requests\Clean\BinTokenRequest;
 use App\Models\BinToken;
 use App\Models\CleanPrice;
 use App\Sockets\BinTcpSocket;
@@ -34,7 +34,7 @@ class BinsController extends Controller
         if ($token->auth_id != null)
         {
             throw new StoreResourceFailedException(null, [
-                'token' => '令牌已使用,请重新获取'
+                'token' => '二维码已使用'
             ]);
         }
 
