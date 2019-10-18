@@ -41,6 +41,7 @@ class BinTcpSocket extends TcpSocket
         self::CLIENT_LOGOUT,
         self::BEAT,
         self::QRCODE,
+        self::CLEAN_TRANSACTION,
     ];
 
     public function onConnect(Server $server, $fd, $reactorId)
@@ -110,7 +111,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs006","equipment_no":"00001","user_card":"8","admin":true,"type":"1","weight":"3000"}
+     {"static_no":"yzs006","equipment_no":"0532009","user_card":"8","admin":true,"type":"1","weight":"3000"}
      */
     public function cleanTransactionAction($server, $fd, $data)
     {
