@@ -120,7 +120,7 @@ class BinTcpSocket extends TcpSocket
         $clean_prices = CleanPrice::all();
         $token = $bin->token;
 
-        if (!$bin || !$recycler || !$token || $token->auth_id != $recycler->id || $data['weight'] < 0 || !in_array($data['type'], [1, 2]))
+        if (!$bin || !$recycler || !$token || $token->auth_id != $recycler->id || !in_array($data['type'], [1, 2]))
         {
             if (!$bin)
             {
@@ -180,7 +180,7 @@ class BinTcpSocket extends TcpSocket
         }
 
         // 正在维护
-        if($type->status == $type::STATUS_REPAIR)
+        if ($type->status == $type::STATUS_REPAIR)
         {
             $server->send($fd, new SocketJsonHandler([
                 'static_no' => self::CLEAN_TRANSACTION,
