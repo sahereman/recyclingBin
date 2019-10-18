@@ -47,6 +47,7 @@ class BinsController extends Controller
 
         info(json_encode([
             '__action'=> 'recycler qrLogin',
+            '__fd' => $token->fd,
             'static_no' => BinTcpSocket::CLIENT_LOGIN,
             'result_code' => '200',
             'user_card' => (string)$recycler->id,
