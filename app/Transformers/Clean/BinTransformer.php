@@ -22,6 +22,8 @@ class BinTransformer extends TransformerAbstract
             'no' => $bin->no,
             'address' => $bin->address,
             'total' => bcadd($type_paper['subtotal'], $type_fabric['subtotal'], 2),
+            'lat' => $bin->lat,
+            'lng' => $bin->lng,
             'site' => $bin->site,
             'type_paper' => $type_paper,
             'type_fabric' => $type_fabric,
