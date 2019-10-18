@@ -125,7 +125,7 @@ class RecyclersController extends Controller
         }
 
         $recycler = Recycler::where('phone', $verify_data['phone'])->first();
-        $recycler->password = bcrypt($request->password);
+        $recycler->password = bcrypt($request->input('password'));
         $recycler->save();
 
         return $this->response->array([
