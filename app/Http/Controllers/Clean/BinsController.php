@@ -45,6 +45,16 @@ class BinsController extends Controller
         $token->auth_id = $recycler->id;
         $token->save();
 
+        info([
+            '__action'=> '回收端 扫码开箱',
+            'static_no' => BinTcpSocket::CLIENT_LOGIN,
+            'result_code' => '200',
+            'user_card' => (string)$recycler->id,
+            'user_type' => '2', // 2:回收员
+            'paper_price' => bcmul($clean_prices->where('slug', 'paper')->first()['price'], 100),
+            'cloth_price' => bcmul($clean_prices->where('slug', 'fabric')->first()['price'], 100),
+            'money' => bcmul($recycler->money, 100)
+        ]);
 
         $swoole->send($token->fd, new SocketJsonHandler([
             'static_no' => BinTcpSocket::CLIENT_LOGIN,

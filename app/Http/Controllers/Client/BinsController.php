@@ -139,6 +139,17 @@ class BinsController extends Controller
         $token->save();
 
 
+        info([
+            '__action'=> '客户端 扫码开箱',
+            'static_no' => BinTcpSocket::CLIENT_LOGIN,
+            'result_code' => '200',
+            'user_card' => (string)$user->id,
+            'user_type' => '1', // 1:用户
+            'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
+            'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
+            'money' => bcmul($user->money, 100)
+        ]);
+
         $swoole->send($token->fd, new SocketJsonHandler([
             'static_no' => BinTcpSocket::CLIENT_LOGIN,
             'result_code' => '200',
