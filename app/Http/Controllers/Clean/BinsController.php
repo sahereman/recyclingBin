@@ -8,6 +8,7 @@ use App\Models\BinToken;
 use App\Models\CleanPrice;
 use App\Sockets\BinTcpSocket;
 use App\Transformers\Client\BinTokenTransformer;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Auth;
 
 class BinsController extends Controller
@@ -30,12 +31,12 @@ class BinsController extends Controller
     {
         $token = BinToken::where('token', $request->token)->first();
 
-        //        if ($token->auth_id != null)
-        //        {
-        //            throw new StoreResourceFailedException(null, [
-        //                'token' => '令牌已使用,请重新获取'
-        //            ]);
-        //        }
+        if ($token->auth_id != null)
+        {
+            throw new StoreResourceFailedException(null, [
+                'token' => '令牌已使用,请重新获取'
+            ]);
+        }
 
         $recycler = Auth::guard('clean')->user();
         $swoole = app('swoole');
@@ -46,7 +47,7 @@ class BinsController extends Controller
         $token->save();
 
         info(json_encode([
-            '__action'=> 'recycler qrLogin',
+            '__action' => 'recycler qrLogin',
             '__fd' => $token->fd,
             'static_no' => BinTcpSocket::CLIENT_LOGIN,
             'result_code' => '200',
