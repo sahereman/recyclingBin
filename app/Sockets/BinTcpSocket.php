@@ -3,15 +3,21 @@
 namespace App\Sockets;
 
 use App\Handlers\SocketJsonHandler;
+use App\Jobs\GenerateCleanOrderSnapshot;
 use App\Jobs\GenerateClientOrderSnapshot;
 use App\Models\Bin;
 use App\Models\BinToken;
 use App\Models\BinTypeFabric;
 use App\Models\BinTypePaper;
+use App\Models\CleanOrder;
+use App\Models\CleanPrice;
 use App\Models\ClientOrder;
 use App\Models\ClientPrice;
+use App\Models\Recycler;
+use App\Models\RecyclerMoneyBill;
 use App\Models\User;
 use App\Models\UserMoneyBill;
+use App\Notifications\Clean\CleanOrderCompletedNotification;
 use App\Notifications\Client\ClientOrderCompletedNotification;
 use Hhxsv5\LaravelS\Swoole\Socket\TcpSocket;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +33,7 @@ class BinTcpSocket extends TcpSocket
     const CLIENT_LOGOUT = 'yzs002';
     const BEAT = 'yzs003';
     const QRCODE = 'yzs004';
+    const CLEAN_TRANSACTION = 'yzs006';
 
     private $actions = [
         self::CLIENT_LOGIN,
@@ -84,6 +91,9 @@ class BinTcpSocket extends TcpSocket
                 case self::QRCODE :
                     $this->qrcodeAction($server, $fd, $data);
                     break;
+                case self::CLEAN_TRANSACTION:
+                    $this->cleanTransactionAction($server, $fd, $data);
+                    break;
                 default:
                     $server->send($fd, new SocketJsonHandler([
                         'result_code' => '401' // static_no 错误/未找到
@@ -96,6 +106,124 @@ class BinTcpSocket extends TcpSocket
 
     public function clientLoginAction($server, $fd, $data)
     {
+
+    }
+
+    /*
+     {"static_no":"yzs006","equipment_no":"00001","user_card":"8","admin":true,"type":"1","weight":"3000"}
+     */
+    public function cleanTransactionAction($server, $fd, $data)
+    {
+        $bin = Bin::where('no', $data['equipment_no'])->first();
+        $recycler = Recycler::find($data['user_card']);
+        $clean_prices = CleanPrice::all();
+        $token = $bin->token;
+
+        if (!$bin || !$recycler || !$token || $token->auth_id != $recycler->id || $data['weight'] < 0 || !in_array($data['type'], [1, 2]))
+        {
+            if (!$bin)
+            {
+                info('$bin not find');
+            }
+            if (!$recycler)
+            {
+                info('$recycler not find');
+            }
+            if (!$token)
+            {
+                info('$token not find');
+            }
+            if ($token && $token->auth_id != $recycler->id)
+            {
+                info('$token->auth_id != $recycler->id');
+                info($token);
+            }
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
+            return false;
+        }
+
+        switch ($data['type'])
+        {
+            case 1:
+                $type = $bin->type_paper;
+                $price = $clean_prices->where('slug', 'paper')->first();
+                break;
+            case 2:
+                $type = $bin->type_fabric;
+                $price = $clean_prices->where('slug', 'fabric')->first();
+                break;
+        }
+
+        $weight = bcdiv($data['weight'], 1000, 2);
+        $subtotal = bcmul($price['price'], $weight, 2);
+
+        // 没有权限开门
+        if (1)
+        {
+
+        }
+
+        // 余额不足
+        if (bcsub($recycler->money, $subtotal, 2) < 0)
+        {
+            $server->send($fd, new SocketJsonHandler([
+                'static_no' => self::CLEAN_TRANSACTION,
+                'open_door' => false,
+                'description' => '2',
+                'money' => $recycler->money,
+                'result_code' => '200',
+            ]));
+            return false;
+        }
+
+
+        // 创建订单
+        $order = CleanOrder::create([
+            'status' => CleanOrder::STATUS_COMPLETED,
+            'bin_id' => $bin->id,
+            'recycler_id' => $recycler->id,
+            'total' => $subtotal,
+            'bin_snapshot' => [],
+        ]);
+        $order->items()->create([
+            'type_slug' => $type::SLUG,
+            'type_name' => $type::NAME,
+            'number' => $weight,
+            'unit' => $price['unit'],
+            'subtotal' => $subtotal,
+        ]);
+
+        // 清空类型箱
+        $type->update([
+            'status' => $type::STATUS_FULL,
+            'number' => 0,
+        ]);
+
+        // 更新回收员余额
+        $recycler->update([
+            'money' => bcsub($recycler->money, $subtotal, 2),
+        ]);
+
+        // 分配任务
+        GenerateCleanOrderSnapshot::dispatch($order, $bin);
+        RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_CLEAN_ORDER, $order->total, $order);
+        Notification::send($recycler, new CleanOrderCompletedNotification($order));
+
+        // 更新bin_token
+        $bin->token->update([
+            'related_model' => $order->getMorphClass(),
+            'related_id' => $order->id,
+        ]);
+
+        $server->send($fd, new SocketJsonHandler([
+            'static_no' => self::CLEAN_TRANSACTION,
+            'open_door' => true,
+            'description' => 0,
+            'money' => bcmul($recycler['money'], 100),
+            'result_code' => '200',
+        ]));
 
     }
 

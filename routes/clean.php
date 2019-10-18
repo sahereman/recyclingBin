@@ -50,6 +50,9 @@ $api->version('v1', [
             $api->get('recyclers/notifications', 'RecyclersController@notifications')->name('clean.recyclers.notifications');/*获取消息通知*/
             $api->post('recyclers/wechatAuthorization', 'RecyclersController@wechatAuthorization')->name('clean.recyclers.wechatAuthorization');/*微信授权关联*/
 
+            // 回收箱
+            $api->put('bins/qrLogin', 'BinsController@qrLogin')->name('clean.bins.qrLogin');/*扫码开箱*/
+
             // 充值
             $api->post('deposits/wechat', 'DepositsController@wechat')->name('clean.deposit.wechat');/*回收员充值*/
 

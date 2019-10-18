@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class RecyclerMoneyBill extends Model
 {
-    const TYPE_RECYCLE_ORDER = 'recycleOrder';
+    const TYPE_CLEAN_ORDER = 'cleanOrder';
     const TYPE_RECYCLER_WITHDRAW = 'recyclerWithdraw';
     const TYPE_RECYCLER_DEPOSIT = 'recyclerDeposit';
 
     public static $TypeMap = [
-        self::TYPE_RECYCLE_ORDER => '取货订单',
+        self::TYPE_CLEAN_ORDER => '取货订单',
         self::TYPE_RECYCLER_WITHDRAW => '回收员提现',
         self::TYPE_RECYCLER_DEPOSIT => '回收员充值',
     ];
@@ -99,7 +99,7 @@ class RecyclerMoneyBill extends Model
         }
 
         switch ($type) {
-            case self::TYPE_RECYCLE_ORDER :
+            case self::TYPE_CLEAN_ORDER :
                 if (!$related instanceof CleanOrder || !$related->exists) {
                     throw new \Exception('关联模型异常');
                 }

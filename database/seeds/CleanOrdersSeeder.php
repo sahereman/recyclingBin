@@ -5,7 +5,7 @@ use App\Models\CleanOrder;
 use App\Models\CleanOrderItem;
 use App\Models\RecyclerMoneyBill;
 use App\Models\Recycler;
-use App\Jobs\GenerateRecycleOrderSnapshot;
+use App\Jobs\GenerateCleanOrderSnapshot;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\Clean\CleanOrderCompletedNotification;
 
@@ -32,8 +32,8 @@ class CleanOrdersSeeder extends Seeder
                         'order_id' => $order->id,
                     ]);
 
-                    GenerateRecycleOrderSnapshot::dispatch($order, $bin);
-                    RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_RECYCLE_ORDER, $order->total, $order);
+                    GenerateCleanOrderSnapshot::dispatch($order, $bin);
+                    RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_CLEAN_ORDER, $order->total, $order);
                     Notification::send($recycler, new CleanOrderCompletedNotification($order));
                 }
             }

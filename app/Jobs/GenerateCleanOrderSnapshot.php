@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
 
 
-class GenerateRecycleOrderSnapshot
+class GenerateCleanOrderSnapshot
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
