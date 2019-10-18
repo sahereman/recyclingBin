@@ -157,7 +157,7 @@ class BinTcpSocket extends TcpSocket
                 break;
         }
 
-        $weight = bcdiv($data['weight'], 1000, 2);
+        $weight = $type->number;
         $subtotal = bcmul($price['price'], $weight, 2);
 
         // 没有权限开门
@@ -173,6 +173,19 @@ class BinTcpSocket extends TcpSocket
                 'static_no' => self::CLEAN_TRANSACTION,
                 'open_door' => false,
                 'description' => '2',
+                'money' => $recycler->money,
+                'result_code' => '200',
+            ]));
+            return false;
+        }
+
+        // 正在维护
+        if($type->status == $type::STATUS_REPAIR)
+        {
+            $server->send($fd, new SocketJsonHandler([
+                'static_no' => self::CLEAN_TRANSACTION,
+                'open_door' => false,
+                'description' => '3',
                 'money' => $recycler->money,
                 'result_code' => '200',
             ]));
@@ -198,7 +211,7 @@ class BinTcpSocket extends TcpSocket
 
         // 清空类型箱
         $type->update([
-            'status' => $type::STATUS_FULL,
+            'status' => $type::STATUS_NORMAL,
             'number' => 0,
         ]);
 
