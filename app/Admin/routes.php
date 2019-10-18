@@ -43,6 +43,9 @@ Route::group([
     /*回收箱*/
     $router->resource('bins', 'BinsController')->names('admin.bins');
 
+    /*回收箱权限*/
+    $router->resource('bin_recyclers', 'BinRecyclersController')->names('admin.bin_recyclers');
+
     /*客户端价格*/
     $router->resource('client_prices', 'ClientPricesController');
 

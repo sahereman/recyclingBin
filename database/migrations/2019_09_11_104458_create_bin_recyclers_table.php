@@ -8,7 +8,6 @@ class CreateBinRecyclersTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
@@ -22,13 +21,15 @@ class CreateBinRecyclersTable extends Migration
             $table->unsignedInteger('recycler_id')->comment('recycler_id');
             $table->foreign('recycler_id')->references('id')->on('recyclers')->onDelete('cascade');
 
+            $table->boolean('fabric_permission')->default(true)->comment('纺织物开箱权限');
+            $table->boolean('paper_permission')->default(true)->comment('可回收物开箱权限');
+
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()

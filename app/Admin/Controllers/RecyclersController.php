@@ -66,6 +66,7 @@ class RecyclersController extends AdminController
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.send_message.show', ['id' => $this->id]) . '">发送通知</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.clean_orders.index', ['recycler_id' => $this->id]) . '">回收订单</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.assignment.show', $this->id) . '">分配回收箱</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.bin_recyclers.index', ['recycler_id' => $this->id]) . '">回收箱权限</a>';
             return $buttons;
         });
 

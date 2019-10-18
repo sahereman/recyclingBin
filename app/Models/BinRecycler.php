@@ -13,6 +13,8 @@ class BinRecycler extends Model
     protected $fillable = [
         'bin_id',
         'recycler_id',
+        'fabric_permission',
+        'paper_permission',
     ];
 
     /**
@@ -20,7 +22,9 @@ class BinRecycler extends Model
      * @var array
      */
     protected $casts = [
-        //
+        'fabric_permission' => 'boolean',
+        'paper_permission' => 'boolean',
+
     ];
 
     /**
