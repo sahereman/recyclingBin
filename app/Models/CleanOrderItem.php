@@ -17,7 +17,7 @@ class CleanOrderItem extends Model
         'type_slug',
         'number',
         'unit',
-        'sub_total'
+        'subtotal'
     ];
 
     /**
