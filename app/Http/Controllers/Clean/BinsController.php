@@ -46,7 +46,7 @@ class BinsController extends Controller
         $token->save();
 
         info(json_encode([
-            '__action'=> '回收端 扫码开箱',
+            '__action'=> 'recycler qrLogin',
             'static_no' => BinTcpSocket::CLIENT_LOGIN,
             'result_code' => '200',
             'user_card' => (string)$recycler->id,

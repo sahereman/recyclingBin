@@ -140,7 +140,7 @@ class BinsController extends Controller
 
 
         info(json_encode([
-            '__action'=> '客户端 扫码开箱',
+            '__action'=> 'user qrLogin',
             'static_no' => BinTcpSocket::CLIENT_LOGIN,
             'result_code' => '200',
             'user_card' => (string)$user->id,
