@@ -16,7 +16,7 @@ class OrderSimpleTransformer extends TransformerAbstract
             'user_id' => $order->user_id,
             'status' => $order->status,
             'status_text' => $order->status_text,
-            'bin_name' => $order->bin_snapshot['name'] ? $order->bin_snapshot['name'] : '',
+            'bin_name' =>  $order->bin_snapshot['name'],
             'total' => $order->total,
             'created_at' => $order->created_at->toDateTimeString(),
             'items' => $order->items,
