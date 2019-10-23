@@ -18,11 +18,17 @@ class Controller extends BaseController
     public function test()
     {
         $user = User::find(1);
-        $bin = Bin::find(1);
+        $bin = Bin::find(9);
         $order = ClientOrder::find(1);
 
         $recycler = Recycler::find(1);
 
+        dump($bin->token);
+        dump($bin->token->auth);
+
+
+        exit();
+//        dd($bin->token->related);
 //        $type_fabric = $bin->type_fabric()->with(['client_price', 'recycle_price'])->first();
 ////        $type_fabric = $bin->type_fabric;
 //

@@ -98,4 +98,9 @@ class Bin extends Model
     {
         return $this->hasOne(BinToken::class);
     }
+
+    public function clientOrderItemTemps()
+    {
+        return $this->hasMany(ClientOrderItemTemp::class);
+    }
 }

@@ -12,6 +12,8 @@ class BinToken extends Model
         'related_model',
         'related_id',
         'token',
+        'auth_model',
+        'auth_id'
 
     ];
 

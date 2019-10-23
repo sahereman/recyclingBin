@@ -3,6 +3,7 @@
 namespace App\Sockets;
 
 use App\Handlers\SocketJsonHandler;
+use App\Jobs\ClearBinToken;
 use App\Jobs\GenerateCleanOrderSnapshot;
 use App\Jobs\GenerateClientOrderSnapshot;
 use App\Models\Bin;
@@ -12,6 +13,7 @@ use App\Models\BinTypePaper;
 use App\Models\CleanOrder;
 use App\Models\CleanPrice;
 use App\Models\ClientOrder;
+use App\Models\ClientOrderItemTemp;
 use App\Models\ClientPrice;
 use App\Models\Recycler;
 use App\Models\RecyclerMoneyBill;
@@ -161,9 +163,16 @@ class BinTcpSocket extends TcpSocket
         $subtotal = bcmul($price['price'], $weight, 2);
 
         // 没有权限开门
-        if (1)
+        if ($data['type'] == 1)
         {
-
+            $server->send($fd, new SocketJsonHandler([
+                'static_no' => self::CLEAN_TRANSACTION,
+                'open_door' => false,
+                'description' => '1',
+                'money' => bcmul($recycler['money'], 100),
+                'result_code' => '200',
+            ]));
+            return false;
         }
 
         // 余额不足
@@ -242,7 +251,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"6","delivery_type":"1","delivery_weight":"0","delivery_time":"20190923140001"}
+     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"1","delivery_type":"2","delivery_weight":"200","delivery_time":"20190923140001"}
      */
     public function clientTransactionAction($server, $fd, $data)
     {
@@ -251,7 +260,7 @@ class BinTcpSocket extends TcpSocket
         $client_prices = ClientPrice::all();
         $token = $bin->token;
 
-        if (!$bin || !$user || !$token || $token->auth_id != $user->id || $data['delivery_weight'] < 0 || !in_array($data['delivery_type'], [1, 2]))
+        if (!$bin || !$user || !$token || $token->auth_id != $user->id || !isset($data['delivery_weight']) || !in_array($data['delivery_type'], [1, 2]))
         {
             if (!$bin)
             {
@@ -276,6 +285,11 @@ class BinTcpSocket extends TcpSocket
             return false;
         }
 
+        if ($data['delivery_weight'] < 0)
+        {
+            $data['delivery_weight'] = 0;
+        }
+
         switch ($data['delivery_type'])
         {
             case 1:
@@ -290,15 +304,8 @@ class BinTcpSocket extends TcpSocket
         $weight = bcdiv($data['delivery_weight'], 1000, 2);
         $subtotal = bcmul($price['price'], $weight, 2);
 
-        $order = ClientOrder::create([
-            'status' => ClientOrder::STATUS_COMPLETED,
-            'bin_id' => $bin->id,
-            'user_id' => $user->id,
-            'total' => $subtotal,
-            'bin_snapshot' => [],
-        ]);
-
-        $order->items()->create([
+        // 加入临时订单缓存表
+        $bin->clientOrderItemTemps()->create([
             'type_slug' => $type::SLUG,
             'type_name' => $type::NAME,
             'number' => $weight,
@@ -306,26 +313,6 @@ class BinTcpSocket extends TcpSocket
             'subtotal' => $subtotal,
         ]);
 
-        $type->update([
-            'status' => $data['equipment_all'] ? $type::STATUS_FULL : $type->status,
-            'number' => bcadd($type->number, $weight, 2),
-        ]);
-
-        $user->update([
-            'money' => bcadd($user->money, $subtotal, 2),
-            'total_client_order_money' => bcadd($user->total_client_order_money, $subtotal, 2),
-            'total_client_order_count' => bcadd($user->total_client_order_count, 1),
-            'total_client_order_number' => bcadd($user->total_client_order_number, $weight, 2),
-        ]);
-
-        GenerateClientOrderSnapshot::dispatch($order, $bin);
-        UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
-        Notification::send($user, new ClientOrderCompletedNotification($order));
-
-        $bin->token->update([
-            'related_model' => $order->getMorphClass(),
-            'related_id' => $order->id,
-        ]);
 
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::CLIENT_TRANSACTION,
@@ -337,21 +324,114 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs002","equipment_no":"0532001"}
+     {"static_no":"yzs002","equipment_no":"0532009"}
      */
     public function clientLogoutAction($server, $fd, $data)
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
-        if (!$bin)
+        if (!$bin || !$bin->token || empty($bin->token->auth_model))
         {
+            if (!$bin->token)
+            {
+                info('$bin->token not find');
+            }
+
+            if ($bin->token && empty($bin->token->auth_model))
+            {
+                info('$bin->token->auth_model not find');
+            }
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
             ]));
             return false;
         }
+        $token = $bin->token;
+        $user = $bin->token->auth;
+
+        // 获取临时订单缓存
+        $item_temps = $bin->clientOrderItemTemps->groupBy('type_slug');
+
+        if ($item_temps->isEmpty())
+        {
+            // 清空token
+            ClearBinToken::dispatchNow($bin);
+            $server->send($fd, new SocketJsonHandler([
+                'static_no' => self::CLIENT_LOGOUT,
+                'result_code' => '200',
+            ]));
+        }
+
+        $total = 0;
+        $weight = 0;
+
+        // 生成订单
+        $order = ClientOrder::create([
+            'status' => ClientOrder::STATUS_COMPLETED,
+            'bin_id' => $bin->id,
+            'user_id' => $user->id,
+            'total' => 0,
+            'bin_snapshot' => [],
+        ]);
+
+        $item_temps->each(function ($slug, $key) use ($bin, $order, &$total, &$weight) {
+
+            // order_item
+            $item = $order->items()->create([
+                'type_slug' => $slug->first()['type_slug'],
+                'type_name' => $slug->first()['type_name'],
+                'number' => $slug->sum('number'),
+                'unit' => $slug->first()['unit'],
+                'subtotal' => $slug->sum('subtotal'),
+            ]);
+
+            $total += $item->subtotal;
+            $weight += $item->number;
+
+            // 更新类型箱重量
+            switch ($key)
+            {
+                case 'paper':
+                    $type = $bin->type_paper;
+                    break;
+                case 'fabric':
+                    $type = $bin->type_fabric;
+                    break;
+            }
+            $type->update([
+                'number' => bcadd($type->number, $item->number, 2),
+            ]);
+        });
+
+        // 更新订单总金额
+        $order->update([
+            'total' => $total,
+        ]);
 
 
-        BinToken::where('bin_id', $bin->id)->delete();// 清空已有token
+        // 更新用户信息
+        $user->update([
+            'money' => bcadd($user->money, $total, 2),
+            'total_client_order_money' => bcadd($user->total_client_order_money, $total, 2),
+            'total_client_order_count' => bcadd($user->total_client_order_count, 1),
+            'total_client_order_number' => bcadd($user->total_client_order_number, $weight, 2),
+        ]);
+
+        // 分配任务
+        GenerateClientOrderSnapshot::dispatchNow($order, $bin);
+        UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
+        Notification::send($user, new ClientOrderCompletedNotification($order));
+
+        // 更新token 防止二次交易 , 并且10秒后删除token
+        $bin->token->update([
+            'related_model' => $order->getMorphClass(),
+            'related_id' => $order->id,
+            'auth_model' => null,
+            'auth_id' => null,
+        ]);
+        // 清空token
+        ClearBinToken::dispatch(Bin::find($bin->id))->delay(now()->addSeconds(10));
+
+        //        ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::CLIENT_LOGOUT,
             'result_code' => '200',
@@ -394,7 +474,8 @@ class BinTcpSocket extends TcpSocket
             return false;
         }
 
-        BinToken::where('bin_id', $bin->id)->delete();// 清空已有token
+        // 清空token
+        ClearBinToken::dispatchNow($bin);
 
         $bin_token = new BinToken();
         $bin_token->bin_id = $bin->id;
