@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Requests\Client\WechatRequest;
-use App\Models\Topic;
-use App\Transformers\Client\TopicTransformer;
 use Illuminate\Support\Facades\Auth;
 
 class WechatsController extends Controller

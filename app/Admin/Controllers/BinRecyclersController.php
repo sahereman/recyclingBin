@@ -47,8 +47,8 @@ class BinRecyclersController extends AdminController
         }
         $grid->bin()->no('设备编号');
         $grid->bin()->name('设备名称');
-        $grid->fabric_permission('纺织物开箱权限')->switch();
         $grid->paper_permission('可回收物开箱权限')->switch();
+        $grid->fabric_permission('纺织物开箱权限')->switch();
 
         return $grid;
     }

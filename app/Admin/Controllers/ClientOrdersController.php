@@ -4,7 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\Models\Bin;
 use App\Models\ClientOrder;
-use App\Models\ClientOrderItem;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;

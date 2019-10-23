@@ -3,7 +3,6 @@
 namespace App\Notifications\Clean;
 
 use App\Models\CleanOrder;
-use App\Models\ClientOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Clean;
 
 use App\Http\Requests\Clean\SmsVerificationRequest;
 use App\Jobs\SendSms;
-use Illuminate\Support\Facades\Log;
-use Overtrue\EasySms\EasySms;
 
 class SmsController extends Controller
 {

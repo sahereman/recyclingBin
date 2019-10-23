@@ -2,7 +2,6 @@
 
 namespace App\Transformers\Client;
 
-use App\Models\User;
 use App\Models\UserMoneyBill;
 use League\Fractal\TransformerAbstract;
 

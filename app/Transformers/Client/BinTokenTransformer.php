@@ -2,9 +2,7 @@
 
 namespace App\Transformers\Client;
 
-use App\Models\Bin;
 use App\Models\BinToken;
-use App\Models\Topic;
 use League\Fractal\TransformerAbstract;
 
 class BinTokenTransformer extends TransformerAbstract

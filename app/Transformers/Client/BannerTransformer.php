@@ -3,7 +3,6 @@
 namespace App\Transformers\Client;
 
 use App\Models\Banner;
-use App\Models\Topic;
 use League\Fractal\TransformerAbstract;
 
 class BannerTransformer extends TransformerAbstract

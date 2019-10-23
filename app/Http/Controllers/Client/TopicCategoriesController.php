@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Client;
 use App\Models\TopicCategory;
 use App\Transformers\Client\TopicCategoryTransformer;
 use App\Transformers\Client\TopicSimpleTransformer;
-use App\Transformers\Client\TopicTransformer;
 use Illuminate\Http\Request;
 
 class TopicCategoriesController extends Controller

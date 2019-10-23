@@ -2,7 +2,6 @@
 
 namespace App\Transformers\Client;
 
-use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 use League\Fractal\TransformerAbstract;
 

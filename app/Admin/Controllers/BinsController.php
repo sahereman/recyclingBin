@@ -9,7 +9,6 @@ use App\Models\BinTypePaper;
 use App\Models\ClientPrice;
 use App\Models\CleanPrice;
 use App\Models\Config;
-use App\Models\Recycler;
 use App\Models\ServiceSite;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;

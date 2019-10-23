@@ -4,22 +4,10 @@ namespace App\Http\Controllers\Clean;
 
 
 use App\Http\Requests\Clean\DepositWechatRequest;
-use App\Http\Requests\Clean\PasswordResetRequest;
-use App\Http\Requests\Clean\WithdrawUnionPayRequest;
-use App\Models\Recycler;
 use App\Models\RecyclerDeposit;
 use App\Models\RecyclerPayment;
-use App\Models\RecyclerWithdraw;
-use App\Transformers\Clean\BinTransformer;
-use App\Transformers\Clean\NotificationTransformer;
-use App\Transformers\Clean\RecyclerMoneyBillTransformer;
-use App\Transformers\Clean\RecyclerTransformer;
 use Dingo\Api\Exception\StoreResourceFailedException;
-use Dingo\Api\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 
 
 class DepositsController extends Controller

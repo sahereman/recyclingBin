@@ -2,9 +2,7 @@
 
 namespace App\Transformers\Client;
 
-use App\Models\Bin;
 use App\Models\ClientOrder;
-use App\Models\Topic;
 use League\Fractal\TransformerAbstract;
 
 class OrderSimpleTransformer extends TransformerAbstract

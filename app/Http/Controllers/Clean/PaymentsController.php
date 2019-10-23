@@ -3,23 +3,11 @@
 namespace App\Http\Controllers\Clean;
 
 
-use App\Http\Requests\Clean\PasswordResetRequest;
-use App\Http\Requests\Clean\WithdrawUnionPayRequest;
 use App\Http\Requests\Request;
-use App\Models\Recycler;
 use App\Models\RecyclerDeposit;
 use App\Models\RecyclerMoneyBill;
 use App\Models\RecyclerPayment;
-use App\Models\RecyclerWithdraw;
 use App\Notifications\Clean\RecyclerDepositSuccessNotification;
-use App\Transformers\Clean\BinTransformer;
-use App\Transformers\Clean\NotificationTransformer;
-use App\Transformers\Clean\RecyclerMoneyBillTransformer;
-use App\Transformers\Clean\RecyclerTransformer;
-use Dingo\Api\Exception\StoreResourceFailedException;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 

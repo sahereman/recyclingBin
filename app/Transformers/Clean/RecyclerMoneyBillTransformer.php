@@ -3,8 +3,6 @@
 namespace App\Transformers\Clean;
 
 use App\Models\RecyclerMoneyBill;
-use App\Models\User;
-use App\Models\UserMoneyBill;
 use League\Fractal\TransformerAbstract;
 
 class RecyclerMoneyBillTransformer extends TransformerAbstract

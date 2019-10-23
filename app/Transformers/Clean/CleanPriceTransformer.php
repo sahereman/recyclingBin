@@ -2,7 +2,6 @@
 
 namespace App\Transformers\Clean;
 
-use App\Models\CleanOrder;
 use App\Models\CleanPrice;
 use League\Fractal\TransformerAbstract;
 

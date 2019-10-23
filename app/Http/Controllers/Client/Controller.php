@@ -17,6 +17,8 @@ class Controller extends BaseController
 
     public function test()
     {
+        return 'test';
+
         $user = User::find(1);
         $bin = Bin::find(9);
         $order = ClientOrder::find(1);

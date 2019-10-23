@@ -3,7 +3,6 @@
 namespace App\Transformers\Client;
 
 use App\Models\Bin;
-use App\Models\Topic;
 use League\Fractal\TransformerAbstract;
 
 class BinSimpleTransformer extends TransformerAbstract

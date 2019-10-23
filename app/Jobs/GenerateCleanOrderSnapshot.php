@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Bin;
-use App\Models\ClientOrder;
 use App\Models\CleanOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
