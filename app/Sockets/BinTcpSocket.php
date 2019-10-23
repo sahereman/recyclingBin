@@ -250,7 +250,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"1","delivery_type":"2","delivery_weight":"200","delivery_time":"20190923140001"}
+     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"6","delivery_type":"2","delivery_weight":"200","delivery_time":"20190923140001"}
      */
     public function clientTransactionAction($server, $fd, $data)
     {
@@ -433,6 +433,7 @@ class BinTcpSocket extends TcpSocket
             'auth_id' => null,
         ]);
         // 清空token
+        info(now()->addSeconds(10));
         ClearBinToken::dispatch(Bin::find($bin->id))->delay(now()->addSeconds(10));
 
         //        ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
