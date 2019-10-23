@@ -42,6 +42,8 @@ class BinsController extends Controller
         $swoole = app('swoole');
         $clean_prices = CleanPrice::all();
 
+        $token->related_model = null;
+        $token->related_id = null;
         $token->auth_model = $recycler->getMorphClass();
         $token->auth_id = $recycler->id;
         $token->save();

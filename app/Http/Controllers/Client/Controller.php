@@ -23,9 +23,12 @@ class Controller extends BaseController
 
         $recycler = Recycler::find(1);
 
-        dump($bin->token);
-        dump($bin->token->auth);
 
+//        dump($recycler->bins[0]->pivot);
+
+        $bin = $recycler->bins->where('no','0532009')->first();
+
+        dump($bin);
 
         exit();
 //        dd($bin->token->related);

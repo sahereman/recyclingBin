@@ -91,7 +91,7 @@ class Recycler extends Authenticatable implements JWTSubject
     /* Eloquent Relationships */
     public function bins()
     {
-        return $this->belongsToMany(Bin::class, 'bin_recyclers', 'recycler_id');
+        return $this->belongsToMany(Bin::class, 'bin_recyclers', 'recycler_id')->withPivot('paper_permission', 'fabric_permission');;
     }
 
     public function orders()

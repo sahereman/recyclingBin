@@ -113,14 +113,14 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs006","equipment_no":"0532009","user_card":"7","admin":true,"type":"1","weight":"3000"}
+     {"static_no":"yzs006","equipment_no":"0532009","user_card":"1","admin":true,"type":"1","weight":"3000"}
      */
     public function cleanTransactionAction($server, $fd, $data)
     {
-        $bin = Bin::where('no', $data['equipment_no'])->first();
         $recycler = Recycler::find($data['user_card']);
+        $bin = $recycler ? $recycler->bins->where('no', $data['equipment_no'])->first() : null;
         $clean_prices = CleanPrice::all();
-        $token = $bin->token;
+        $token = $bin ? $bin->token : null;
 
         if (!$bin || !$recycler || !$token || $token->auth_id != $recycler->id || !in_array($data['type'], [1, 2]))
         {
@@ -152,10 +152,12 @@ class BinTcpSocket extends TcpSocket
             case 1:
                 $type = $bin->type_paper;
                 $price = $clean_prices->where('slug', 'paper')->first();
+                $permission = $bin->pivot->paper_permission;
                 break;
             case 2:
                 $type = $bin->type_fabric;
                 $price = $clean_prices->where('slug', 'fabric')->first();
+                $permission = $bin->pivot->fabric_permission;
                 break;
         }
 
@@ -163,7 +165,7 @@ class BinTcpSocket extends TcpSocket
         $subtotal = bcmul($price['price'], $weight, 2);
 
         // 没有权限开门
-        if ($data['type'] == 1)
+        if ($permission != true)
         {
             $server->send($fd, new SocketJsonHandler([
                 'static_no' => self::CLEAN_TRANSACTION,
@@ -260,7 +262,7 @@ class BinTcpSocket extends TcpSocket
         $client_prices = ClientPrice::all();
         $token = $bin->token;
 
-        if (!$bin || !$user || !$token || $token->auth_id != $user->id || !isset($data['delivery_weight']) || !in_array($data['delivery_type'], [1, 2]))
+        if (!$bin || !$user || !$token || $token->auth_model != User::class || $token->auth_id != $user->id || !isset($data['delivery_weight']) || !in_array($data['delivery_type'], [1, 2]))
         {
             if (!$bin)
             {
@@ -273,6 +275,11 @@ class BinTcpSocket extends TcpSocket
             if (!$token)
             {
                 info('$token not find');
+            }
+            if ($token && $token->auth_model != User::class)
+            {
+                info('$token->auth_model != App\Models\User');
+                info($token);
             }
             if ($token && $user && $token->auth_id != $user->id)
             {
