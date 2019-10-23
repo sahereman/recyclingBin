@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Models\ClientPrice;
+use App\Jobs\GenerateBinTypeSnapshot;
+use App\Models\Bin;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -44,6 +46,15 @@ class ClientPricesController extends AdminController
         $form->display('slug_text', '分类箱');
         $form->decimal('price', '价格')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');
         $form->display('unit', '单位');
+
+        //保存后回调
+        $form->saved(function (Form $form) {
+            $bins = Bin::all();
+
+            $bins->each(function ($bin) {
+                GenerateBinTypeSnapshot::dispatch($bin);
+            });
+        });
 
         return $form;
     }
