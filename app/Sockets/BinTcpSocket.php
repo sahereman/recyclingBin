@@ -11,6 +11,7 @@ use App\Models\BinToken;
 use App\Models\CleanOrder;
 use App\Models\CleanPrice;
 use App\Models\ClientOrder;
+use App\Models\ClientOrderItemTemp;
 use App\Models\ClientPrice;
 use App\Models\Recycler;
 use App\Models\RecyclerMoneyBill;
@@ -450,7 +451,7 @@ class BinTcpSocket extends TcpSocket
         info(now()->addSeconds(10));
         ClearBinToken::dispatch(Bin::find($bin->id))->delay(now()->addSeconds(10));
 
-        //        ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
+        ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::CLIENT_LOGOUT,
             'result_code' => '200',
