@@ -333,6 +333,18 @@ class BinTcpSocket extends TcpSocket
     public function clientLogoutAction($server, $fd, $data)
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
+
+        
+        if($bin && $data['admin'] == true)
+        {
+            // 清空token
+            ClearBinToken::dispatchNow($bin);
+            $server->send($fd, new SocketJsonHandler([
+                'static_no' => self::CLIENT_LOGOUT,
+                'result_code' => '200',
+            ]));
+        }
+
         if (!$bin || !$bin->token || $bin->token->auth_model != User::class)
         {
             if (!$bin->token)
