@@ -183,10 +183,6 @@ class BinsController extends Controller
     {
         $user = Auth::guard('client')->user();
 
-        if (!$user->can('own', $token))
-        {
-            return $this->response->errorForbidden('This action is unauthorized.');
-        }
 
         return $this->response->item($token, new BinTokenTransformer());
     }

@@ -328,7 +328,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs002","equipment_no":"0532009"}
+     {"static_no":"yzs002","equipment_no":"0532009","admin":false}
      {"static_no":"yzs002","equipment_no":"0532009","admin":true}
      */
     public function clientLogoutAction($server, $fd, $data)
