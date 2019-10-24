@@ -23,6 +23,8 @@ class CleanPricesController extends Controller
      */
     public function index()
     {
+        $recycler = Auth::guard('clean')->user();
+
         $prices = CleanPrice::all();
 
         return $this->response->collection($prices, new CleanPriceTransformer());
