@@ -63,13 +63,13 @@ return [
     'events'                   => [],
     'swoole_tables'            => [],
     'register_providers'       => [
-        /* middleware service providers */
-        Dingo\Api\Provider\DingoServiceProvider::class,
-        Dingo\Api\Provider\HttpServiceProvider::class,
-        /* auth service providers */
-        Illuminate\Auth\AuthServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+//        /* middleware service providers */
+//        Dingo\Api\Provider\DingoServiceProvider::class,
+//        Dingo\Api\Provider\HttpServiceProvider::class,
+//        /* auth service providers */
+//        Illuminate\Auth\AuthServiceProvider::class,
+//        App\Providers\AuthServiceProvider::class,
+//        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
     ],
     'cleaners'                 => [
         Hhxsv5\LaravelS\Illuminate\Cleaners\SessionCleaner::class, // If you use the session or authentication in your project, please uncomment this line
