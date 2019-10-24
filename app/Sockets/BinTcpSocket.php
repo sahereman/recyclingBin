@@ -378,6 +378,7 @@ class BinTcpSocket extends TcpSocket
                 'static_no' => self::CLIENT_LOGOUT,
                 'result_code' => '200',
             ]));
+            return false;
         }
 
         $total = 0;
@@ -456,6 +457,7 @@ class BinTcpSocket extends TcpSocket
             'static_no' => self::CLIENT_LOGOUT,
             'result_code' => '200',
         ]));
+        return false;
     }
 
     /*
