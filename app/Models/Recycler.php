@@ -77,6 +77,11 @@ class Recycler extends Authenticatable implements JWTSubject
         'contract_end_time',
     ];
 
+    public static function recyclerDisabledException()
+    {
+        abort(403,'The recycler is disabled');
+    }
+
     /* Accessors */
     public function getAvatarUrlAttribute()
     {

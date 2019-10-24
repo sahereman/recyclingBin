@@ -69,6 +69,8 @@ Route::group([
     $router->put('recyclers/{id}/assignment', 'RecyclersController@assignmentStore')->name('admin.recyclers.assignment.store'); /*分配回收箱 请求处理*/
     $router->get('recyclers/send_message/{id?}', 'RecyclersController@sendMessageShow')->name('admin.recyclers.send_message.show'); /*群发站内信 页面*/
     $router->post('recyclers/send_message', 'RecyclersController@sendMessageStore')->name('admin.recyclers.send_message.store'); /*群发站内信 请求处理*/
+    $router->post('recyclers/{recycler}/disable', 'RecyclersController@disable')->name('admin.recyclers.disable');/*加入黑名单*/
+    $router->post('recyclers/{recycler}/enable', 'RecyclersController@enable')->name('admin.recyclers.enable');/*移除黑名单*/
     $router->resource('recyclers', 'RecyclersController')->names('admin.recyclers');
 
     /*回收员提现*/

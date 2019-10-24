@@ -39,7 +39,7 @@ $api->version('v1', [
 
 
         /*需要 token 验证的接口*/
-        $api->group(['middleware' => 'api.auth:clean'], function ($api) {
+        $api->group(['middleware' => ['api.auth:clean', 'clean.checkDisabledRecycler']], function ($api) {
 
             // 回收员
             $api->post('sms/verification', 'SmsController@verification')->name('clean.sms.verification');/*获取短信验证码*/

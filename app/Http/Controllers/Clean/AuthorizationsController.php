@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Clean;
 
 
 use App\Http\Requests\Clean\AuthorizationRequest;
+use App\Models\Recycler;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,6 +45,13 @@ class AuthorizationsController extends Controller
             ]);
         }
 
+        $recycler = Auth::guard('clean')->user();
+
+        if ($recycler->disabled_at != null)
+        {
+            Recycler::recyclerDisabledException();
+        }
+
         return $this->respondWithToken($token)->setStatusCode(201);
 
     }
@@ -68,20 +76,24 @@ class AuthorizationsController extends Controller
     {
         $check = Auth::guard('clean')->parser()->setRequest($request)->hasToken();
 
-        if(!$check)
+        if (!$check)
         {
             throw new TokenInvalidException('Failed to authenticate because of bad credentials or an invalid authorization header.');
         }
 
-        try {
+        try
+        {
             $token = Auth::guard('clean')->refresh();
 
-        } catch (TokenExpiredException $exception) {
+        } catch (TokenExpiredException $exception)
+        {
             // 此处捕获到了 token 过期所抛出的 TokenExpiredException 异常，我们在这里需要做的是刷新该用户的 token 并将它添加到响应头中
-            try {
+            try
+            {
                 // 刷新用户的 token
                 $token = Auth::guard('clean')->refresh();
-            } catch (JWTException $exception) {
+            } catch (JWTException $exception)
+            {
                 // 如果捕获到此异常，即代表 refresh 也过期了，用户无法刷新令牌，需要重新登录。
                 throw new UnauthorizedHttpException('jwt-auth', $exception->getMessage());
             }

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckDisabledRecycler;
 use App\Http\Middleware\CheckDisabledUser;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -63,6 +64,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'client.checkDisabledUser' => CheckDisabledUser::class,
+        'clean.checkDisabledRecycler' => CheckDisabledRecycler::class,
     ];
 
     /**

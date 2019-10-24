@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Ajax\Ajax_Button;
 use App\Models\Bin;
 use App\Models\Recycler;
 use App\Http\Requests\Request;
@@ -45,6 +46,20 @@ class RecyclersController extends AdminController
             $filter->column(1 / 2, function ($filter) {
                 $filter->between('created_at', '创建时间')->datetime();
                 $filter->between('money', '余额');
+                $filter->where(function ($query) {
+                    switch ($this->input) {
+                        case 'yes':
+                            $query->where('disabled_at', '!=', null);
+                            break;
+                        case 'no':
+                            $query->where('disabled_at', null);
+                            break;
+                    }
+                }, '黑名单')->radio([
+                    'all' => '不选择',
+                    'yes' => '是',
+                    'no' => '否',
+                ]);
             });
         });
 
@@ -67,6 +82,13 @@ class RecyclersController extends AdminController
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.clean_orders.index', ['recycler_id' => $this->id]) . '">回收订单</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.assignment.show', $this->id) . '">分配回收箱</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.bin_recyclers.index', ['recycler_id' => $this->id]) . '">回收箱权限</a>';
+
+            if ($this->disabled_at == null) {
+                $buttons .= new Ajax_Button(route('admin.recyclers.disable', $this->id), [], '加入黑名单');
+            } else {
+                $buttons .= new Ajax_Button(route('admin.recyclers.enable', $this->id), [], '移除黑名单');
+            }
+
             return $buttons;
         });
 
@@ -289,5 +311,29 @@ class RecyclersController extends AdminController
         return $content
             ->row("<center><h3>发送站内信成功</h3></center>")
             ->row("<center><a href='" . route('admin.recyclers.index') . "'>返回回收员列表</a></center>");
+    }
+
+    public function disable(Request $request, Recycler $recycler)
+    {
+        $recycler->update([
+            'disabled_at' => now(),
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => '加入黑名单成功'
+        ]);
+    }
+
+    public function enable(Request $request, Recycler $recycler)
+    {
+        $recycler->update([
+            'disabled_at' => null,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => '移除黑名单成功'
+        ]);
     }
 }
