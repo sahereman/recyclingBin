@@ -329,13 +329,14 @@ class BinTcpSocket extends TcpSocket
 
     /*
      {"static_no":"yzs002","equipment_no":"0532009"}
+     {"static_no":"yzs002","equipment_no":"0532009","admin":true}
      */
     public function clientLogoutAction($server, $fd, $data)
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
 
-        
-        if($bin && $data['admin'] == true)
+
+        if ($bin && isset($data['admin']) && $data['admin'] == true)
         {
             // 清空token
             ClearBinToken::dispatchNow($bin);
@@ -343,6 +344,7 @@ class BinTcpSocket extends TcpSocket
                 'static_no' => self::CLIENT_LOGOUT,
                 'result_code' => '200',
             ]));
+            return false;
         }
 
         if (!$bin || !$bin->token || $bin->token->auth_model != User::class)
