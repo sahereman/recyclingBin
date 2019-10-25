@@ -126,4 +126,15 @@ class CleanOrdersController extends AdminController
 
         return $show;
     }
+
+    protected function form()
+    {
+        $form = new Form(new CleanOrder);
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+        });
+
+        return $form;
+    }
 }

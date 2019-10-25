@@ -146,30 +146,14 @@ class ClientOrdersController extends AdminController
         return $show;
     }
 
-//    protected function form()
-//    {
-//        $form = new Form(new ClientOrder);
-//
-//        $form->tools(function (Form\Tools $tools) {
-//            $tools->disableDelete();
-//        });
-//
-//        // $form->number('user_id', 'User id');
-//        $users = User::all()->pluck('name', 'id');
-//        $form->select('user_id', 'User')->options($users)->readOnly();
-//        // $form->text('status', 'Status')->default('completed');
-//        $form->display('status_text', 'Status')->default('completed');
-//        // $form->text('bin_snapshot', 'Bin snapshot');
-//        // $form->decimal('total', 'Total');
-//        $form->display('total', 'Total')->setWidth(2)->default(0.01)->rules('required|numeric|min:0.01');
-//
-//        $form->hasMany('items', '订单详情', function ($item) {
-//            $item->display('type_name', 'Type')->setWidth(3);
-//            $item->display('number', 'Number')->setWidth(2);
-//            $item->display('unit', 'Unit')->setWidth(2);
-//            $item->display('subtotal', '小计')->setWidth(2)->default(0.01);
-//        })->disableCreate()->disableDelete()->readonly();
-//
-//        return $form;
-//    }
+    protected function form()
+    {
+        $form = new Form(new ClientOrder);
+
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+        });
+
+        return $form;
+    }
 }
