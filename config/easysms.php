@@ -21,7 +21,7 @@ return [
         'aliyun' => [
             'access_key_id' => env('SMS_ALIYUN_KEY'),
             'access_key_secret' => env('SMS_ALIYUN_SECRET'),
-            'sign_name' => '青岛尚禾维曼网络科技',
+            'sign_name' => '新生派环保',
         ]
     ],
 ];
