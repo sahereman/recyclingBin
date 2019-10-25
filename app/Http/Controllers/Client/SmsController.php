@@ -7,7 +7,7 @@ use App\Jobs\SendSms;
 
 class SmsController extends Controller
 {
-    public $verification_template_code = 'SMS_151996714';
+    public $verification_template_code = 'SMS_175543046';
 
     /**
      * showdoc
