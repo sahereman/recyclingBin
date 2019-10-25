@@ -11,9 +11,9 @@ class BinTransformer extends TransformerAbstract
     {
         $total = '0.00';
         $type_paper = $bin->type_paper->toArray();
-        $type_paper['paper_permission'] = $bin->pivot->paper_permission;
+        $type_paper['permission'] = $bin->pivot->paper_permission;
         $type_fabric = $bin->type_fabric->toArray();
-        $type_fabric['fabric_permission'] = $bin->pivot->fabric_permission;
+        $type_fabric['permission'] = $bin->pivot->fabric_permission;
 
         if ($bin->pivot->paper_permission)
         {
