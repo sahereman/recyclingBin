@@ -56,7 +56,7 @@ class DepositsController extends Controller
         $app = app('wechat.payment.clean');
 
         $result = $app->order->unify([
-            'body' => '工蚁回收员充值',
+            'body' => '小黑点回收员充值',
             'out_trade_no' => $payment->sn,
             'total_fee' => bcmul($payment->amount, 100),
             'notify_url' => app('Dingo\Api\Routing\UrlGenerator')->version('v1')->route('clean.payments.wechatNotify'), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
