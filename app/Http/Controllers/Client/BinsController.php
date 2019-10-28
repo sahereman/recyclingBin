@@ -26,7 +26,6 @@ class BinsController extends Controller
      * @title GET 获取回收箱列表
      * @method GET
      * @url bins
-     * @param Headers.Authorization 必选 headers 用户凭证
      * @param lat 必选 string 纬度
      * @param lng 必选 string 经度
      * @param count 非必选(默认10条) string 需要返回的条数
@@ -81,7 +80,6 @@ class BinsController extends Controller
      * @title GET 获取距离最近的回收箱
      * @method GET
      * @url bins/nearby
-     * @param Headers.Authorization 必选 headers 用户凭证
      * @param lat 必选 string 纬度
      * @param lng 必选 string 经度
      * @return {"id":1,"site_id":1,"name":"呼和浩特上街区","no":"0532001","address":"21 褚 Street","distance":824,"types_snapshot":{"type_paper":{"id":1,"name":"可回收物","unit":"公斤","bin_id":1,"number":"14.88","status":"full","clean_price":{"id":1,"slug":"paper","price":"0.70"},"status_text":"满箱","client_price":{"id":1,"slug":"paper","price":"0.50"},"clean_price_id":1,"client_price_id":1},"type_fabric":{"id":1,"name":"纺织物","unit":"公斤","bin_id":1,"number":"66.54","status":"normal","clean_price":{"id":2,"slug":"fabric","price":"0.40"},"status_text":"正常","client_price":{"id":2,"slug":"fabric","price":"0.10"},"clean_price_id":2,"client_price_id":2}}}

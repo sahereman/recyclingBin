@@ -35,6 +35,16 @@ $api->version('v1', [
         // Banner
         $api->get('banners/{slug}', 'BannersController@index')->name('client.banners.index');/*获取Banner图列表*/
 
+        // 回收箱
+        $api->get('bins/nearby', 'BinsController@nearby')->name('client.bins.nearby');/*获取距离最近的回收箱*/
+        $api->get('bins', 'BinsController@index')->name('client.bins.index');/*获取回收箱列表*/
+
+        //话题
+        $api->get('topic_categories', 'TopicCategoriesController@index')->name('client.topic_categories.index');/*获取话题分类*/
+        $api->get('topic_categories/{category}', 'TopicCategoriesController@topic')->name('client.topic_categories.topic');/*获取话题列表*/
+        $api->get('topics/{topic}', 'TopicsController@show')->name('client.topics.show');/*获取话题详情*/
+
+
         /*需要 token 验证的接口*/
         $api->group(['middleware' => ['api.auth:client', 'client.checkDisabledUser']], function ($api) {
 
@@ -49,16 +59,9 @@ $api->version('v1', [
             $api->post('users/withdraw/unionPay', 'UsersController@WithdrawUnionPay')->name('client.users.withdraw.unionPay');/*用户银联提现*/
 
 
-            //回收箱
-            $api->get('bins/nearby', 'BinsController@nearby')->name('client.bins.nearby');/*获取距离最近的回收箱*/
-            $api->get('bins', 'BinsController@index')->name('client.bins.index');/*获取回收箱列表*/
             $api->put('bins/qrLogin', 'BinsController@qrLogin')->name('client.bins.qrLogin');/*扫码开箱*/
             $api->get('bins/orderCheck/{token}', 'BinsController@orderCheck')->name('client.bins.orderCheck');/*回收箱订单检查*/
 
-            //话题
-            $api->get('topic_categories', 'TopicCategoriesController@index')->name('client.topic_categories.index');/*获取话题分类*/
-            $api->get('topic_categories/{category}', 'TopicCategoriesController@topic')->name('client.topic_categories.topic');/*获取话题列表*/
-            $api->get('topics/{topic}', 'TopicsController@show')->name('client.topics.show');/*获取话题详情*/
 
             //订单
             $api->get('orders', 'OrdersController@index')->name('client.orders.index');/*获取订单列表*/
