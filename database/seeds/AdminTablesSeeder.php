@@ -62,6 +62,12 @@ class AdminTablesSeeder extends Seeder
                 'http_method' => '',
                 'http_path' => "/client_orders",
             ],
+            [
+                'name' => 'Banner 管理',
+                'slug' => 'banners',
+                'http_method' => '',
+                'http_path' => "/banners",
+            ],
         ];
 
     /*自定义添加的菜单*/
@@ -96,7 +102,14 @@ class AdminTablesSeeder extends Seeder
                 'icon' => 'fa-archive',
                 'uri' => '',
             ],
-
+            // Banner 管理
+            [
+                'parent_id' => 0,
+                'order' => 60,
+                'title' => 'Banner 管理',
+                'icon' => 'fa-image',
+                'uri' => 'banners',
+            ],
 
             //用户管理
             [
@@ -187,7 +200,6 @@ class AdminTablesSeeder extends Seeder
                 'icon' => 'fa-sitemap',
                 'uri' => 'service_sites',
             ],
-
 
             //话题管理
             [

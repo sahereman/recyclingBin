@@ -40,6 +40,9 @@ Route::group([
     /*服务城市*/
     $router->resource('service_sites', 'ServiceSitesController');
 
+    /*Banner*/
+    $router->resource('banners', 'BannersController')->names('admin.banners');
+
     /*回收箱*/
     $router->resource('bins', 'BinsController')->names('admin.bins');
 
