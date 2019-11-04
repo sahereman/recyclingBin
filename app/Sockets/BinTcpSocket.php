@@ -20,6 +20,7 @@ use App\Models\UserMoneyBill;
 use App\Notifications\Clean\CleanOrderCompletedNotification;
 use App\Notifications\Client\ClientOrderCompletedNotification;
 use Hhxsv5\LaravelS\Swoole\Socket\TcpSocket;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
@@ -34,6 +35,7 @@ class BinTcpSocket extends TcpSocket
     const BEAT = 'yzs003';
     const QRCODE = 'yzs004';
     const CLEAN_TRANSACTION = 'yzs006';
+    const PASSWORD_LOGIN = 'yzs007';
 
     private $actions = [
         self::CLIENT_LOGIN,
@@ -42,6 +44,7 @@ class BinTcpSocket extends TcpSocket
         self::BEAT,
         self::QRCODE,
         self::CLEAN_TRANSACTION,
+        self::PASSWORD_LOGIN,
     ];
 
     public function onConnect(Server $server, $fd, $reactorId)
@@ -95,6 +98,9 @@ class BinTcpSocket extends TcpSocket
                 case self::CLEAN_TRANSACTION:
                     $this->cleanTransactionAction($server, $fd, $data);
                     break;
+                case self::PASSWORD_LOGIN:
+                    $this->passwordLoginAction($server, $fd, $data);
+                    break;
                 default:
                     $server->send($fd, new SocketJsonHandler([
                         'result_code' => '401' // static_no 错误/未找到
@@ -107,6 +113,118 @@ class BinTcpSocket extends TcpSocket
 
     public function clientLoginAction($server, $fd, $data)
     {
+
+    }
+
+    /*
+     {"static_no":"yzs007","equipment_no":"0532009","account":"18600982820","password":"0"}
+     {"static_no":"yzs007","equipment_no":"0532009","account":"18600982820","password":"123456"}
+     */
+    public function passwordLoginAction($server, $fd, $data)
+    {
+        $bin = Bin::where('no', $data['equipment_no'])->first();
+        $username = $data['account'];
+        $password = $data['password'];
+
+
+        if (!$bin || !$username || !isset($password))
+        {
+            if (!$bin)
+            {
+                info('$bin not find');
+            }
+            if (!$username)
+            {
+                info('$username not find');
+            }
+            if (!isset($password))
+            {
+                info('$password not find');
+            }
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
+            return false;
+        }
+
+        if ($password == '0')
+        {
+            // 普通用户
+            $user = User::where('phone', $username)->first();
+            if (!$user)
+            {
+                $server->send($fd, new SocketJsonHandler([
+                    'result_code' => '400', // 用户未注册/json格式字段错误
+                    'message' => '用户手机号不正确',
+                ]));
+            } else
+            {
+                // 清空token
+                ClearBinToken::dispatchNow($bin);
+
+                $bin_token = new BinToken();
+                $bin_token->bin_id = $bin->id;
+                $bin_token->fd = $fd;
+                $bin_token->related_model = null;
+                $bin_token->related_id = null;
+                $bin_token->auth_model = $user->getMorphClass();
+                $bin_token->auth_id = $user->id;
+                $bin_token->save();
+
+                $client_prices = ClientPrice::all();
+
+                $server->send($bin_token->fd, new SocketJsonHandler([
+                    'static_no' => BinTcpSocket::CLIENT_LOGIN,
+                    'result_code' => '200',
+                    'user_card' => (string)$user->id,
+                    'user_type' => '1', // 1:用户
+                    'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
+                    'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
+                    'money' => bcmul($user->money, 100)
+                ]));
+                return false;
+            }
+
+        } else
+        {
+            // 回收员
+            $recycler = Recycler::where('phone', $username)->first();
+            if (!$recycler || !Hash::check($password, $recycler->password))
+            {
+                $server->send($fd, new SocketJsonHandler([
+                    'result_code' => '400', // 用户未注册/json格式字段错误
+                    'message' => '回收员手机号或密码错误',
+                ]));
+                return false;
+            } else
+            {
+                // 清空token
+                ClearBinToken::dispatchNow($bin);
+
+                $bin_token = new BinToken();
+                $bin_token->bin_id = $bin->id;
+                $bin_token->fd = $fd;
+                $bin_token->related_model = null;
+                $bin_token->related_id = null;
+                $bin_token->auth_model = $recycler->getMorphClass();
+                $bin_token->auth_id = $recycler->id;
+                $bin_token->save();
+
+                $clean_prices = CleanPrice::all();
+
+                $server->send($bin_token->fd, new SocketJsonHandler([
+                    'static_no' => BinTcpSocket::CLIENT_LOGIN,
+                    'result_code' => '200',
+                    'user_card' => (string)$recycler->id,
+                    'user_type' => '2', // 2:回收员
+                    'paper_price' => bcmul($clean_prices->where('slug', 'paper')->first()['price'], 100),
+                    'cloth_price' => bcmul($clean_prices->where('slug', 'fabric')->first()['price'], 100),
+                    'money' => bcmul($recycler->money, 100)
+                ]));
+                return false;
+            }
+
+        }
 
     }
 
