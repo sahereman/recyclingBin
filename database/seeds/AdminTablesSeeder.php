@@ -21,13 +21,19 @@ class AdminTablesSeeder extends Seeder
                 'http_path' => "/users",
             ],
             [
+                'name' => '回收员管理',
+                'slug' => 'recyclers',
+                'http_method' => '',
+                'http_path' => "/recyclers",
+            ],
+            [
                 'name' => '回收站点管理',
                 'slug' => 'service_sites',
                 'http_method' => '',
                 'http_path' => "/service_sites",
             ],
             [
-                'name' => '回收垃圾桶管理',
+                'name' => '回收箱管理',
                 'slug' => 'bins',
                 'http_method' => '',
                 'http_path' => "/bins",
@@ -57,13 +63,31 @@ class AdminTablesSeeder extends Seeder
                 'http_path' => "/topics",
             ],
             [
-                'name' => '订单管理',
+                'name' => '投递订单管理',
                 'slug' => 'client_orders',
                 'http_method' => '',
                 'http_path' => "/client_orders",
             ],
             [
-                'name' => 'Banner 管理',
+                'name' => '回收订单管理',
+                'slug' => 'clean_orders',
+                'http_method' => '',
+                'http_path' => "/clean_orders",
+            ],
+            [
+                'name' => '传统箱管理',
+                'slug' => 'boxes',
+                'http_method' => '',
+                'http_path' => "/boxes",
+            ],
+            [
+                'name' => '传统箱订单管理',
+                'slug' => 'box_orders',
+                'http_method' => '',
+                'http_path' => "/box_orders",
+            ],
+            [
+                'name' => 'Banner管理',
                 'slug' => 'banners',
                 'http_method' => '',
                 'http_path' => "/banners",
@@ -80,6 +104,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '用户管理',
                 'icon' => 'fa-users',
                 'uri' => '',
+                'permission' => 'users'
             ],
             [
                 'parent_id' => 0,
@@ -87,6 +112,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收员管理',
                 'icon' => 'fa-users',
                 'uri' => '',
+                'permission' => 'recyclers',
             ],
             [
                 'parent_id' => 0,
@@ -94,6 +120,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收箱管理',
                 'icon' => 'fa-recycle',
                 'uri' => '',
+                'permission' => 'bins',
             ],
             [
                 'parent_id' => 0,
@@ -101,15 +128,25 @@ class AdminTablesSeeder extends Seeder
                 'title' => '话题管理',
                 'icon' => 'fa-archive',
                 'uri' => '',
+                'permission' => 'topics',
             ],
-            // Banner 管理
+            [
+                'parent_id' => 0,
+                'order' => 55,
+                'title' => '传统箱管理',
+                'icon' => 'fa-recycle',
+                'uri' => '',
+                'permission' => 'boxes',
+            ],
             [
                 'parent_id' => 0,
                 'order' => 60,
-                'title' => 'Banner 管理',
+                'title' => 'Banner管理',
                 'icon' => 'fa-image',
                 'uri' => 'banners',
+                'permission' => 'banners',
             ],
+
 
             //用户管理
             [
@@ -118,6 +155,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '用户列表',
                 'icon' => 'fa-users',
                 'uri' => 'users',
+                'permission' => null,
             ],
             [
                 'parent_id' => 14,
@@ -125,6 +163,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '用户提现申请',
                 'icon' => 'fa-users',
                 'uri' => 'user_withdraws',
+                'permission' => null,
             ],
             [
                 'parent_id' => 14,
@@ -132,6 +171,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '投递订单列表',
                 'icon' => 'fa-list',
                 'uri' => 'client_orders',
+                'permission' => null,
             ],
             [
                 'parent_id' => 14,
@@ -139,6 +179,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '群发站内信',
                 'icon' => 'fa-file-text',
                 'uri' => 'users/send_message',
+                'permission' => null,
             ],
 
             //回收员管理
@@ -148,6 +189,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收员列表',
                 'icon' => 'fa-users',
                 'uri' => 'recyclers',
+                'permission' => null,
             ],
             [
                 'parent_id' => 15,
@@ -155,6 +197,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收员提现申请',
                 'icon' => 'fa-users',
                 'uri' => 'recycler_withdraws',
+                'permission' => null,
             ],
             [
                 'parent_id' => 15,
@@ -162,6 +205,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收订单列表',
                 'icon' => 'fa-list',
                 'uri' => 'clean_orders',
+                'permission' => null,
             ],
             [
                 'parent_id' => 15,
@@ -169,6 +213,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '群发站内信',
                 'icon' => 'fa-file-text',
                 'uri' => 'recyclers/send_message',
+                'permission' => null,
             ],
 
             //回收箱管理
@@ -178,6 +223,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收箱列表',
                 'icon' => 'fa-bitbucket',
                 'uri' => 'bins',
+                'permission' => null,
             ],
             [
                 'parent_id' => 16,
@@ -185,6 +231,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '客户端价格',
                 'icon' => 'fa-yen',
                 'uri' => 'client_prices',
+                'permission' => null,
             ],
             [
                 'parent_id' => 16,
@@ -192,6 +239,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收端价格',
                 'icon' => 'fa-dollar',
                 'uri' => 'clean_prices',
+                'permission' => null,
             ],
             [
                 'parent_id' => 16,
@@ -199,6 +247,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '服务城市列表',
                 'icon' => 'fa-sitemap',
                 'uri' => 'service_sites',
+                'permission' => null,
             ],
 
             //话题管理
@@ -208,6 +257,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '话题分类',
                 'icon' => 'fa-list-ol',
                 'uri' => 'topic_categories',
+                'permission' => null,
             ],
             [
                 'parent_id' => 17,
@@ -215,6 +265,25 @@ class AdminTablesSeeder extends Seeder
                 'title' => '话题列表',
                 'icon' => 'fa-file-text',
                 'uri' => 'topics',
+                'permission' => null,
+            ],
+
+            //传统箱管理
+            [
+                'parent_id' => 18,
+                'order' => 5,
+                'title' => '传统箱列表',
+                'icon' => 'fa-list-ol',
+                'uri' => 'boxes',
+                'permission' => null,
+            ],
+            [
+                'parent_id' => 18,
+                'order' => 10,
+                'title' => '管理员列表',
+                'icon' => 'fa-list-ol',
+                'uri' => 'box_admin_users',
+                'permission' => null,
             ],
 
         ];
@@ -233,6 +302,12 @@ class AdminTablesSeeder extends Seeder
             'name' => 'Admin',
         ]);
 
+        Administrator::create([
+            'username' => 'box-001',
+            'password' => bcrypt('123456'),
+            'name' => 'Box001',
+        ]);
+
         // create a role.
         Role::truncate();
         Role::create([
@@ -240,8 +315,14 @@ class AdminTablesSeeder extends Seeder
             'slug' => 'administrator',
         ]);
 
+        Role::create([
+            'name' => '传统箱管理员',
+            'slug' => 'box_admin',
+        ]);
+
         // add role to user.
         Administrator::first()->roles()->save(Role::first());
+        Administrator::where('username', 'box-001')->first()->roles()->save(Role::where('slug', 'box_admin')->first());
 
         //create a permission
         Permission::truncate();
@@ -277,7 +358,7 @@ class AdminTablesSeeder extends Seeder
                 'http_path' => "/auth/roles\r\n/auth/permissions\r\n/auth/menu\r\n/auth/logs\r\n/media*\r\n/logs*\r\n/dashboard\r\n/redis\r\n/horizon",
             ],
             [
-                'name' => '系统设置',
+                'name' => '应用功能设置',
                 'slug' => 'configs',
                 'http_method' => '',
                 'http_path' => "/configs",
@@ -286,7 +367,14 @@ class AdminTablesSeeder extends Seeder
         $permissions = array_merge($permissions, $this->custom_permissions);
         Permission::insert($permissions);
 
+        // 超管添加所有权限
         Role::first()->permissions()->save(Permission::first());
+
+        // 传统箱管理员添加权限
+        Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug','auth.login')->first());
+        Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug','auth.setting')->first());
+        Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug','boxes')->first());
+
 
         // add default menus.
         Menu::truncate();
@@ -297,6 +385,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '首页',
                 'icon' => 'fa-bar-chart',
                 'uri' => '/',
+                'permission' => 'index',
             ],
             [
                 'parent_id' => 0,
@@ -304,6 +393,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '系统管理',
                 'icon' => 'fa-tasks',
                 'uri' => '',
+                'permission' => 'auth.management',
             ],
             [
                 'parent_id' => 2,
@@ -311,6 +401,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '系统信息',
                 'icon' => 'fa-dashboard',
                 'uri' => 'dashboard',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -318,6 +409,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '管理员',
                 'icon' => 'fa-users',
                 'uri' => 'auth/users',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -325,6 +417,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '角色',
                 'icon' => 'fa-user',
                 'uri' => 'auth/roles',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -332,6 +425,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '权限',
                 'icon' => 'fa-ban',
                 'uri' => 'auth/permissions',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -339,6 +433,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '菜单',
                 'icon' => 'fa-bars',
                 'uri' => 'auth/menu',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -346,6 +441,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '文件管理',
                 'icon' => 'fa-file',
                 'uri' => 'media',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -353,6 +449,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '系统日志',
                 'icon' => 'fa-database',
                 'uri' => 'logs',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -360,6 +457,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => '操作日志',
                 'icon' => 'fa-history',
                 'uri' => 'auth/logs',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -367,6 +465,7 @@ class AdminTablesSeeder extends Seeder
                 'title' => 'Horizon',
                 'icon' => 'fa-desktop',
                 'uri' => 'horizon',
+                'permission' => null,
             ],
             [
                 'parent_id' => 2,
@@ -374,13 +473,15 @@ class AdminTablesSeeder extends Seeder
                 'title' => 'Redis',
                 'icon' => 'fa-database',
                 'uri' => 'redis',
+                'permission' => null,
             ],
             [
                 'parent_id' => 0,
                 'order' => 998,
-                'title' => '系统设置',
+                'title' => '应用功能设置',
                 'icon' => 'fa-gear',
                 'uri' => 'configs',
+                'permission' => 'configs',
             ],
         ];
         $menus = array_merge($menus, $this->custom_menus);

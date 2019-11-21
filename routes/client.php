@@ -39,6 +39,9 @@ $api->version('v1', [
         $api->get('bins/nearby', 'BinsController@nearby')->name('client.bins.nearby');/*获取距离最近的回收箱*/
         $api->get('bins', 'BinsController@index')->name('client.bins.index');/*获取回收箱列表*/
 
+        // 传统箱
+
+
         //话题
         $api->get('topic_categories', 'TopicCategoriesController@index')->name('client.topic_categories.index');/*获取话题分类*/
         $api->get('topic_categories/{category}', 'TopicCategoriesController@topic')->name('client.topic_categories.topic');/*获取话题列表*/

@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientPricesSeeder::class);
         $this->call(RecyclePricesSeeder::class);
 
-        // 箱
+        // 智能箱
         $this->call(BinsSeeder::class);
 
         // 话题
@@ -39,9 +39,13 @@ class DatabaseSeeder extends Seeder
         // 客户端订单
         $this->call(ClientOrdersSeeder::class);
 
-
-
         // 回收端订单
         $this->call(CleanOrdersSeeder::class);
+
+        // 传统箱
+        $this->call(BoxesSeeder::class);
+
+        // 传统箱订单
+        $this->call(BoxOrdersSeeder::class);
     }
 }

@@ -8,15 +8,16 @@ class UserMoneyBill extends Model
 {
     const TYPE_CLIENT_ORDER = 'clientOrder';
     const TYPE_USER_WITHDRAW = 'userWithdraw';
+    const TYPE_BOX_ORDER = 'boxOrder';
 
     public static $TypeMap = [
         self::TYPE_CLIENT_ORDER => '回收订单',
         self::TYPE_USER_WITHDRAW => '用户提现',
+        self::TYPE_BOX_ORDER => '传统箱订单',
     ];
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -89,28 +90,46 @@ class UserMoneyBill extends Model
 
     public static function change(User $user, $type, $number, Model $related = null)
     {
-        if (!in_array($type, array_keys(self::$TypeMap))) {
+        if (!in_array($type, array_keys(self::$TypeMap)))
+        {
             throw new \Exception('账单类型异常');
         }
 
-        if ($number < 0) {
+        if ($number < 0)
+        {
             throw new \Exception('账单数额异常');
         }
 
-        switch ($type) {
+        if ($number == 0)
+        {
+            return false;
+        }
+
+        switch ($type)
+        {
             case self::TYPE_CLIENT_ORDER :
-                if (!$related instanceof ClientOrder || !$related->exists) {
+                if (!$related instanceof ClientOrder || !$related->exists)
+                {
                     throw new \Exception('关联模型异常');
                 }
                 $operator = '+';
                 $description = '投递废品';
                 break;
             case self::TYPE_USER_WITHDRAW :
-                if (!$related instanceof UserWithdraw || !$related->exists) {
+                if (!$related instanceof UserWithdraw || !$related->exists)
+                {
                     throw new \Exception('关联模型异常');
                 }
                 $operator = '-';
                 $description = '奖励金提现';
+                break;
+            case self::TYPE_BOX_ORDER :
+                if (!$related instanceof BoxOrder || !$related->exists)
+                {
+                    throw new \Exception('关联模型异常');
+                }
+                $operator = '+';
+                $description = '投递旧衣物';
                 break;
         }
 
@@ -122,7 +141,8 @@ class UserMoneyBill extends Model
             'number' => $number,
         ];
 
-        if ($related != null && $related->exists) {
+        if ($related != null && $related->exists)
+        {
             $data = array_merge($data, [
                 'related_model' => $related->getMorphClass(),
                 'related_id' => $related->id,
