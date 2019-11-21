@@ -39,7 +39,7 @@ class BoxOrdersController extends Controller
 
     /**
      * showdoc
-     * @catalog 客户端/订单相关
+     * @catalog 客户端/传统箱订单相关
      * @title GET 获取传统箱订单详情
      * @method GET
      * @url box_orders/{order_id}
@@ -84,7 +84,7 @@ class BoxOrdersController extends Controller
         $box_order_profit_money = Config::config('box_order_profit_money');
 
         $his_orders = BoxOrder::where('user_id', $user->id)->where('total', '>', 0)->whereBetween('created_at', [
-            now()->subDays($box_order_profit_day),// start
+            now()->subMinutes($box_order_profit_day),// start
             now(),// end
         ])->get();
 

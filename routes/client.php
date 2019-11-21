@@ -41,6 +41,7 @@ $api->version('v1', [
 
         // 传统箱
         $api->get('boxes/nearby', 'BoxesController@nearby')->name('client.boxes.nearby');/*获取距离最近的传统箱*/
+        $api->get('boxes/profits', 'BoxesController@profits')->name('client.boxes.profits');/*获取传统箱奖励参数*/
         $api->get('boxes', 'BoxesController@index')->name('client.boxes.index');/*获取传统箱列表*/
 
         //话题

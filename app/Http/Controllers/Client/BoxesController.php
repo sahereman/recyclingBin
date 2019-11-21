@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Handlers\Tools\Coordinate;
 use App\Http\Requests\Client\BoxRequest;
 use App\Models\Box;
+use App\Models\Config;
 use App\Transformers\Client\BoxSimpleTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -94,4 +95,31 @@ class BoxesController extends Controller
 
         return $this->response->item($boxes->first(), new BoxSimpleTransformer());
     }
+
+
+    /**
+     * showdoc
+     * @catalog 客户端/传统箱相关
+     * @title GET 获取传统箱奖励参数
+     * @method GET
+     * @url boxes/profits
+     * @return {"box_order_profit_day":"7","box_order_profit_number":"2","box_order_profit_money":"0.2"}
+     * @return_param HTTP.Status int 成功时HTTP状态码:200
+     * @return_param data json 传统箱信息
+     * @number 10
+     */
+    public function profits()
+    {
+        $box_order_profit_day = Config::config('box_order_profit_day');
+        $box_order_profit_number = Config::config('box_order_profit_number');
+        $box_order_profit_money = Config::config('box_order_profit_money');
+
+        return $this->response->array([
+            'box_order_profit_day' => $box_order_profit_day,
+            'box_order_profit_number' => $box_order_profit_number,
+            'box_order_profit_money' => $box_order_profit_money,
+        ]);
+
+    }
+
 }
