@@ -40,7 +40,8 @@ $api->version('v1', [
         $api->get('bins', 'BinsController@index')->name('client.bins.index');/*获取回收箱列表*/
 
         // 传统箱
-
+        $api->get('boxes/nearby', 'BoxesController@nearby')->name('client.boxes.nearby');/*获取距离最近的传统箱*/
+        $api->get('boxes', 'BoxesController@index')->name('client.boxes.index');/*获取传统箱列表*/
 
         //话题
         $api->get('topic_categories', 'TopicCategoriesController@index')->name('client.topic_categories.index');/*获取话题分类*/
@@ -62,13 +63,18 @@ $api->version('v1', [
             $api->post('users/withdraw/unionPay', 'UsersController@WithdrawUnionPay')->name('client.users.withdraw.unionPay');/*用户银联提现*/
 
 
+            // 回收箱
             $api->put('bins/qrLogin', 'BinsController@qrLogin')->name('client.bins.qrLogin');/*扫码开箱*/
             $api->get('bins/orderCheck/{token}', 'BinsController@orderCheck')->name('client.bins.orderCheck');/*回收箱订单检查*/
 
-
-            //订单
+            //投递订单
             $api->get('orders', 'OrdersController@index')->name('client.orders.index');/*获取订单列表*/
             $api->get('orders/{order}', 'OrdersController@show')->name('client.orders.show');/*获取订单详情*/
+
+            //传统箱订单
+            $api->get('box_orders', 'BoxOrdersController@index')->name('client.box_orders.index');/*获取传统箱订单列表*/
+            $api->get('box_orders/{order}', 'BoxOrdersController@show')->name('client.box_orders.show');/*获取传统箱订单详情*/
+            $api->post('box_orders', 'BoxOrdersController@store')->name('client.box_orders.store');/*传统箱投递*/
 
             //微信
             $api->post('wechats/decryptedData', 'WechatsController@decryptedData')->name('client.wechats.decryptedData');/*微信数据解密*/

@@ -12,6 +12,7 @@ $factory->define(App\Models\BoxOrder::class, function (Faker $faker) {
         'box_id' => null,
         'user_id' => null,
         'status' => \App\Models\BoxOrder::STATUS_COMPLETED,
+        'image_proof' => $faker->imageUrl(),
         'total' => $faker->randomElement([0, \App\Models\Config::config('box_order_profit_money')]),
         'created_at' => $created_at,
         'updated_at' => $updated_at,

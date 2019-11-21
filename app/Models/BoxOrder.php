@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class BoxOrder extends Model
 {
@@ -45,6 +46,7 @@ class BoxOrder extends Model
      */
     protected $appends = [
         'status_text',
+        'image_proof_url',
     ];
 
     protected static function boot()
@@ -88,5 +90,26 @@ class BoxOrder extends Model
     public function getStatusTextAttribute()
     {
         return self::$StatusMap[$this->attributes['status']];
+    }
+
+    /* Accessors */
+    public function getImageProofUrlAttribute()
+    {
+        // 如果 image 字段本身就已经是完整的 url 就直接返回
+        if (Str::startsWith($this->attributes['image_proof'], ['http://', 'https://']))
+        {
+            return $this->attributes['image_proof'];
+        }
+        return \Storage::disk('public')->url($this->attributes['image_proof']);
+    }
+
+    public function box()
+    {
+        return $this->belongsTo(Box::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

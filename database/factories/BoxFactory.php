@@ -10,6 +10,7 @@ $factory->define(App\Models\Box::class, function (Faker $faker) {
 
     return [
         'site_id' => null,
+        'status' => \App\Models\Box::STATUS_NORMAL,
         'name' => $faker->address,
         'no' => $faker->randomNumber(9),
         'lat' => null,

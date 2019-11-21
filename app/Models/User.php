@@ -131,13 +131,19 @@ class User extends Authenticatable implements JWTSubject
 
     public static function userDisabledException()
     {
-        abort(403,'The user is disabled');
+        abort(403, 'The user is disabled');
     }
 
     /* Eloquent Relationships */
     public function orders()
     {
         return $this->hasMany(ClientOrder::class);
+    }
+
+    /* Eloquent Relationships */
+    public function box_orders()
+    {
+        return $this->hasMany(BoxOrder::class);
     }
 
     public function moneyBills()

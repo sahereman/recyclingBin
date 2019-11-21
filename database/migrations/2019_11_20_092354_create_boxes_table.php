@@ -19,6 +19,7 @@ class CreateBoxesTable extends Migration
             $table->unsignedInteger('site_id')->comment('站点id');
             $table->foreign('site_id')->references('id')->on('service_sites')->onDelete('cascade');
 
+            $table->string('status')->comment('满箱状态');
             $table->string('name')->comment('名称');
             $table->string('no')->unique()->comment('设备编号');
             $table->string('lat')->comment('纬度');

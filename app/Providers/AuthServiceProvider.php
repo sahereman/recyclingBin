@@ -15,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
         // 客户端
         'App\Models\ClientOrder' => 'App\Policies\Client\ClientOrderPolicy',
         'App\Models\BinToken' => 'App\Policies\Client\BinTokenPolicy',
+        'App\Models\BoxOrder' => 'App\Policies\Client\BoxOrderPolicy',
 
         // 回收端
         'App\Models\CleanOrder' => 'App\Policies\Clean\CleanOrderPolicy',

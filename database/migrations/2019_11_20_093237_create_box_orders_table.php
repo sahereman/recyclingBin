@@ -8,7 +8,6 @@ class CreateBoxOrdersTable extends Migration
 {
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
@@ -25,6 +24,8 @@ class CreateBoxOrdersTable extends Migration
             $table->string('sn')->comment('传统箱订单序列号');
             $table->string('status')->default('completed')->comment('order-status:completed[已完成]')->index();
 
+            $table->string('image_proof')->comment('上传图片凭证');
+
             $table->unsignedDecimal('total')->comment('合计');
 
             $table->timestamps();
@@ -33,7 +34,6 @@ class CreateBoxOrdersTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
