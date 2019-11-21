@@ -2,22 +2,21 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Bin;
-use App\Models\ClientOrder;
+use App\Models\Box;
+use App\Models\BoxOrder;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use Encore\Admin\Widgets\Table;
 
-class ClientOrdersController extends AdminController
+class BoxOrdersController extends AdminController
 {
     /**
      * Title for current resource.
      * @var string
      */
-    protected $title = '投递订单';
+    protected $title = '传统箱订单';
 
     /**
      * Make a grid builder.
@@ -25,19 +24,19 @@ class ClientOrdersController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new ClientOrder);
+        $grid = new Grid(new BoxOrder);
         $grid->disableExport();
-        $grid->model()->with(['items','bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->model()->with('box')->orderBy('created_at', 'desc'); // 设置初始排序条件
 
         $user = User::find(request()->input('user_id'));
-        $bin = Bin::find(request()->input('bin_id'));
+        $box = Box::find(request()->input('box_id'));
         if ($user instanceof User)
         {
             $grid->model()->where('user_id', $user->id);
         }
-        if ($bin instanceof Bin)
+        if ($box instanceof Box)
         {
-            $grid->model()->where('bin_id', $bin->id);
+            $grid->model()->where('box_id', $box->id);
         }
 
         /*禁用*/
@@ -69,20 +68,25 @@ class ClientOrdersController extends AdminController
         });
 
         $grid->created_at('投递时间')->sortable();
-        $grid->sn('订单号')->expand(function ($model) {
-            $item = $model->items->map(function ($item) {
-                return $item->only(['type_name', 'number', 'unit','subtotal']);
-            });
-            return new Table(['分类箱', '数量', '单位','小计'], $item->toArray());
-        });;
+        $grid->sn('订单号')->sortable();
+
         $grid->user('用户')->display(function ($user) {
             return "<a href='" . route('admin.users.show', $user['id']) . "'>$user[name]</a>";
         });
-        $grid->bin('回收箱')->display(function ($bin) {
-            return $bin ? "<a href='" . route('admin.bins.show', $bin['id']) . "'>$bin[name]</a>" : '';
+        $grid->box('传统箱')->display(function ($box) {
+            return $box ? "<a href='" . route('admin.boxes.show', $box['id']) . "'>$box[name]</a>" : '';
         });
-        $grid->status_text('状态');
-        $grid->total('合计')->sortable();
+        $grid->total('奖励金')->display(function ($total) {
+            return $total == 0 ? '奖励次数限制' : $total;
+        });
+
+        $grid->column('image_proof','图片凭证')->image('',60,60);
+
+        $grid->column('manage', '管理')->display(function () {
+            $buttons = '';
+            $buttons .= '<a target="__blank" class="btn btn-xs btn-primary" style="margin-right:6px" href="' . $this->image_proof_url . '">查看图片凭证</a>';
+            return $buttons;
+        });
 
         return $grid;
     }
@@ -94,7 +98,7 @@ class ClientOrdersController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(ClientOrder::findOrFail($id));
+        $show = new Show(BoxOrder::findOrFail($id));
 
         $show->panel()->tools(function ($tools) {
             $tools->disableEdit();
@@ -102,24 +106,11 @@ class ClientOrdersController extends AdminController
 
         $show->id('ID');
         $show->sn('订单号');
-        $show->status_text('状态');
-        $show->total('合计');
-        $show->created_at('投递时间');
-
-        $show->items('投递详情', function ($item) {
-            /*禁用*/
-            $item->disableCreateButton();
-            $item->disableFilter();
-            $item->disableExport();
-            $item->disableActions();
-            $item->disableBatchActions();
-            $item->disablePagination();
-
-            $item->type_name('分类箱');
-            $item->number('数量');
-            $item->unit('单位');
-            $item->subtotal('小计');
+        $show->total('奖励金')->as(function ($total) {
+            return $total == 0 ? '奖励次数限制' : $total;
         });
+        $show->created_at('投递时间');
+        $show->image_proof('图片凭证')->image();
 
         $show->user('投递用户信息', function ($user) {
             /*禁用*/
@@ -141,19 +132,17 @@ class ClientOrdersController extends AdminController
         });
 
 
-
-
-
         return $show;
     }
 
+    /**
+     * Make a form builder.
+     * @return Form
+     */
     protected function form()
     {
-        $form = new Form(new ClientOrder);
+        $form = new Form(new BoxOrder);
 
-        $form->tools(function (Form\Tools $tools) {
-            $tools->disableDelete();
-        });
 
         return $form;
     }

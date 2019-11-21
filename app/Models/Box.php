@@ -53,6 +53,38 @@ class Box extends Model
         'status_text',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        // 监听模型创建事件，在写入数据库之前触发
+        static::created(function ($model) {
+            // 如果模型的 no 字段为空
+            if (!$model->no)
+            {
+                // 调用 generateSn 生成箱体号
+                $model->no = static::generateNo($model);
+                $model->save();
+            }
+        });
+    }
+
+    //  生成箱体号
+    public static function generateNo($model)
+    {
+        // 号前缀
+        $prefix = 'CM';
+        for ($i = 0; $i < 10; $i++)
+        {
+            $no = $prefix . str_pad($model->id, 7, '0', STR_PAD_LEFT);
+            // 判断是否已经存在
+            if (!static::query()->where('no', $no)->exists())
+            {
+                return $no;
+            }
+        }
+        return null;
+    }
+
     /* Accessors */
     public function getStatusTextAttribute()
     {
@@ -85,18 +117,18 @@ class Box extends Model
         return $this->belongsTo(ServiceSite::class);
     }
 
-//    public function recyclers()
-//    {
-//        return $this->belongsToMany(Recycler::class, 'bin_recyclers', 'bin_id');
-//    }
+    //    public function recyclers()
+    //    {
+    //        return $this->belongsToMany(Recycler::class, 'bin_recyclers', 'bin_id');
+    //    }
 
-//    public function token()
-//    {
-//        return $this->hasOne(BinToken::class);
-//    }
-//
-//    public function clientOrderItemTemps()
-//    {
-//        return $this->hasMany(ClientOrderItemTemp::class);
-//    }
+    //    public function token()
+    //    {
+    //        return $this->hasOne(BinToken::class);
+    //    }
+    //
+    //    public function clientOrderItemTemps()
+    //    {
+    //        return $this->hasMany(ClientOrderItemTemp::class);
+    //    }
 }

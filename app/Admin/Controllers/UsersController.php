@@ -95,6 +95,7 @@ class UsersController extends AdminController
             $buttons = '';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.users.send_message.show', ['id' => $this->id]) . '">发送通知</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.client_orders.index', ['user_id' => $this->id]) . '">投递订单</a>';
+            $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.box_orders.index', ['user_id' => $this->id]) . '">传统箱订单</a>';
 
             if ($this->disabled_at == null) {
                 $buttons .= new Ajax_Button(route('admin.users.disable', $this->id), [], '加入黑名单');

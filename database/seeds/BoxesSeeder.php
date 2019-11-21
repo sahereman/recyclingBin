@@ -24,7 +24,6 @@ class BoxesSeeder extends Seeder
         {
             $box = factory(Box::class)->create([
                 'site_id' => $site->id,
-                'no' => 'CM053200' . $i,
                 'lat' => $lat,
                 'lng' => $lng,
             ]);
@@ -49,7 +48,6 @@ class BoxesSeeder extends Seeder
         {
             $box = factory(Box::class)->create([
                 'site_id' => $site->id,
-                'no' => 'CM053100' . $i,
                 'lat' => $lat,
                 'lng' => $lng,
             ]);

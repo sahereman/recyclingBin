@@ -21,7 +21,7 @@ class CreateBoxesTable extends Migration
 
             $table->string('status')->comment('满箱状态');
             $table->string('name')->comment('名称');
-            $table->string('no')->unique()->comment('设备编号');
+            $table->string('no')->unique()->nullable()->comment('箱体编号');
             $table->string('lat')->comment('纬度');
             $table->string('lng')->comment('经度');
             $table->string('address')->comment('地址');

@@ -12,7 +12,7 @@ $factory->define(App\Models\Box::class, function (Faker $faker) {
         'site_id' => null,
         'status' => \App\Models\Box::STATUS_NORMAL,
         'name' => $faker->address,
-        'no' => $faker->randomNumber(9),
+        'no' => null,
         'lat' => null,
         'lng' => null,
         'address' => $faker->streetAddress,
