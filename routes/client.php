@@ -53,6 +53,8 @@ $api->version('v1', [
         /*需要 token 验证的接口*/
         $api->group(['middleware' => ['api.auth:client', 'client.checkDisabledUser']], function ($api) {
 
+            //图片上传
+            $api->post('upload/image', 'Controller@uploadImage')->name('client.upload.image');/*图片上传*/
 
             // 用户
             $api->get('users/show', 'UsersController@show')->name('client.users.show');/*获取用户信息*/

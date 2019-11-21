@@ -68,13 +68,13 @@ class BoxOrdersController extends Controller
      * @url box_orders
      * @param Headers.Authorization 必选 headers 用户凭证
      * @param box_no 必选 string 传统箱编号
-     * @param image_proof 必选 file 图片凭证
+     * @param image_proof 必选 string 图片凭证(图片上传接口中返回的path)
      * @return {"id":48,"user_id":1,"status":"completed","status_text":"已完成","image_proof_url":"http://bin.test/storage/original/201911/ETAF2UeA8P8JbnUl1NCdwnkAmrwAEX6VNMFiNzYo.jpeg","total":"0.2","created_at":"2019-11-21 13:53:13"}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param * json 订单信息
      * @number 30
      */
-    public function store(BoxOrderRequest $request, ImageUploadHandler $imageUploadHandler)
+    public function store(BoxOrderRequest $request)
     {
         $user = Auth::guard('client')->user();
         $box = Box::where('no', $request->input('box_no'))->first();
@@ -92,7 +92,7 @@ class BoxOrdersController extends Controller
         $order->box()->associate($box);
         $order->user()->associate($user);
         $order->status = BoxOrder::STATUS_COMPLETED;
-        $order->image_proof = $imageUploadHandler->uploadOriginal($request->file('image_proof'));
+        $order->image_proof = $request->input('image_proof');
         $order->total = $his_orders->count() < $box_order_profit_number ? $box_order_profit_money : 0;
         $order->save();
 

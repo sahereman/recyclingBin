@@ -81,6 +81,16 @@ Route::group([
     $router->post('recycler_withdraws/{withdraw}/agree', 'RecyclerWithdrawsController@agree')->name('admin.recycler_withdraws.agree');/*同意*/
     $router->post('recycler_withdraws/{withdraw}/deny', 'RecyclerWithdrawsController@deny')->name('admin.recycler_withdraws.deny');/*拒绝*/
 
+    /*传统箱*/
+    $router->resource('boxes', 'BoxesController')->names('admin.boxes');
+
+    /*传统订单*/
+    $router->resource('box_orders', 'BoxOrdersController')->names('admin.box_orders');
+
+    /*传统箱管理员*/
+    $router->resource('box_admin_users', 'BoxAdminUsersController')->names('admin.box_admin_users');
+
+
     // $router->resource('example', ExampleController::class)->names('admin.example');
     // $router->get('example', 'ExampleController@index')->name('admin.example.index');
     // $router->get('example/create', 'ExampleController@create')->name('admin.example.create');

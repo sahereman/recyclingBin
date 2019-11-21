@@ -10,7 +10,7 @@ class BoxOrderRequest extends FormRequest
     {
         return [
             'box_no' => ['required', 'exists:boxes,no'],
-            'image_proof' => ['required', 'image'],
+            'image_proof' => ['required', 'string'],
         ];
     }
 

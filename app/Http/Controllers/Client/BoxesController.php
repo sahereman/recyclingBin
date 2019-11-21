@@ -105,7 +105,7 @@ class BoxesController extends Controller
      * @url boxes/profits
      * @return {"box_order_profit_day":"7","box_order_profit_number":"2","box_order_profit_money":"0.2"}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
-     * @return_param data json 传统箱信息
+     * @return_param data json 奖励参数信息
      * @number 10
      */
     public function profits()
