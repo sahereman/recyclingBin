@@ -12,19 +12,19 @@ class BoxAdminUsersController extends AdminController
 {
     /**
      * Title for current resource.
-     *
      * @var string
      */
-    protected $title = 'App\Models\Administrator';
+    protected $title = '传统箱管理员';
 
     /**
      * Make a grid builder.
-     *
      * @return Grid
      */
     protected function grid()
     {
         $grid = new Grid(new Administrator);
+
+        $grid->disableExport();
 
         $grid->column('id', __('Id'));
         $grid->column('username', __('Username'));
@@ -40,7 +40,6 @@ class BoxAdminUsersController extends AdminController
 
     /**
      * Make a show builder.
-     *
      * @param mixed $id
      * @return Show
      */
@@ -62,7 +61,6 @@ class BoxAdminUsersController extends AdminController
 
     /**
      * Make a form builder.
-     *
      * @return Form
      */
     protected function form()

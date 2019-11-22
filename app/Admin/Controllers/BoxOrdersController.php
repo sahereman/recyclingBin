@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Box;
 use App\Models\BoxOrder;
 use App\Models\User;
@@ -25,7 +26,6 @@ class BoxOrdersController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new BoxOrder);
-        $grid->disableExport();
         $grid->model()->with('box')->orderBy('created_at', 'desc'); // 设置初始排序条件
 
         $user = User::find(request()->input('user_id'));
@@ -38,6 +38,8 @@ class BoxOrdersController extends AdminController
         {
             $grid->model()->where('box_id', $box->id);
         }
+
+        $grid->exporter(new ExcelExporter());
 
         /*禁用*/
         $grid->disableCreateButton();

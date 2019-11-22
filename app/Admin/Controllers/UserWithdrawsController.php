@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax\Ajax_Button;
 use App\Admin\Extensions\Ajax\Ajax_Input_Text_Button;
+use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\UserMoneyBill;
 use App\Models\UserWithdraw;
 use App\Notifications\Client\UserWithdrawAgreeNotification;
@@ -28,7 +29,7 @@ class UserWithdrawsController extends AdminController
         $grid->disableCreateButton();
         $grid->disableActions();
         $grid->disableBatchActions();
-        $grid->disableExport();
+        $grid->exporter(new ExcelExporter());
 
         /*筛选*/
         $grid->filter(function ($filter) {

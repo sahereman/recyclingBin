@@ -30,7 +30,7 @@ class BoxOrdersController extends Controller
         $user = Auth::guard('client')->user();
 
 
-        $orders = $user->box_orders()->orderBy('created_at', 'desc')->paginate(10);
+        $orders = $user->box_orders()->with('box')->orderBy('created_at', 'desc')->paginate(10);
 
 
         return $this->response->paginator($orders, new BoxOrderTransformer());

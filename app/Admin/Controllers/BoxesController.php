@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Box;
 use App\Models\ServiceSite;
 use Encore\Admin\Controllers\AdminController;
@@ -28,7 +29,7 @@ class BoxesController extends AdminController
             'site',
         ])->orderBy('id', 'asc'); // 设置初始排序条件
 
-        $grid->disableExport();
+        $grid->exporter(new ExcelExporter());
 
         /*筛选*/
         $grid->filter(function ($filter) {
@@ -46,7 +47,6 @@ class BoxesController extends AdminController
         //        $grid->column('id', 'ID')->sortable();
         $grid->column('no', '箱体编号')->qrcode(function ($no) {
             return url('client/qr') . '?box_no=' . $no;
-
         })->sortable();
         $grid->site()->name('站点名称');
         $grid->column('name', '箱体名称');

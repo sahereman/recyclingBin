@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Bin;
 use App\Models\ClientOrder;
 use App\Models\User;
@@ -26,7 +27,6 @@ class ClientOrdersController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ClientOrder);
-        $grid->disableExport();
         $grid->model()->with(['items','bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
 
         $user = User::find(request()->input('user_id'));
@@ -40,6 +40,7 @@ class ClientOrdersController extends AdminController
             $grid->model()->where('bin_id', $bin->id);
         }
 
+        $grid->exporter(new ExcelExporter());
         /*禁用*/
         $grid->disableCreateButton();
         $grid->actions(function ($actions) {

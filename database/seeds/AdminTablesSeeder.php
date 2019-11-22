@@ -124,19 +124,19 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 0,
+                'order' => 45,
+                'title' => '传统箱管理',
+                'icon' => 'fa-recycle',
+                'uri' => '',
+                'permission' => 'boxes',
+            ],
+            [
+                'parent_id' => 0,
                 'order' => 50,
                 'title' => '话题管理',
                 'icon' => 'fa-archive',
                 'uri' => '',
                 'permission' => 'topics',
-            ],
-            [
-                'parent_id' => 0,
-                'order' => 55,
-                'title' => '传统箱管理',
-                'icon' => 'fa-recycle',
-                'uri' => '',
-                'permission' => 'boxes',
             ],
             [
                 'parent_id' => 0,
@@ -250,27 +250,9 @@ class AdminTablesSeeder extends Seeder
                 'permission' => null,
             ],
 
-            //话题管理
-            [
-                'parent_id' => 17,
-                'order' => 5,
-                'title' => '话题分类',
-                'icon' => 'fa-list-ol',
-                'uri' => 'topic_categories',
-                'permission' => null,
-            ],
-            [
-                'parent_id' => 17,
-                'order' => 10,
-                'title' => '话题列表',
-                'icon' => 'fa-file-text',
-                'uri' => 'topics',
-                'permission' => null,
-            ],
-
             //传统箱管理
             [
-                'parent_id' => 18,
+                'parent_id' => 17,
                 'order' => 5,
                 'title' => '传统箱列表',
                 'icon' => 'fa-list-ol',
@@ -278,7 +260,7 @@ class AdminTablesSeeder extends Seeder
                 'permission' => null,
             ],
             [
-                'parent_id' => 18,
+                'parent_id' => 17,
                 'order' => 10,
                 'title' => '管理员列表',
                 'icon' => 'fa-list-ol',
@@ -286,13 +268,33 @@ class AdminTablesSeeder extends Seeder
                 'permission' => null,
             ],
             [
-                'parent_id' => 18,
+                'parent_id' => 17,
                 'order' => 10,
                 'title' => '传统箱订单列表',
                 'icon' => 'fa-list-ol',
                 'uri' => 'box_orders',
                 'permission' => null,
             ],
+
+            //话题管理
+            [
+                'parent_id' => 18,
+                'order' => 5,
+                'title' => '话题分类',
+                'icon' => 'fa-list-ol',
+                'uri' => 'topic_categories',
+                'permission' => null,
+            ],
+            [
+                'parent_id' => 18,
+                'order' => 10,
+                'title' => '话题列表',
+                'icon' => 'fa-file-text',
+                'uri' => 'topics',
+                'permission' => null,
+            ],
+
+
 
         ];
 

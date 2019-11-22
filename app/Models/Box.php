@@ -51,6 +51,7 @@ class Box extends Model
      */
     protected $appends = [
         'status_text',
+        'qr_code',
     ];
 
     protected static function boot()
@@ -86,6 +87,10 @@ class Box extends Model
     }
 
     /* Accessors */
+    public function getQrCodeAttribute()
+    {
+        return url('client/qr') . '?box_no=' . $this->attributes['no'];
+    }
     public function getStatusTextAttribute()
     {
         return self::$StatusMap[$this->attributes['status']];

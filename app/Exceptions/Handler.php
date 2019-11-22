@@ -9,16 +9,14 @@ class Handler extends ExceptionHandler
 {
     /**
      * A list of the exception types that are not reported.
-     *
      * @var array
      */
     protected $dontReport = [
-        //
+        SwooleExitException::class
     ];
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
-     *
      * @var array
      */
     protected $dontFlash = [
@@ -28,8 +26,7 @@ class Handler extends ExceptionHandler
 
     /**
      * Report or log an exception.
-     *
-     * @param  \Exception  $exception
+     * @param  \Exception $exception
      * @return void
      */
     public function report(Exception $exception)
@@ -39,13 +36,18 @@ class Handler extends ExceptionHandler
 
     /**
      * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception $exception
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
+        //判断是否为我们的自定义异常
+        if ($exception instanceof SwooleExitException)
+        {
+            //直接调用perpare
+            return $exception->getResponse()->prepare($request);
+        }
         return parent::render($request, $exception);
     }
 }

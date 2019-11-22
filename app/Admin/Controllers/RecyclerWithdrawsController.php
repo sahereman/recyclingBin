@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax\Ajax_Button;
 use App\Admin\Extensions\Ajax\Ajax_Input_Text_Button;
+use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\RecyclerMoneyBill;
 use App\Models\RecyclerWithdraw;
 use App\Notifications\Clean\RecyclerWithdrawAgreeNotification;
@@ -23,8 +24,8 @@ class RecyclerWithdrawsController extends AdminController
     {
         $grid = new Grid(new RecyclerWithdraw);
         $grid->model()->orderBy('status', 'desc')->orderBy('created_at', 'desc'); // 设置初始排序条件
-        $grid->disableExport();
 
+        $grid->exporter(new ExcelExporter());
         /*禁用*/
         $grid->disableCreateButton();
         $grid->disableActions();

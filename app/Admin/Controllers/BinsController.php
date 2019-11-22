@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Jobs\GenerateBinTypeSnapshot;
 use App\Models\Bin;
 use App\Models\BinTypeFabric;
@@ -40,8 +41,8 @@ class BinsController extends AdminController
         /*if ($recycler instanceof Recycler) {
             // $grid->model()->recyclers()->where('recycler_id', $recycler->id);
         }*/
-        $grid->disableExport();
 
+        $grid->exporter(new ExcelExporter());
         /*筛选*/
         $grid->filter(function ($filter) {
             $filter->column(1 / 2, function ($filter) {

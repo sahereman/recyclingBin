@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax\Ajax_Button;
+use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Bin;
 use App\Models\Recycler;
 use App\Http\Requests\Request;
@@ -34,8 +35,8 @@ class RecyclersController extends AdminController
     {
         $grid = new Grid(new Recycler);
         // $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
-        $grid->disableExport();
 
+        $grid->exporter(new ExcelExporter());
         /*筛选*/
         $grid->filter(function ($filter) {
             $filter->column(1 / 2, function ($filter) {

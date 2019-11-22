@@ -17,6 +17,8 @@ class BoxOrderTransformer extends TransformerAbstract
             'image_proof_url' => $order->image_proof_url,
             'total' => $order->total,
             'created_at' => $order->created_at->toDateTimeString(),
+            'box_name' => $order->box->name,
+            'box_address' => $order->box->address,
         ];
     }
 

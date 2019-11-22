@@ -26,6 +26,8 @@ class BannersController extends AdminController
     {
         $grid = new Grid(new Banner);
 
+        $grid->disableExport();
+
         $grid->column('id', 'ID')->sortable();
         $grid->image_url('Banner')->image('', 120);
         $grid->column('slug', 'Slug')->sortable();
