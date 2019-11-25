@@ -11,6 +11,8 @@ class BoxOrdersSeeder extends Seeder
 {
     public function run()
     {
+        BoxOrder::truncate();
+
         $user = User::find(1);
         $boxes = Box::all();
 

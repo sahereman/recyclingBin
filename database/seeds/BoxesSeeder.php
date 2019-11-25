@@ -13,6 +13,9 @@ class BoxesSeeder extends Seeder
      */
     public function run()
     {
+        Box::truncate();
+        BoxAdminUser::truncate();
+
         //回收员
         $box_admin_user = \Encore\Admin\Auth\Database\Role::where('slug','box_admin')->first()->administrators->first();
 
