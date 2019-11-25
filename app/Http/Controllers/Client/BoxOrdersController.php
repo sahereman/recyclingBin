@@ -19,7 +19,7 @@ class BoxOrdersController extends Controller
      * @method GET
      * @url box_orders
      * @param Headers.Authorization 必选 headers 用户凭证
-     * @return {"data":[{"id":3,"user_id":1,"status":"completed","status_text":"已完成","image_proof_url":"https://lorempixel.com/640/480/?86747","total":"0.20","created_at":"2019-11-20 22:12:07"},{"id":5,"user_id":1,"status":"completed","status_text":"已完成","image_proof_url":"https://lorempixel.com/640/480/?91776","total":"0.20","created_at":"2019-11-20 20:00:29"}],"meta":{"pagination":{"total":20,"count":10,"per_page":10,"current_page":1,"total_pages":2,"links":{"previous":null,"next":"http://bin.test/api/client/box_orders?page=2"}}}}
+     * @return {"data":[{"id":2,"user_id":1,"status":"completed","status_text":"已完成","image_proof_url":"https://lorempixel.com/640/480/?17703","total":"0.00","created_at":"2019-11-22 04:59:43","box_name":"郑州涪城区","box_address":"61 祁 Street"},{"id":15,"user_id":1,"status":"completed","status_text":"已完成","image_proof_url":"https://lorempixel.com/640/480/?75810","total":"0.00","created_at":"2019-11-22 01:32:48","box_name":"广州沈河区","box_address":"75 陈 Street"}],"meta":{"pagination":{"total":20,"count":10,"per_page":10,"current_page":1,"total_pages":2,"links":{"previous":null,"next":"http://bin.test/api/client/box_orders?page=2"}}}}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param data.* json 订单列表信息
      * @return_param mata.pagination json 分页信息 (使用links.next前往下一页数据)
@@ -44,7 +44,7 @@ class BoxOrdersController extends Controller
      * @method GET
      * @url box_orders/{order_id}
      * @param Headers.Authorization 必选 headers 用户凭证
-     * @return {"id":2,"user_id":1,"status":"completed","status_text":"已完成","image_proof_url":"https://lorempixel.com/640/480/?84092","total":"0.00","created_at":"2019-11-17 18:06:50"}
+     * @return {"id":2,"user_id":1,"status":"completed","status_text":"已完成","image_proof_url":"https://lorempixel.com/640/480/?17703","total":"0.00","created_at":"2019-11-22 04:59:43","box_name":"郑州涪城区","box_address":"61 祁 Street"}
      * @return_param HTTP.Status int 成功时HTTP状态码:200
      * @return_param * json 订单信息
      * @number 30

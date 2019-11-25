@@ -89,6 +89,9 @@ Route::group([
 
     /*传统箱管理员*/
     $router->resource('box_admin_users', 'BoxAdminUsersController')->names('admin.box_admin_users');
+    $router->get('box_admin_users/{id}/assignment', 'BoxAdminUsersController@assignmentShow')->name('admin.box_admin_users.assignment.show'); /*分配传统箱 页面*/
+    $router->put('box_admin_users/{id}/assignment', 'BoxAdminUsersController@assignmentStore')->name('admin.box_admin_users.assignment.store'); /*分配传统箱 请求处理*/
+
 
 
     // $router->resource('example', ExampleController::class)->names('admin.example');

@@ -9,6 +9,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Auth;
 
 class BoxesController extends AdminController
 {
@@ -25,9 +26,20 @@ class BoxesController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Box);
+
         $grid->model()->with([
             'site',
         ])->orderBy('id', 'asc'); // 设置初始排序条件
+
+        $admin_user = Auth::guard('admin')->user();
+        $admin_role = $admin_user->roles->first();
+
+        dd($admin_user,$admin_role);
+        if ($admin_role->slug == 'box_admin')
+        {
+
+        }
+
 
         $grid->exporter(new ExcelExporter());
 
