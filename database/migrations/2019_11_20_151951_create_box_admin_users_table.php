@@ -16,7 +16,7 @@ class CreateBoxAdminUsersTable extends Migration
             $table->increments('id');
 //
             $table->unsignedInteger('box_id')->comment('box_id');
-            $table->foreign('box_id')->references('id')->on('boxes')->onDelete('cascade');
+//            $table->foreign('box_id')->references('id')->on('boxes')->onDelete('cascade');
 
             $table->unsignedInteger('admin_user_id')->comment('admin_user_id');
 //            $table->foreign('admin_user_id')->references('id')->on('admin_users')->onDelete('cascade');

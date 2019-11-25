@@ -13,11 +13,11 @@ class BoxesSeeder extends Seeder
      */
     public function run()
     {
-        Box::truncate();
         BoxAdminUser::truncate();
+        Box::where('id', '>', 0)->delete();
 
         //回收员
-        $box_admin_user = \Encore\Admin\Auth\Database\Role::where('slug','box_admin')->first()->administrators->first();
+        $box_admin_user = \Encore\Admin\Auth\Database\Role::where('slug', 'box_admin')->first()->administrators->first();
 
         // 青岛站
         $site = ServiceSite::where('city', '青岛市')->first();
