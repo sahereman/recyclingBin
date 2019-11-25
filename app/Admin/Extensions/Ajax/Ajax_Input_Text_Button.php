@@ -14,12 +14,15 @@ class Ajax_Input_Text_Button
 
     protected $title;
 
-    public function __construct($url, $fields = array(), $button = '提交', $title = '请输入')
+    protected $value;
+
+    public function __construct($url, $fields = array(), $button = '提交', $title = '请输入', $value = '')
     {
         $this->url = $url;
         $this->fields = $fields;
         $this->button = $button;
         $this->title = $title;
+        $this->value = $value;
     }
 
     protected function script()
@@ -39,41 +42,42 @@ class Ajax_Input_Text_Button
             data._token = LA.token;
             
             swal.fire({
-              title: "$this->title",
-              input: 'text',
-              showCancelButton: true,
+                title: "$this->title",
+                input: 'text',
+                inputValue : "$this->value",
+                showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "$confirm",
                 showLoaderOnConfirm: true,
                 cancelButtonText: "$cancel",
                 preConfirm: function(input) {
-                    data.input = input;
-                    return new Promise(function(resolve) {
-                        $.ajax({
-                            method: 'POST',
-                            url: data_url,
-                            data: data,
-                            success: function (data) {
-                                $.pjax.reload('#pjax-container');
-                                if (typeof data === 'object') {
-                                    if (data.status) {
-                                        swal(data.message, '', 'success');
-                                    } else {
-                                        swal(data.message, '', 'error');
+                        data.input = input;
+                        return new Promise(function(resolve) {
+                            $.ajax({
+                                method: 'POST',
+                                url: data_url,
+                                data: data,
+                                success: function (data) {
+                                    $.pjax.reload('#pjax-container');
+                                    if (typeof data === 'object') {
+                                        if (data.status) {
+                                            swal(data.message, '', 'success');
+                                        } else {
+                                            swal(data.message, '', 'error');
+                                        }
+                                    }
+                                },
+                                error: function(xhr, errorText, errorStatus) {
+                                    if(xhr.status == 422){
+                                        for(var i in xhr.responseJSON.errors)
+                                        {
+                                            swal(xhr.responseJSON.errors[i].shift(), '', 'error');
+                                            break;
+                                        }
                                     }
                                 }
-                            },
-                            error: function(xhr, errorText, errorStatus) {
-                                if(xhr.status == 422){
-                                    for(var i in xhr.responseJSON.errors)
-                                    {
-                                        swal(xhr.responseJSON.errors[i].shift(), '', 'error');
-                                        break;
-                                    }
-                                }
-                            }
+                            });
                         });
-                    });
                 }
             });
             

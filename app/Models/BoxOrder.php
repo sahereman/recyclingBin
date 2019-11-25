@@ -7,9 +7,11 @@ use Illuminate\Support\Str;
 
 class BoxOrder extends Model
 {
+    const STATUS_WAIT = 'wait';
     const STATUS_COMPLETED = 'completed';
 
     public static $StatusMap = [
+        self::STATUS_WAIT => '待审核',
         self::STATUS_COMPLETED => '已完成',
     ];
 

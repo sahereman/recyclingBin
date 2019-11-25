@@ -32,12 +32,10 @@ class BoxesController extends AdminController
         ])->orderBy('id', 'asc'); // 设置初始排序条件
 
         $admin_user = Auth::guard('admin')->user();
-        $admin_role = $admin_user->roles->first();
 
-//        dd($admin_user,$admin_role);
-        if ($admin_role->slug == 'box_admin')
+        if ($admin_user->isRole('box_admin'))
         {
-
+            $grid->model()->whereIn('id',$admin_user->boxes->pluck('id')->all());
         }
 
 

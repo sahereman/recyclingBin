@@ -2,14 +2,22 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Ajax\Ajax_Button;
+use App\Admin\Extensions\Ajax\Ajax_Input_Text_Button;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
+use App\Http\Requests\Request;
 use App\Models\Box;
 use App\Models\BoxOrder;
+use App\Models\Config;
 use App\Models\User;
+use App\Models\UserMoneyBill;
+use App\Notifications\Client\BoxOrderCompletedNotification;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class BoxOrdersController extends AdminController
 {
@@ -26,7 +34,14 @@ class BoxOrdersController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new BoxOrder);
-        $grid->model()->with('box')->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->model()->with('box')->orderBy('status', 'desc')->orderBy('created_at', 'desc'); // 设置初始排序条件
+
+        $admin_user = Auth::guard('admin')->user();
+
+        if ($admin_user->isRole('box_admin'))
+        {
+            $grid->model()->whereIn('box_id', $admin_user->boxes->pluck('id')->all());
+        }
 
         $user = User::find(request()->input('user_id'));
         $box = Box::find(request()->input('box_id'));
@@ -78,15 +93,30 @@ class BoxOrdersController extends AdminController
         $grid->box('传统箱')->display(function ($box) {
             return $box ? "<a href='" . route('admin.boxes.show', $box['id']) . "'>$box[name]</a>" : '';
         });
+        $grid->status_text('状态');
         $grid->total('奖励金')->display(function ($total) {
-            return $total == 0 ? '奖励次数限制' : $total;
+            if ($this->status == BoxOrder::STATUS_COMPLETED)
+            {
+                return $total == 0 ? '奖励次数限制' : $total;
+            } else
+            {
+                return '';
+            }
         });
 
-        $grid->column('image_proof','图片凭证')->image('',60,60);
+        $grid->column('image_proof', '图片凭证')->image('', 60, 60);
 
-        $grid->column('manage', '管理')->display(function () {
+        $grid->column('manage', '管理')->display(function () use ($admin_user) {
             $buttons = '';
-            $buttons .= '<a target="__blank" class="btn btn-xs btn-primary" style="margin-right:6px" href="' . $this->image_proof_url . '">查看图片凭证</a>';
+            $buttons .= '<a target="_blank" class="btn btn-xs btn-primary" style="margin-right:6px" href="' . $this->image_proof_url . '">查看图片凭证</a>';
+            if ($this->status == BoxOrder::STATUS_WAIT)
+            {
+                if($admin_user->can('box_orders.check'))
+                {
+                    $buttons .= new Ajax_Input_Text_Button(route('admin.box_orders.agree', $this->id), [], '审核通过', '请输入奖励金额', Config::config('box_order_profit_money'));
+                    $buttons .= new Ajax_Button(route('admin.box_orders.deny', $this->id), [], '奖励限制');
+                }
+            }
             return $buttons;
         });
 
@@ -147,5 +177,66 @@ class BoxOrdersController extends AdminController
 
 
         return $form;
+    }
+
+
+    public function agree(Request $request, BoxOrder $order)
+    {
+
+        if ($order->status !== BoxOrder::STATUS_WAIT)
+        {
+            return response()->json([
+                'status' => false,
+                'message' => '状态异常'
+            ]);
+        }
+
+        // 验证
+        $data = Validator::make($request->all(), [
+            'input' => ['required', 'numeric', 'min:0', 'max:10'],
+        ], [], [
+            'input' => '奖励金额',
+        ])->validate();
+
+        // 审核成功,修改用户金额,修改订单状态,通知用户,改变账单
+        $user = $order->user;
+        $order->update([
+            'status' => BoxOrder::STATUS_COMPLETED,
+            'total' => $data['input'],
+        ]);
+        $user->update([
+            'money' => bcadd($user->money, $data['input'], 2),
+        ]);
+        UserMoneyBill::change($user, UserMoneyBill::TYPE_BOX_ORDER, $data['input'], $order);
+        $user->notify(new BoxOrderCompletedNotification($order));
+
+
+        return response()->json([
+            'status' => true,
+            'message' => '审核成功'
+        ]);
+    }
+
+    public function deny(Request $request, BoxOrder $order)
+    {
+        if ($order->status !== BoxOrder::STATUS_WAIT)
+        {
+            return response()->json([
+                'status' => false,
+                'message' => '状态异常'
+            ]);
+        }
+
+        // 奖励限制,修改订单状态
+        $order->update([
+            'status' => BoxOrder::STATUS_COMPLETED,
+            'total' => 0,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => '奖励限制'
+        ]);
+
     }
 }

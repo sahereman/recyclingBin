@@ -87,6 +87,18 @@ class AdminTablesSeeder extends Seeder
                 'http_path' => "/box_orders",
             ],
             [
+                'name' => '传统箱订单审核',
+                'slug' => 'box_orders.check',
+                'http_method' => '',
+                'http_path' => "/box_orders/*/agree\r\n/box_orders/*/deny",
+            ],
+            [
+                'name' => '传统箱管理员管理',
+                'slug' => 'box_admin_users',
+                'http_method' => '',
+                'http_path' => "/box_admin_users",
+            ],
+            [
                 'name' => 'Banner管理',
                 'slug' => 'banners',
                 'http_method' => '',
@@ -261,19 +273,19 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 17,
-                'order' => 10,
-                'title' => '管理员列表',
+                'order' => 8,
+                'title' => '传统箱订单列表',
                 'icon' => 'fa-list-ol',
-                'uri' => 'box_admin_users',
+                'uri' => 'box_orders',
                 'permission' => null,
             ],
             [
                 'parent_id' => 17,
                 'order' => 10,
-                'title' => '传统箱订单列表',
+                'title' => '传统箱管理员列表',
                 'icon' => 'fa-list-ol',
-                'uri' => 'box_orders',
-                'permission' => null,
+                'uri' => 'box_admin_users',
+                'permission' => 'box_admin_users',
             ],
 
             //话题管理
@@ -384,6 +396,8 @@ class AdminTablesSeeder extends Seeder
         Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'auth.login')->first());
         Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'auth.setting')->first());
         Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'boxes')->first());
+        Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'box_orders')->first());
+        Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'box_orders.check')->first());
 
 
         // add default menus.

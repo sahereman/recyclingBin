@@ -85,6 +85,8 @@ Route::group([
     $router->resource('boxes', 'BoxesController')->names('admin.boxes');
 
     /*传统订单*/
+    $router->post('box_orders/{order}/agree', 'BoxOrdersController@agree')->name('admin.box_orders.agree'); /*传统订单 审核通过*/
+    $router->post('box_orders/{order}/deny', 'BoxOrdersController@deny')->name('admin.box_orders.deny'); /*传统订单 审核拒绝*/
     $router->resource('box_orders', 'BoxOrdersController')->names('admin.box_orders');
 
     /*传统箱管理员*/

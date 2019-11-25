@@ -83,7 +83,7 @@ class BoxOrdersController extends Controller
         $box_order_profit_number = Config::config('box_order_profit_number');
         $box_order_profit_money = Config::config('box_order_profit_money');
 
-        $his_orders = BoxOrder::where('user_id', $user->id)->where('total', '>', 0)->whereBetween('created_at', [
+        $his_orders = BoxOrder::where('user_id', $user->id)->whereBetween('created_at', [
             now()->subMinutes($box_order_profit_day),// start
             now(),// end
         ])->get();
@@ -93,7 +93,13 @@ class BoxOrdersController extends Controller
         $order->user()->associate($user);
         $order->status = BoxOrder::STATUS_COMPLETED;
         $order->image_proof = $request->input('image_proof');
-        $order->total = $his_orders->count() < $box_order_profit_number ? $box_order_profit_money : 0;
+        $order->total = 0;
+
+        if ($his_orders->count() < $box_order_profit_number)
+        {
+            $order->status = BoxOrder::STATUS_WAIT;
+        }
+
         $order->save();
 
         return $this->response->item($order, new BoxOrderTransformer());
