@@ -34,7 +34,7 @@ class BoxesController extends AdminController
         $admin_user = Auth::guard('admin')->user();
         $admin_role = $admin_user->roles->first();
 
-        dd($admin_user,$admin_role);
+//        dd($admin_user,$admin_role);
         if ($admin_role->slug == 'box_admin')
         {
 
