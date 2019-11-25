@@ -91,6 +91,7 @@ class Box extends Model
     {
         return url('client/qr') . '?box_no=' . $this->attributes['no'];
     }
+
     public function getStatusTextAttribute()
     {
         return self::$StatusMap[$this->attributes['status']];
@@ -127,13 +128,8 @@ class Box extends Model
     //        return $this->belongsToMany(Recycler::class, 'bin_recyclers', 'bin_id');
     //    }
 
-    //    public function token()
-    //    {
-    //        return $this->hasOne(BinToken::class);
-    //    }
-    //
-    //    public function clientOrderItemTemps()
-    //    {
-    //        return $this->hasMany(ClientOrderItemTemp::class);
-    //    }
+    public function orders()
+    {
+        return $this->hasMany(BoxOrder::class);
+    }
 }

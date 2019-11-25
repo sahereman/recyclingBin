@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Box;
+use App\Models\BoxOrder;
 use App\Models\ServiceSite;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -35,7 +36,7 @@ class BoxesController extends AdminController
 
         if ($admin_user->isRole('box_admin'))
         {
-            $grid->model()->whereIn('id',$admin_user->boxes->pluck('id')->all());
+            $grid->model()->whereIn('id', $admin_user->boxes->pluck('id')->all());
         }
 
 
@@ -61,6 +62,13 @@ class BoxesController extends AdminController
         $grid->site()->name('站点名称');
         $grid->column('name', '箱体名称');
         $grid->column('address', '地址');
+
+        $grid->column('orders', '待审核订单')->display(function ($orders) {
+            $filtered = array_where($orders, function ($value) {
+                return $value['status'] == BoxOrder::STATUS_WAIT;
+            });
+            return count($filtered);
+        });
 
         $grid->column('manage', '管理')->display(function () {
             $buttons = '';

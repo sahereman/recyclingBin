@@ -27,9 +27,9 @@ class BoxAdminUsersController extends AdminController
     {
         $grid = new Grid(new Administrator);
 
-        $role = Role::where('slug','box_admin')->first();
+        $role = Role::where('slug', 'box_admin')->first();
         $admin_user_ids = $role->administrators->pluck('id')->all();
-        $grid->model()->whereIn('id',$admin_user_ids)->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->model()->whereIn('id', $admin_user_ids)->orderBy('created_at', 'desc'); // 设置初始排序条件
 
         $grid->filter(function ($filter) {
             $filter->column(1 / 2, function ($filter) {
@@ -97,7 +97,6 @@ class BoxAdminUsersController extends AdminController
             });
         $form->image('avatar', '头像');
 
-
         $form->ignore(['password_confirmation']);
 
         $form->saving(function (Form $form) {
@@ -110,6 +109,10 @@ class BoxAdminUsersController extends AdminController
             {
                 $form->password = bcrypt($form->password);
             }
+        });
+
+        $form->saved(function (Form $form) {
+            $form->model()->roles()->save(Role::where('slug', 'box_admin')->first());
         });
 
         return $form;
