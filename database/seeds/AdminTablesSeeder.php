@@ -393,6 +393,7 @@ class AdminTablesSeeder extends Seeder
         Role::first()->permissions()->save(Permission::first());
 
         // 传统箱管理员添加权限
+        Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'index')->first());
         Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'auth.login')->first());
         Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'auth.setting')->first());
         Role::where('slug', 'box_admin')->first()->permissions()->save(Permission::where('slug', 'boxes')->first());
