@@ -152,6 +152,14 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 0,
+                'order' => 55,
+                'title' => '回收站点',
+                'icon' => 'fa-sitemap',
+                'uri' => 'service_sites',
+                'permission' => 'service_sites',
+            ],
+            [
+                'parent_id' => 0,
                 'order' => 60,
                 'title' => 'Banner管理',
                 'icon' => 'fa-image',
@@ -251,14 +259,6 @@ class AdminTablesSeeder extends Seeder
                 'title' => '回收端价格',
                 'icon' => 'fa-dollar',
                 'uri' => 'clean_prices',
-                'permission' => null,
-            ],
-            [
-                'parent_id' => 16,
-                'order' => 40,
-                'title' => '服务城市列表',
-                'icon' => 'fa-sitemap',
-                'uri' => 'service_sites',
                 'permission' => null,
             ],
 
