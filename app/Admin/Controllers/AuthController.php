@@ -7,27 +7,21 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends BaseAuthController
 {
+
     /**
-     * Get the post login redirect path.
-     * @return string
+     * 传统箱管理员跳转 重定向至 有权限的路由中
+     * 解决问题 : laravels环境中,无权限会抛出500服务器错误,因box_admin默认进入路由是 /admin
+     * Pjax 中的 exit 在 56 行  throw new SwooleExitException($res);
      */
-    protected function redirectPath()
+    public function redirectTo()
     {
-        if (method_exists($this, 'redirectTo'))
+        $prefix = config('admin.route.prefix');
+        $admin_user = Auth::guard('admin')->user();
+
+        if ($admin_user->isRole('box_admin'))
         {
-            return $this->redirectTo();
+            redirect()->setIntendedUrl($prefix . '/boxes');
         }
-
-        $admin_user_role = Auth::guard('admin')->user()->roles->first();
-
-        if ($admin_user_role->slug == 'box_admin')
-        {
-            return property_exists($this, 'redirectTo') ? $this->redirectTo : config('admin.route.prefix') . '/boxes';
-        } else
-        {
-            return property_exists($this, 'redirectTo') ? $this->redirectTo : config('admin.route.prefix');
-        }
-
     }
 
 }
