@@ -316,8 +316,17 @@ class AdminTablesSeeder extends Seeder
      */
     public function run()
     {
-        // create a user.
         Administrator::truncate();
+        Role::truncate();
+        Menu::truncate();
+        Permission::truncate();
+        DB::table(config('admin.database.operation_log_table'))->truncate();
+        DB::table(config('admin.database.user_permissions_table'))->truncate();
+        DB::table(config('admin.database.role_users_table'))->truncate();
+        DB::table(config('admin.database.role_permissions_table'))->truncate();
+        DB::table(config('admin.database.role_menu_table'))->truncate();
+
+        // create a user.
         Administrator::create([
             'username' => 'admin',
             'password' => bcrypt('admin'),
@@ -331,7 +340,6 @@ class AdminTablesSeeder extends Seeder
         ]);
 
         // create a role.
-        Role::truncate();
         Role::create([
             'name' => '超级管理员',
             'slug' => 'administrator',
@@ -347,7 +355,6 @@ class AdminTablesSeeder extends Seeder
         Administrator::where('username', 'box-001')->first()->roles()->save(Role::where('slug', 'box_admin')->first());
 
         //create a permission
-        Permission::truncate();
         $permissions = [
             [
                 'name' => '所有权限',
@@ -402,7 +409,6 @@ class AdminTablesSeeder extends Seeder
 
 
         // add default menus.
-        Menu::truncate();
         $menus = [
             [
                 'parent_id' => 0,
