@@ -413,7 +413,7 @@ return [
 
         'latlong' => [
             // Whether to enable this extension, defaults to true
-            'enable' => false,
+            'enable' => true,
             // Specify the default provider
             'default' => 'tencent',
             // According to the selected provider above, fill in the corresponding api_key
