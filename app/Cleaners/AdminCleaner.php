@@ -15,7 +15,7 @@ class AdminCleaner implements CleanerInterface
         \Encore\Admin\Admin::$deferredScript = [];
         \Encore\Admin\Admin::$headerJs = [];
         \Encore\Admin\Admin::$manifestData = [];
-        \Encore\Admin\Admin::$extensions = [];
+        //\Encore\Admin\Admin::$extensions = [];
 
         $app->forgetInstance(\Encore\Admin\Admin::class);
         Facade::clearResolvedInstance(\Encore\Admin\Admin::class);
