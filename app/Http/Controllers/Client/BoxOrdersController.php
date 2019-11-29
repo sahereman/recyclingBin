@@ -84,7 +84,7 @@ class BoxOrdersController extends Controller
         $box_order_profit_money = Config::config('box_order_profit_money');
 
         $his_orders = BoxOrder::where('user_id', $user->id)->whereBetween('created_at', [
-            now()->subMinutes($box_order_profit_day),// start
+            now()->subDays($box_order_profit_day),// start
             now(),// end
         ])->get();
 
