@@ -12,7 +12,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-//        SwooleExitException::class
+        SwooleExitException::class
     ];
 
     /**

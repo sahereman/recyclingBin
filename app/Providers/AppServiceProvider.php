@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Exceptions\SwooleExitException;
 use App\Models\Config;
 use App\Models\User;
 use App\Observers\ConfigObserver;
@@ -51,6 +52,13 @@ class AppServiceProvider extends ServiceProvider
         //Token无效异常返回正确的状态码
         API::error(function (\Tymon\JWTAuth\Exceptions\TokenInvalidException $exception) {
             abort(401, $exception->getMessage());
+        });
+
+
+        API::error(function (SwooleExitException $exception) {
+//            abort(401, $exception->getMessage());
+            return $exception->getResponse()->prepare(request());
+
         });
     }
 }
