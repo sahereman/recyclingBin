@@ -54,11 +54,9 @@ class AppServiceProvider extends ServiceProvider
             abort(401, $exception->getMessage());
         });
 
-
+        // SwooleExit 自定义异常, 正常返回结果
         API::error(function (SwooleExitException $exception) {
-//            abort(401, $exception->getMessage());
             return $exception->getResponse()->prepare(request());
-
         });
     }
 }
