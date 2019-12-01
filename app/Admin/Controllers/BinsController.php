@@ -36,7 +36,7 @@ class BinsController extends AdminController
             'site',
             'type_paper', 'type_paper.client_price', 'type_paper.clean_price',
             'type_fabric', 'type_fabric.client_price', 'type_fabric.clean_price',
-        ])->orderBy('id', 'asc'); // 设置初始排序条件
+        ])->orderBy('no', 'asc'); // 设置初始排序条件
         // $recycler = Recycler::find(request()->input('recycler_id'));
         /*if ($recycler instanceof Recycler) {
             // $grid->model()->recyclers()->where('recycler_id', $recycler->id);
@@ -72,7 +72,7 @@ class BinsController extends AdminController
 
         $grid->column('id', 'ID')->sortable();
         $grid->site()->name('站点名称');
-        $grid->column('no', '设备编号');
+        $grid->column('no', '设备编号')->sortable();
         $grid->column('name', '设备名称')->expand(function ($model) {
             $types[0] = $model->type_fabric->only('name', 'status_text', 'number', 'unit', 'threshold', 'client_price_value', 'clean_price_value');
             $types[1] = $model->type_paper->only('name', 'status_text', 'number', 'unit', 'threshold', 'client_price_value', 'clean_price_value');
