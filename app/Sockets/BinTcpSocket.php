@@ -625,7 +625,8 @@ class BinTcpSocket extends TcpSocket
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::QRCODE,
             'result_code' => '200',
-            'set_url' => url('client/qr') . '?token=' . $bin_token->token
+            'set_url' => 'https://www.gongyihuishou.com/client/qr?token=' . $bin_token->token,
+//            'set_url' => url('client/qr') . '?token=' . $bin_token->token
         ]));
     }
 }
