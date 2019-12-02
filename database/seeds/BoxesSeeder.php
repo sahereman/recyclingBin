@@ -22,7 +22,7 @@ class BoxesSeeder extends Seeder
         $site = ServiceSite::all()->first();
         $lat = '36.092550';
         $lng = '120.381420';
-        for ($i = 1; $i <= 6000; $i++)
+        for ($i = 1; $i <= 3973; $i++)
         {
             $box = factory(Box::class)->create([
                 'site_id' => $site->id,
