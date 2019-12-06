@@ -117,17 +117,18 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs007","equipment_no":"0532009","account":"18600982820","password":"0"}
-     {"static_no":"yzs007","equipment_no":"0532009","account":"18600982820","password":"123456"}
+     {"static_no":"yzs007","equipment_no":"00030","account":"18600982820","login_type":"1"}
+     {"static_no":"yzs007","equipment_no":"00030","account":"18600982820",login_type":"1","password":"123456"}
      */
     public function passwordLoginAction($server, $fd, $data)
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
         $username = $data['account'];
         $password = $data['password'];
+        $type = $data['login_type'];
 
 
-        if (!$bin || !$username || !isset($password))
+        if (!$bin || !$username || !$type)
         {
             if (!$bin)
             {
@@ -137,17 +138,25 @@ class BinTcpSocket extends TcpSocket
             {
                 info('$username not find');
             }
-            if (!isset($password))
+            if (!$type)
             {
-                info('$password not find');
+                info('$type not find');
             }
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
             ]));
             return false;
         }
+        if ($type != '1' && !isset($password))
+        {
+            info('$password not find');
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
+            return false;
+        }
 
-        if ($password == '0')
+        if ($type == '1')
         {
             // 普通用户
             $user = User::where('phone', $username)->first();
@@ -229,7 +238,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs006","equipment_no":"0532009","user_card":"1","admin":true,"type":"1","weight":"3000"}
+     {"static_no":"yzs006","equipment_no":"00030","user_card":"1","admin":true,"type":"1","weight":"3000"}
      */
     public function cleanTransactionAction($server, $fd, $data)
     {
@@ -286,8 +295,9 @@ class BinTcpSocket extends TcpSocket
             $server->send($fd, new SocketJsonHandler([
                 'static_no' => self::CLEAN_TRANSACTION,
                 'open_door' => false,
-                'description' => '1',
+                'description' => '权限限制,请联系平台',
                 'money' => bcmul($recycler['money'], 100),
+                'spend_money' => 0,
                 'result_code' => '200',
             ]));
             return false;
@@ -299,8 +309,9 @@ class BinTcpSocket extends TcpSocket
             $server->send($fd, new SocketJsonHandler([
                 'static_no' => self::CLEAN_TRANSACTION,
                 'open_door' => false,
-                'description' => '2',
+                'description' => '账户余额不足',
                 'money' => bcmul($recycler['money'], 100),
+                'spend_money' => 0,
                 'result_code' => '200',
             ]));
             return false;
@@ -312,8 +323,9 @@ class BinTcpSocket extends TcpSocket
             $server->send($fd, new SocketJsonHandler([
                 'static_no' => self::CLEAN_TRANSACTION,
                 'open_door' => false,
-                'description' => '3',
+                'description' => '分类箱正在维护',
                 'money' => bcmul($recycler['money'], 100),
+                'spend_money' => 0,
                 'result_code' => '200',
             ]));
             return false;
@@ -361,15 +373,16 @@ class BinTcpSocket extends TcpSocket
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::CLEAN_TRANSACTION,
             'open_door' => true,
-            'description' => 0,
+            'description' => '开箱成功,已支付开箱金额',
             'money' => bcmul($recycler['money'], 100),
+            'spend_money' => bcmul($subtotal, 100),
             'result_code' => '200',
         ]));
 
     }
 
     /*
-     {"static_no":"yzs001","equipment_no":"0532009","equipment_all":false,"user_card":"6","delivery_type":"2","delivery_weight":"200","delivery_time":"20190923140001"}
+     {"static_no":"yzs001","equipment_no":"00030","equipment_all":false,"user_card":"6","delivery_type":"2","delivery_weight":"200","delivery_time":"20190923140001"}
      */
     public function clientTransactionAction($server, $fd, $data)
     {
@@ -447,8 +460,8 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs002","equipment_no":"0532009","admin":false}
-     {"static_no":"yzs002","equipment_no":"0532009","admin":true}
+     {"static_no":"yzs002","equipment_no":"00030","admin":false}
+     {"static_no":"yzs002","equipment_no":"00030","admin":true}
      */
     public function clientLogoutAction($server, $fd, $data)
     {
@@ -578,7 +591,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-    {"static_no":"yzs003","equipment_no":"0532009","equipment_all":false,"device":"0000","send_time":"20190923150201"}
+    {"static_no":"yzs003","equipment_no":"00030","equipment_all":false,"device":"0000","send_time":"20190923150201"}
      */
     public function beatAction($server, $fd, $data)
     {
@@ -600,7 +613,7 @@ class BinTcpSocket extends TcpSocket
 
 
     /*
-    {"static_no":"yzs004","equipment_no":"0532009"}
+    {"static_no":"yzs004","equipment_no":"00030"}
      */
     public function qrcodeAction($server, $fd, $data)
     {
@@ -625,7 +638,7 @@ class BinTcpSocket extends TcpSocket
             'static_no' => self::QRCODE,
             'result_code' => '200',
             'set_url' => 'https://www.gongyihuishou.com/client/qr?token=' . $bin_token->token,
-//            'set_url' => url('client/qr') . '?token=' . $bin_token->token
+            //            'set_url' => url('client/qr') . '?token=' . $bin_token->token
         ]));
     }
 }
