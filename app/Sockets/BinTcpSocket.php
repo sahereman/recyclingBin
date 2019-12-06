@@ -147,7 +147,7 @@ class BinTcpSocket extends TcpSocket
             ]));
             return false;
         }
-        if ($type != '1' && !isset($password))
+        if ($type == '2' && !isset($password))
         {
             info('$password not find');
             $server->send($fd, new SocketJsonHandler([
