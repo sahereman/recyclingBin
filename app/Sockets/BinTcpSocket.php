@@ -124,9 +124,8 @@ class BinTcpSocket extends TcpSocket
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
         $username = $data['account'];
-        $password = $data['password'];
+        $password = isset($data['password']) ? $data['password'] : '';
         $type = $data['login_type'];
-
 
         if (!$bin || !$username || !$type)
         {
@@ -142,14 +141,6 @@ class BinTcpSocket extends TcpSocket
             {
                 info('$type not find');
             }
-            $server->send($fd, new SocketJsonHandler([
-                'result_code' => '400' // 用户未注册/json格式字段错误
-            ]));
-            return false;
-        }
-        if ($type == '2' && !isset($password))
-        {
-            info('$password not find');
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '400' // 用户未注册/json格式字段错误
             ]));
