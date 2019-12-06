@@ -118,13 +118,13 @@ class BinTcpSocket extends TcpSocket
 
     /*
      {"static_no":"yzs007","equipment_no":"00030","account":"18600982820","login_type":"1"}
-     {"static_no":"yzs007","equipment_no":"00030","account":"18600982820",login_type":"1","password":"123456"}
+     {"static_no":"yzs007","equipment_no":"00030","account":"18600982820","login_type":"1","password":"123456"}
      */
     public function passwordLoginAction($server, $fd, $data)
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
         $username = $data['account'];
-        $password = isset($data['password']) ? $data['password'] : '';
+        $password = empty($data['password']) ? '' : $data['password'];
         $type = $data['login_type'];
 
         if (!$bin || !$username || !$type)
@@ -157,6 +157,7 @@ class BinTcpSocket extends TcpSocket
                     'result_code' => '400', // 用户未注册/json格式字段错误
                     'message' => '用户手机号不正确',
                 ]));
+                return false;
             } else
             {
                 // 清空token
