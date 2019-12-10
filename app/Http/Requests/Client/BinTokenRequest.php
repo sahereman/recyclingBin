@@ -19,4 +19,11 @@ class BinTokenRequest extends FormRequest
             'token' => '二维码',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'token.exists' => '二维码已失效',
+        ];
+    }
 }

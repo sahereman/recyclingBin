@@ -117,8 +117,8 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs007","equipment_no":"00030","account":"18600982820","login_type":"1"}
-     {"static_no":"yzs007","equipment_no":"00030","account":"18600982820","login_type":"1","password":"123456"}
+     {"static_no":"yzs007","equipment_no":"00020","account":"18600982820","login_type":"1"}
+     {"static_no":"yzs007","equipment_no":"00020","account":"18600982820","login_type":"2","password":"123456"}
      */
     public function passwordLoginAction($server, $fd, $data)
     {
@@ -230,7 +230,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs006","equipment_no":"00030","user_card":"1","admin":true,"type":"1","weight":"3000"}
+     {"static_no":"yzs006","equipment_no":"00020","user_card":"7","admin":true,"type":"1","weight":"3000"}
      */
     public function cleanTransactionAction($server, $fd, $data)
     {
@@ -374,7 +374,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs001","equipment_no":"00030","equipment_all":false,"user_card":"6","delivery_type":"2","delivery_weight":"200","delivery_time":"20190923140001"}
+     {"static_no":"yzs001","equipment_no":"00020","equipment_all":false,"user_card":"6","delivery_type":"2","delivery_weight":"200","delivery_time":"20190923140001"}
      */
     public function clientTransactionAction($server, $fd, $data)
     {
@@ -452,8 +452,8 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs002","equipment_no":"00030","admin":false}
-     {"static_no":"yzs002","equipment_no":"00030","admin":true}
+     {"static_no":"yzs002","equipment_no":"00020","admin":false}
+     {"static_no":"yzs002","equipment_no":"00020","admin":true}
      */
     public function clientLogoutAction($server, $fd, $data)
     {
@@ -583,7 +583,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-    {"static_no":"yzs003","equipment_no":"00030","equipment_all":false,"device":"0000","send_time":"20190923150201"}
+    {"static_no":"yzs003","equipment_no":"00020","equipment_all":false,"device":"0000","send_time":"20190923150201"}
      */
     public function beatAction($server, $fd, $data)
     {
@@ -605,7 +605,7 @@ class BinTcpSocket extends TcpSocket
 
 
     /*
-    {"static_no":"yzs004","equipment_no":"00030"}
+    {"static_no":"yzs004","equipment_no":"00020"}
      */
     public function qrcodeAction($server, $fd, $data)
     {
