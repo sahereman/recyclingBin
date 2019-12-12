@@ -23,6 +23,7 @@ class RecyclerDeposit extends Model
         'payment_id',
         'sn',
         'money',
+        'status',
     ];
 
     /**
