@@ -158,7 +158,9 @@ class BinsController extends Controller
             'user_type' => '1', // 1:用户
             'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
             'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
-            'money' => bcmul($user->money, 100)
+            'money' => bcmul($user->money, 100),
+            'paper_money' => 0,
+            'cloth _money' => 0,
         ]));
 
 

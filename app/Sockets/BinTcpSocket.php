@@ -181,7 +181,9 @@ class BinTcpSocket extends TcpSocket
                     'user_type' => '1', // 1:用户
                     'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
                     'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
-                    'money' => bcmul($user->money, 100)
+                    'money' => bcmul($user->money, 100),
+                    'paper_money' => 0,
+                    'cloth _money' => 0,
                 ]));
                 return false;
             }
@@ -212,15 +214,27 @@ class BinTcpSocket extends TcpSocket
                 $bin_token->save();
 
                 $clean_prices = CleanPrice::all();
+                $clean_paper_price = $clean_prices->where('slug', 'paper')->first()['price'];
+                $clean_fabric_price = $clean_prices->where('slug', 'fabric')->first()['price'];
+
+                /*货物的价值金额*/
+                $type_paper = $bin->type_paper;
+                $type_paper_money = bcmul($type_paper->number, $clean_paper_price, 2);
+
+                $type_fabric = $bin->type_fabric;
+                $type_fabric_money = bcmul($type_fabric->number, $clean_fabric_price, 2);
+
 
                 $server->send($bin_token->fd, new SocketJsonHandler([
                     'static_no' => BinTcpSocket::CLIENT_LOGIN,
                     'result_code' => '200',
                     'user_card' => (string)$recycler->id,
                     'user_type' => '2', // 2:回收员
-                    'paper_price' => bcmul($clean_prices->where('slug', 'paper')->first()['price'], 100),
-                    'cloth_price' => bcmul($clean_prices->where('slug', 'fabric')->first()['price'], 100),
-                    'money' => bcmul($recycler->money, 100)
+                    'paper_price' => bcmul($clean_paper_price, 100),
+                    'cloth_price' => bcmul($clean_fabric_price, 100),
+                    'money' => bcmul($recycler->money, 100),
+                    'paper_money' => bcmul($type_paper_money, 100),
+                    'cloth _money' => bcmul($type_fabric_money, 100),
                 ]));
                 return false;
             }
@@ -289,7 +303,6 @@ class BinTcpSocket extends TcpSocket
                 'open_door' => false,
                 'description' => '权限限制,请联系平台',
                 'money' => bcmul($recycler['money'], 100),
-                'spend_money' => 0,
                 'result_code' => '200',
             ]));
             return false;
@@ -303,7 +316,6 @@ class BinTcpSocket extends TcpSocket
                 'open_door' => false,
                 'description' => '账户余额不足',
                 'money' => bcmul($recycler['money'], 100),
-                'spend_money' => 0,
                 'result_code' => '200',
             ]));
             return false;
@@ -317,7 +329,6 @@ class BinTcpSocket extends TcpSocket
                 'open_door' => false,
                 'description' => '分类箱正在维护',
                 'money' => bcmul($recycler['money'], 100),
-                'spend_money' => 0,
                 'result_code' => '200',
             ]));
             return false;
@@ -367,7 +378,6 @@ class BinTcpSocket extends TcpSocket
             'open_door' => true,
             'description' => '开箱成功,已支付开箱金额',
             'money' => bcmul($recycler['money'], 100),
-            'spend_money' => bcmul($subtotal, 100),
             'result_code' => '200',
         ]));
 

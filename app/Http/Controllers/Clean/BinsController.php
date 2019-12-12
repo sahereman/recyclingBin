@@ -40,8 +40,19 @@ class BinsController extends Controller
 
         $recycler = Auth::guard('clean')->user();
         $swoole = app('swoole');
+        $bin = $token->bin;
         $clean_prices = CleanPrice::all();
+        $clean_paper_price = $clean_prices->where('slug', 'paper')->first()['price'];
+        $clean_fabric_price = $clean_prices->where('slug', 'fabric')->first()['price'];
 
+        /*货物的价值金额*/
+        $type_paper = $bin->type_paper;
+        $type_paper_money = bcmul($type_paper->number, $clean_paper_price, 2);
+
+        $type_fabric = $bin->type_fabric;
+        $type_fabric_money = bcmul($type_fabric->number, $clean_fabric_price, 2);
+
+        /*修改token防止二次操作*/
         $token->related_model = null;
         $token->related_id = null;
         $token->auth_model = $recycler->getMorphClass();
@@ -67,7 +78,9 @@ class BinsController extends Controller
             'user_type' => '2', // 2:回收员
             'paper_price' => bcmul($clean_prices->where('slug', 'paper')->first()['price'], 100),
             'cloth_price' => bcmul($clean_prices->where('slug', 'fabric')->first()['price'], 100),
-            'money' => bcmul($recycler->money, 100)
+            'money' => bcmul($recycler->money, 100),
+            'paper_money' => bcmul($type_paper_money, 100),
+            'cloth _money' => bcmul($type_fabric_money, 100),
         ]));
 
 
