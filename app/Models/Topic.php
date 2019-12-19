@@ -45,7 +45,7 @@ class Topic extends Model
         'category_name',
         'thumb_url',
         'image_url',
-        'content_simple',
+        // 'content_simple',
     ];
 
     /* Accessors */
@@ -80,7 +80,7 @@ class Topic extends Model
         $str = trim(html_entity_decode(strip_tags($this->attributes['content'])));
         if (strlen($str) > 50)
         {
-            return substr($str, 0, 47) . '...';
+            return str_limit($str, 80);
         } else
         {
             return $str;
