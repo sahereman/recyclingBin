@@ -73,6 +73,7 @@ class BinsController extends Controller
 
         $swoole->send($token->fd, new SocketJsonHandler([
             'static_no' => BinTcpSocket::CLIENT_LOGIN,
+            'status' => '0', //正常,通知设备无需验证码
             'result_code' => '200',
             'user_card' => (string)$recycler->id,
             'user_type' => '2', // 2:回收员
