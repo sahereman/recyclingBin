@@ -29,6 +29,8 @@ class TopicsController extends Controller
      */
     public function show(Topic $topic)
     {
+        $topic->incrment('view_count');
+        $topic->save();
         return $this->response->item($topic, new TopicTransformer());
     }
 
