@@ -129,7 +129,7 @@ class BinTcpSocket extends TcpSocket
         $password = empty($data['password']) ? '' : $data['password'];
         $type = $data['login_type'];
 
-        if (!$bin || !$username || !$type)
+        if (!$bin || !$username || !$type || !(boolean)preg_match('/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/',$username)) // 校验手机号正确性
         {
             if (!$bin)
             {
@@ -138,6 +138,15 @@ class BinTcpSocket extends TcpSocket
             if (!$username)
             {
                 info('$username not find');
+            }
+            if(!(boolean)preg_match('/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/',$username))
+            {
+                info('$username is bad phone number');
+                $server->send($fd, new SocketJsonHandler([
+                    'result_code' => '400', // 用户未注册/json格式字段错误
+                    'message' => '手机号格式不正确',
+                ]));
+                return false;
             }
             if (!$type)
             {
