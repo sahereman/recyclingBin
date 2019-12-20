@@ -3,9 +3,11 @@
 namespace App\Sockets;
 
 use App\Handlers\SocketJsonHandler;
+use App\Http\Controllers\Client\SmsController;
 use App\Jobs\ClearBinToken;
 use App\Jobs\GenerateCleanOrderSnapshot;
 use App\Jobs\GenerateClientOrderSnapshot;
+use App\Jobs\SendSms;
 use App\Models\Bin;
 use App\Models\BinToken;
 use App\Models\CleanOrder;
@@ -117,7 +119,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs007","equipment_no":"00020","account":"18600982820","login_type":"1"}
+     {"static_no":"yzs007","equipment_no":"00020","account":"18600982820","login_type":"1","password":"1111"}
      {"static_no":"yzs007","equipment_no":"00020","account":"18600982820","login_type":"2","password":"123456"}
      */
     public function passwordLoginAction($server, $fd, $data)
@@ -151,14 +153,44 @@ class BinTcpSocket extends TcpSocket
         {
             // 普通用户
             $user = User::where('phone', $username)->first();
+
+            // 无用户,创建用户,发送验证码
             if (!$user)
             {
+                $user = User::create([
+                    'name' => '',
+                    'gender' => '男',
+                    'phone' => $username,
+                    'avatar' => url('defaults/user_avatar.png'),
+                ]);
+
+                // 发送验证码
+                $code = str_pad(random_int(1, 9999), 4, 0, STR_PAD_LEFT);// 生成4位随机数，左侧补0
+                $content = "您的验证码为：{$code}，该验证码 5 分钟内有效，请勿泄漏于他人。";
+                SendSms::dispatch($user->phone, (new SmsController())->verification_template_code, $content, [
+                    'code' => $code
+                ]);
+
+                // 存储验证码key
+                $key = 'SmsVerification_' . $user->phone;
+                $expiredAt = now()->addMinutes(10); // 缓存验证码 10分钟过期。
+                \Cache::put($key, ['phone' => $user->phone, 'code' => $code], $expiredAt);
+
                 $server->send($fd, new SocketJsonHandler([
-                    'result_code' => '400', // 用户未注册/json格式字段错误
-                    'message' => '用户手机号不正确',
+                    'static_no' => BinTcpSocket::CLIENT_LOGIN,
+                    'status' => '1', //需验证,通知设备请输入短信验证码
+                    'result_code' => '200',
+                    'user_card' => '0',
+                    'user_type' => '1', // 1:用户
+                    'paper_price' => '0',
+                    'cloth_price' => '0',
+                    'money' => '0',
+                    'paper_money' => '0',
+                    'cloth _money' => '0',
                 ]));
                 return false;
-            } else
+            } // 已通过微信授权用户,登录成功
+            elseif (!empty($user->wx_openid))
             {
                 // 清空token
                 ClearBinToken::dispatchNow($bin);
@@ -183,8 +215,79 @@ class BinTcpSocket extends TcpSocket
                     'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
                     'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
                     'money' => bcmul($user->money, 100),
-                    'paper_money' => 0,
-                    'cloth _money' => 0,
+                    'paper_money' => '0',
+                    'cloth _money' => '0',
+                ]));
+                return false;
+            } // 未微信授权用户,检查验证码,正确=>登录成功, 错误=>重新发送验证码
+            elseif (empty($user->wx_openid))
+            {
+                $key = 'SmsVerification_' . $user->phone;
+                $verify_data = \Cache::get($key);
+
+                if (!empty($verify_data) && hash_equals($verify_data['code'], $password))
+                {
+                    // 清空token
+                    ClearBinToken::dispatchNow($bin);
+
+                    $bin_token = new BinToken();
+                    $bin_token->bin_id = $bin->id;
+                    $bin_token->fd = $fd;
+                    $bin_token->related_model = null;
+                    $bin_token->related_id = null;
+                    $bin_token->auth_model = $user->getMorphClass();
+                    $bin_token->auth_id = $user->id;
+                    $bin_token->save();
+
+                    $client_prices = ClientPrice::all();
+
+                    $server->send($bin_token->fd, new SocketJsonHandler([
+                        'static_no' => BinTcpSocket::CLIENT_LOGIN,
+                        'status' => '0', //正常,通知设备无需验证码
+                        'result_code' => '200',
+                        'user_card' => (string)$user->id,
+                        'user_type' => '1', // 1:用户
+                        'paper_price' => bcmul($client_prices->where('slug', 'paper')->first()['price'], 100),
+                        'cloth_price' => bcmul($client_prices->where('slug', 'fabric')->first()['price'], 100),
+                        'money' => bcmul($user->money, 100),
+                        'paper_money' => '0',
+                        'cloth _money' => '0',
+                    ]));
+                    return false;
+                } else
+                {
+                    // 发送验证码
+                    $code = str_pad(random_int(1, 9999), 4, 0, STR_PAD_LEFT);// 生成4位随机数，左侧补0
+                    $content = "您的验证码为：{$code}，该验证码 5 分钟内有效，请勿泄漏于他人。";
+                    SendSms::dispatch($user->phone, (new SmsController())->verification_template_code, $content, [
+                        'code' => $code
+                    ]);
+
+                    // 存储验证码key
+                    $key = 'SmsVerification_' . $user->phone;
+                    $expiredAt = now()->addMinutes(10); // 缓存验证码 10分钟过期。
+                    \Cache::put($key, ['phone' => $user->phone, 'code' => $code], $expiredAt);
+
+                    $server->send($fd, new SocketJsonHandler([
+                        'static_no' => BinTcpSocket::CLIENT_LOGIN,
+                        'status' => '1', //需验证,通知设备请输入短信验证码
+                        'result_code' => '200',
+                        'user_card' => '0',
+                        'user_type' => '1', // 1:用户
+                        'paper_price' => '0',
+                        'cloth_price' => '0',
+                        'money' => '0',
+                        'paper_money' => '0',
+                        'cloth _money' => '0',
+                    ]));
+                    return false;
+                }
+            } //未知问题
+            else
+            {
+                $server->send($fd, new SocketJsonHandler([
+                    'result_code' => '400', // 用户未注册/json格式字段错误
+                    'message' => '未知错误',
                 ]));
                 return false;
             }
@@ -574,7 +677,7 @@ class BinTcpSocket extends TcpSocket
         // 分配任务
         GenerateClientOrderSnapshot::dispatchNow($order, $bin);
         UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
-        Notification::send($user, new ClientOrderCompletedNotification($order));
+        $user->notify(new ClientOrderCompletedNotification($order));
 
         // 更新token 防止二次交易 , 并且3秒后删除token
         $bin->token->update([

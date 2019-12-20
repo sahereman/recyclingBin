@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
 
             $table->string('name')->comment('昵称');
             $table->string('gender')->default('')->comment('性别');
-            $table->string('phone')->default('')->comment('手机');
+            $table->string('phone')->nullable()->default('')->comment('手机');
             $table->string('avatar')->nullable()->comment('头像');
 
             $table->unsignedDecimal('money')->default(0)->comment('奖励金');

@@ -7,6 +7,7 @@ use App\Http\Requests\Client\BindPhoneRequest;
 use App\Http\Requests\Client\UserRequest;
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
 use App\Http\Requests\Request;
+use App\Models\ClientOrder;
 use App\Models\User;
 use App\Models\UserMoneyBill;
 use App\Models\UserWithdraw;
@@ -102,6 +103,34 @@ class UsersController extends Controller
         }
 
         $user = Auth::guard('client')->user();
+
+        $unauthorized_user = User::where('phone', $verify_data['phone'])->where('wx_openid',null)->first();
+
+        // 如果有相同手机的未授权用户,将未授权用户数据合并,删除未授权用户
+        if($unauthorized_user)
+        {
+            // 同步订单
+            $unauthorized_user->orders->each(function ($order) use ($user){
+                $order->user()->associate($user);
+                $order->save();
+            });
+
+            // 同步账单
+            $unauthorized_user->moneyBills->each(function ($bill) use ($user){
+                $bill->user()->associate($user);
+                $bill->save();
+            });
+
+            // 合并用户信息
+            $user->update([
+                'money' => bcadd($user->money,$unauthorized_user->money,2),
+                'total_client_order_money' => bcadd($user->total_client_order_money, $unauthorized_user->total_client_order_money, 2),
+                'total_client_order_count' => bcadd($user->total_client_order_count, $unauthorized_user->total_client_order_count),
+                'total_client_order_number' => bcadd($user->total_client_order_number, $unauthorized_user->total_client_order_number, 2),
+            ]);
+
+            $unauthorized_user->delete();
+        }
 
         $user->phone = $verify_data['phone'];
         $user->save();
