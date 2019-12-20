@@ -29,7 +29,7 @@ class TopicsController extends Controller
      */
     public function show(Topic $topic)
     {
-        $topic->incrment('view_count');
+        $topic->view_count = bcadd($topic->view_count,1);
         $topic->save();
         return $this->response->item($topic, new TopicTransformer());
     }
