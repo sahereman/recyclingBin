@@ -20,11 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Config::observe(ConfigObserver::class);
-        User::observe(UserObserver::class);
 
-        // Carbon 中文化配置
-        Carbon::setLocale('zh');
     }
 
     /**
@@ -34,6 +30,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Carbon 中文化配置
+        Carbon::setLocale('zh');
+
+        Config::observe(ConfigObserver::class);
+        User::observe(UserObserver::class);
+
         //路由模型绑定没有找到模型后的异常处理
         API::error(function (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             abort(404);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\ConfigObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -47,6 +48,7 @@ class Config extends Model
     protected static function boot()
     {
         parent::boot();
+//        self::observe(ConfigObserver::class);
 
         self::$cache_key = config('app.name') . '_configs';
     }

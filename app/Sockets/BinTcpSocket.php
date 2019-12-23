@@ -708,6 +708,7 @@ class BinTcpSocket extends TcpSocket
 
     /*
     {"static_no":"yzs003","equipment_no":"00020","equipment_all":false,"device":"0000","send_time":"20190923150201"}
+    {"static_no":"yzs003","equipment_no":"00020","equipment_all_paper":false,"equipment_all_cloth":false,"paper_weight":0,"cloth_weight":0,"send_time":"19700101000324"}
      */
     public function beatAction($server, $fd, $data)
     {

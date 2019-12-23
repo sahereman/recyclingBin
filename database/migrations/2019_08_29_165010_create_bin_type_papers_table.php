@@ -25,7 +25,9 @@ class CreateBinTypePapersTable extends Migration
             $table->unsignedDecimal('number')->comment('数量');
             $table->string('unit')->comment('计量单位');
 
-            $table->unsignedDecimal('threshold')->nullable()->comment('阈值');
+            $table->unsignedDecimal('threshold')->default(0)->comment('阈值');
+
+            $table->unsignedDecimal('real_weight')->default(0)->comment('实时重量(回收机传输)');
 
             $table->unsignedInteger('client_price_id')->comment('客户端价格');
             $table->foreign('client_price_id')->references('id')->on('client_prices')->onDelete('cascade');
