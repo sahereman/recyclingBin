@@ -696,7 +696,7 @@ class BinTcpSocket extends TcpSocket
             'auth_id' => null,
         ]);
         // 清空token
-        ClearBinToken::dispatch(Bin::find($bin->id))->delay(now()->addSeconds(3));
+        //ClearBinToken::dispatch(Bin::find($bin->id))->delay(now()->addSeconds(3));
 
         ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
         $server->send($fd, new SocketJsonHandler([
