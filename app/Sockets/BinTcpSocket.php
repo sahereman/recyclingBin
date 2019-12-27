@@ -367,6 +367,18 @@ class BinTcpSocket extends TcpSocket
         $clean_prices = CleanPrice::all();
         $token = $bin ? $bin->token : null;
 
+        if(!$bin)
+        {
+            $server->send($fd, new SocketJsonHandler([
+                'static_no' => self::CLEAN_TRANSACTION,
+                'open_door' => false,
+                'description' => '权限限制,请联系平台',
+                'money' => bcmul($recycler['money'], 100),
+                'result_code' => '200',
+            ]));
+            return false;
+        }
+
         if (!$bin || !$recycler || !$token || $token->auth_id != $recycler->id || !in_array($data['type'], [1, 2]))
         {
             if (!$bin)
