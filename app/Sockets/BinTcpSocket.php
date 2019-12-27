@@ -688,7 +688,7 @@ class BinTcpSocket extends TcpSocket
         UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
         $user->notify(new ClientOrderCompletedNotification($order));
 
-        // 更新token 防止二次交易 , 并且3秒后删除token
+        // 更新token 防止二次交易 , 并且立即删除token
         $bin->token->update([
             'related_model' => $order->getMorphClass(),
             'related_id' => $order->id,
@@ -696,7 +696,7 @@ class BinTcpSocket extends TcpSocket
             'auth_id' => null,
         ]);
         // 清空token
-        //ClearBinToken::dispatch(Bin::find($bin->id))->delay(now()->addSeconds(3));
+         ClearBinToken::dispatchNow(Bin::find($bin->id));
 
         ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
         $server->send($fd, new SocketJsonHandler([
