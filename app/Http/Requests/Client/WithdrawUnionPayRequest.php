@@ -13,7 +13,7 @@ class WithdrawUnionPayRequest extends FormRequest
             'bank' => ['required'],
             'account' => ['required'],
             'bank_name' => ['required'],
-            'money' => ['required', 'numeric','min:5', 'max:1000']
+            'money' => ['required', 'numeric','min:0.10', 'max:1000']
         ];
     }
 
