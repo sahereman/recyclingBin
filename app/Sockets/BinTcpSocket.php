@@ -623,7 +623,6 @@ class BinTcpSocket extends TcpSocket
             ]));
             return false;
         }
-        $token = $bin->token;
         $user = $bin->token->auth;
 
         // 获取临时订单缓存
