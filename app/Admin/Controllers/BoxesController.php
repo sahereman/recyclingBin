@@ -54,8 +54,7 @@ class BoxesController extends AdminController
                 $filter->like('address', '地址');
             });
         });
-
-        //        $grid->column('id', 'ID')->sortable();
+        $grid->id("ID")->hide();
         $grid->column('no', '箱体编号')->qrcode(function ($no) {
             return url('client/qr') . '?box_no=' . $no;
         })->sortable();

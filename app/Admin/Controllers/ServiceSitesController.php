@@ -33,8 +33,7 @@ class ServiceSitesController extends AdminController
             $filter->disableIdFilter(); // 去掉默认的id过滤器
             $filter->like('name', '回收站点名称');
         });
-
-        $grid->column('id', 'Id')->sortable();
+        $grid->id("ID")->hide();
         $grid->column('name', '回收站点名称');
         $grid->column('county', '国家');
         $grid->column('province', '省份');

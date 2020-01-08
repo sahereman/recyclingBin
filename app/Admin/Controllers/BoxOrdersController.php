@@ -83,7 +83,7 @@ class BoxOrdersController extends AdminController
                 $filter->between('created_at', '投递时间')->datetime();
             });
         });
-
+        $grid->id("ID")->hide();
         $grid->created_at('投递时间')->sortable();
         $grid->sn('订单号')->sortable();
 

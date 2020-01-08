@@ -69,10 +69,9 @@ class BinsController extends AdminController
                 ]);
             });
         });
-
-        $grid->column('id', 'ID')->sortable();
-        $grid->site()->name('站点名称');
+        $grid->id("ID")->hide();
         $grid->column('no', '设备编号')->sortable();
+        $grid->site()->name('站点名称');
         $grid->column('name', '设备名称')->expand(function ($model) {
             $types[0] = $model->type_fabric->only('name', 'status_text', 'number', 'unit', 'threshold', 'client_price_value', 'clean_price_value');
             $types[1] = $model->type_paper->only('name', 'status_text', 'number', 'unit', 'threshold', 'client_price_value', 'clean_price_value');

@@ -51,8 +51,7 @@ class TopicsController extends AdminController
                 'no' => '否',
             ]);
         });
-
-        $grid->column('id', 'Id')->sortable();
+        $grid->id("ID")->hide();
         $grid->column('thumb', '缩略图')->image('', 40);
         // $grid->column('category_id', 'Category id');
         $grid->column('category_name', '话题分类');

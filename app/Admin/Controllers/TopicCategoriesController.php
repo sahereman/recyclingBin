@@ -33,8 +33,7 @@ class TopicCategoriesController extends AdminController
             $filter->disableIdFilter(); // 去掉默认的id过滤器
             $filter->like('name', '话题分类名称');
         });
-
-        $grid->column('id', 'Id')->sortable();
+        $grid->id("ID")->hide();
         $grid->column('name', '话题分类名称')->sortable();
         $grid->column('sort', '排序值')->sortable();
         $grid->column('topics', '话题数目')->display(function ($topics) {

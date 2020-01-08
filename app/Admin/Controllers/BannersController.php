@@ -27,8 +27,8 @@ class BannersController extends AdminController
         $grid = new Grid(new Banner);
 
         $grid->disableExport();
-
-        $grid->column('id', 'ID')->sortable();
+        $grid->model()->orderBy('sort', 'desc'); // 设置初始排序条件
+        $grid->id("ID")->hide();
         $grid->image_url('Banner')->image('', 120);
         $grid->column('slug', 'Slug')->sortable();
         // $grid->column('image', 'Image');

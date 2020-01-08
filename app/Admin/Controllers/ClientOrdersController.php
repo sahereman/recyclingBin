@@ -27,7 +27,7 @@ class ClientOrdersController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ClientOrder);
-        $grid->model()->with(['items','bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
+        $grid->model()->with(['items', 'bin'])->orderBy('created_at', 'desc'); // 设置初始排序条件
 
         $user = User::find(request()->input('user_id'));
         $bin = Bin::find(request()->input('bin_id'));
@@ -68,19 +68,19 @@ class ClientOrdersController extends AdminController
                 $filter->between('created_at', '投递时间')->datetime();
             });
         });
-
+        $grid->id("ID")->hide();
         $grid->created_at('投递时间')->sortable();
         $grid->sn('订单号')->expand(function ($model) {
             $item = $model->items->map(function ($item) {
-                return $item->only(['type_name', 'number', 'unit','subtotal']);
+                return $item->only(['type_name', 'number', 'unit', 'subtotal']);
             });
-            return new Table(['分类箱', '数量', '单位','小计'], $item->toArray());
+            return new Table(['分类箱', '数量', '单位', '小计'], $item->toArray());
         });;
         $grid->user('用户')->display(function ($user) {
             return "<a href='" . route('admin.users.show', $user['id']) . "'>$user[name]</a>";
         });
         $grid->bin('回收箱')->display(function ($bin) {
-            return $bin ? "<a href='" . route('admin.bins.show', $bin['id']) . "'>$bin[name]</a>" : '';
+            return $bin ? "<a href='" . route('admin.bins.show', $bin['id']) . "'>$bin[name]</a>" : $this['bin_snapshot']['name'];
         });
         $grid->status_text('状态');
         $grid->total('合计')->sortable();
@@ -140,9 +140,6 @@ class ClientOrdersController extends AdminController
             $user->field('total_client_order_money', '累计投递订单金额');
             $user->field('total_client_order_count', '累计投递订单次数');
         });
-
-
-
 
 
         return $show;

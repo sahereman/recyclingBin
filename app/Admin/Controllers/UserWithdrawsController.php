@@ -54,7 +54,7 @@ class UserWithdrawsController extends AdminController
                 $filter->between('checked_at', '审核时间')->datetime();
             });
         });
-
+        $grid->id("ID")->hide();
         $grid->user('用户')->display(function ($user) {
             return "<a href='" . route('admin.users.show', $user['id']) . "'>$user[name]</a>";
         });

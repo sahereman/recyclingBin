@@ -60,26 +60,35 @@ class BinTcpSocket extends TcpSocket
     }
 
 
-    public function onReceive(Server $server, $fd, $reactorId, $data)
+    public function onReceive(Server $server, $fd, $reactorId, $origin_data)
     {
-        Log::info($fd, [$data]);
+
 
         //        $redis = app('redis.connection');
         //        $userId = array_first($redis->zrangebyscore($this->client_fd, $frame->fd, $frame->fd));
-        $data = is_array(json_decode($data, true)) ? json_decode($data, true) : array();
-
-
+        $data = is_array(json_decode($origin_data, true)) ? json_decode($origin_data, true) : array();
+        if (empty($data))
+        {
+            Log::info($fd . ' JSON格式错误 - ', [$origin_data]);
+        }
         $validator = Validator::make($data, [
             'static_no' => ['required', Rule::in($this->actions)],
         ]);
 
         if ($validator->fails())
         {
+            Log::info($fd . ' static_no错误/未找到 - ', [$origin_data]);
             $server->send($fd, new SocketJsonHandler([
                 'result_code' => '401' // static_no 错误/未找到
             ]));
+            return false;
         } else
         {
+            if ($data['static_no'] != self::BEAT)
+            {
+                Log::info($fd, $data);
+            }
+
             switch ($data['static_no'])
             {
                 case self::CLIENT_LOGIN :
@@ -107,8 +116,10 @@ class BinTcpSocket extends TcpSocket
                     $server->send($fd, new SocketJsonHandler([
                         'result_code' => '401' // static_no 错误/未找到
                     ]));
+                    return false;
                     break;
             }
+            return false;
         }
 
     }
@@ -129,7 +140,7 @@ class BinTcpSocket extends TcpSocket
         $password = empty($data['password']) ? '' : $data['password'];
         $type = $data['login_type'];
 
-        if (!$bin || !$username || !$type || !(boolean)preg_match('/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/',$username)) // 校验手机号正确性
+        if (!$bin || !$username || !$type || !(boolean)preg_match('/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/', $username)) // 校验手机号正确性
         {
             if (!$bin)
             {
@@ -139,7 +150,7 @@ class BinTcpSocket extends TcpSocket
             {
                 info('$username not find');
             }
-            if(!(boolean)preg_match('/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/',$username))
+            if (!(boolean)preg_match('/^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/', $username))
             {
                 info('$username is bad phone number');
                 $server->send($fd, new SocketJsonHandler([
@@ -367,7 +378,7 @@ class BinTcpSocket extends TcpSocket
         $clean_prices = CleanPrice::all();
         $token = $bin ? $bin->token : null;
 
-        if(!$bin)
+        if (!$bin)
         {
             $server->send($fd, new SocketJsonHandler([
                 'static_no' => self::CLEAN_TRANSACTION,
@@ -707,7 +718,7 @@ class BinTcpSocket extends TcpSocket
             'auth_id' => null,
         ]);
         // 清空token
-         ClearBinToken::dispatchNow(Bin::find($bin->id));
+        ClearBinToken::dispatchNow(Bin::find($bin->id));
 
         ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
         $server->send($fd, new SocketJsonHandler([
@@ -718,7 +729,6 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-    {"static_no":"yzs003","equipment_no":"00020","equipment_all":false,"device":"0000","send_time":"20190923150201"}
     {"static_no":"yzs003","equipment_no":"00020","equipment_all_paper":false,"equipment_all_cloth":false,"paper_weight":0,"cloth_weight":0,"send_time":"19700101000324"}
      */
     public function beatAction($server, $fd, $data)
