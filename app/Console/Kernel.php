@@ -25,6 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('backup:run --disable-notifications --only-db')->twiceDaily(1, 13)->runInBackground(); // 定时备份数据库
+        $schedule->exec(base_path() . '/bin/laravels reload')->twiceDaily(2, 14)->after(function () {
+            info("Schedule Laravel-s reload");
+        });
 
         $schedule->call(function () {
 
