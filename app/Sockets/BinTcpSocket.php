@@ -610,8 +610,12 @@ class BinTcpSocket extends TcpSocket
             return false;
         }
 
-        if (!$bin || !$bin->token || $bin->token->auth_model != User::class)
+        if (!$bin || !$bin->token || $bin->token->auth_model != User::class || !isset($data['admin']))
         {
+            if(!isset($data['admin']))
+            {
+                info('$data[admin] not find');
+            }
             if (!$bin->token)
             {
                 info('$bin->token not find');
