@@ -91,9 +91,6 @@ class BinTcpSocket extends TcpSocket
 
             switch ($data['static_no'])
             {
-                case self::CLIENT_LOGIN :
-                    $this->clientLoginAction($server, $fd, $data);
-                    break;
                 case self::CLIENT_TRANSACTION :
                     $this->clientTransactionAction($server, $fd, $data);
                     break;
@@ -121,11 +118,6 @@ class BinTcpSocket extends TcpSocket
             }
             return false;
         }
-
-    }
-
-    public function clientLoginAction($server, $fd, $data)
-    {
 
     }
 
@@ -705,11 +697,6 @@ class BinTcpSocket extends TcpSocket
             'total_client_order_number' => bcadd($user->total_client_order_number, $weight, 2),
         ]);
 
-        // 分配任务
-        GenerateClientOrderSnapshot::dispatchNow($order, $bin);
-        UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
-        $user->notify(new ClientOrderCompletedNotification($order));
-
         // 更新token 防止二次交易 , 并且立即删除token
         $bin->token->update([
             'related_model' => $order->getMorphClass(),
@@ -720,7 +707,14 @@ class BinTcpSocket extends TcpSocket
         // 清空token
         ClearBinToken::dispatchNow(Bin::find($bin->id));
 
-        ClientOrderItemTemp::where('bin_id', $bin->id)->delete();// 清空订单缓存
+        // 清空订单缓存
+        ClientOrderItemTemp::where('bin_id', $bin->id)->delete();
+
+        // 分配任务
+        GenerateClientOrderSnapshot::dispatchNow($order, $bin);
+        UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
+        //$user->notify(new ClientOrderCompletedNotification($order));
+        Notification::send($user, new ClientOrderCompletedNotification($order));
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::CLIENT_LOGOUT,
             'result_code' => '200',
