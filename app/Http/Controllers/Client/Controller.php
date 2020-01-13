@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Client;
 use App\Handlers\ImageUploadHandler;
 use App\Http\Requests\Client\UploadImageRequest;
 use App\Http\Requests\Request;
+use App\Jobs\UserWithdrawWechatPay;
 use App\Models\Bin;
 use App\Models\ClientOrder;
 use App\Models\Recycler;
 use App\Models\User;
+use App\Models\UserWithdraw;
 use App\Notifications\Client\ClientOrderCompletedNotification;
 use Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Controller as BaseController;
@@ -42,6 +44,12 @@ class Controller extends BaseController
 
     public function test()
     {
+        return '';
+//        $w = UserWithdraw::find(22);
+//        UserWithdrawWechatPay::dispatchNow($w);
+//
+//        return $w;
+
         $box_admin_user = \Encore\Admin\Auth\Database\Role::where('slug', 'box_admin')->first()->administrators->first();
 
         dd($box_admin_user);

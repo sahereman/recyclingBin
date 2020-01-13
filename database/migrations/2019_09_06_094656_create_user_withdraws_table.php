@@ -27,6 +27,9 @@ class CreateUserWithdrawsTable extends Migration
 
             $table->string('reason')->nullable()->comment('回复拒绝原因等信息');
 
+            $table->string('sn')->nullable()->comment('用于第三方渠道付款的订单号');
+            $table->json('trace')->nullable()->comment('用于第三方渠道付款返回的记录');
+
             $table->timestamp('checked_at')->nullable()->comment('审核时间');
             $table->timestamps();
         });

@@ -36,6 +36,8 @@ class UserWithdraw extends Model
         'info',
         'reason',
         'checked_at',
+        'sn',
+        'trace'
     ];
 
     /**
@@ -44,6 +46,7 @@ class UserWithdraw extends Model
      */
     protected $casts = [
         'info' => 'json',
+        'trace' => 'json',
     ];
 
     /**
@@ -62,6 +65,24 @@ class UserWithdraw extends Model
         'type_text',
         'status_text',
     ];
+
+    //  生成单号
+    public static function generateSn()
+    {
+        // 单号前缀
+        $prefix = 'W' . date('YmdHis');
+        for ($i = 0; $i < 10; $i++)
+        {
+            // 随机生成 6 位的数字
+            $sn = $prefix . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            // 判断是否已经存在
+            if (!static::query()->where('sn', $sn)->exists())
+            {
+                return $sn;
+            }
+        }
+        return false;
+    }
 
     /* Accessors */
     public function getTypeTextAttribute()

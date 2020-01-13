@@ -8,6 +8,7 @@ use App\Http\Requests\Client\UserRequest;
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
 use App\Http\Requests\Client\WithdrawWechatPayRequest;
 use App\Http\Requests\Request;
+use App\Jobs\UserWithdrawWechatPay;
 use App\Models\ClientOrder;
 use App\Models\User;
 use App\Models\UserMoneyBill;
@@ -271,7 +272,6 @@ class UsersController extends Controller
             ]);
         }
 
-
         $withdraw = DB::transaction(function () use ($user, $request) {
 
             $withdraw = UserWithdraw::create([
@@ -279,12 +279,8 @@ class UsersController extends Controller
                 'type' => UserWithdraw::TYPE_WECHAT,
                 'status' => UserWithdraw::STATUS_WAIT,
                 'money' => $request->input('money'),
-                'info' => [
-                    'name' => $request->input('name'),
-                    'bank' => $request->input('bank'),
-                    'account' => $request->input('account'),
-                    'bank_name' => $request->input('bank_name')
-                ]
+                'info' => [],
+                'sn' => UserWithdraw::generateSn(),
             ]);
 
             $user->frozen_money = bcadd($user->frozen_money, $withdraw->money, 2);
@@ -293,6 +289,8 @@ class UsersController extends Controller
 
             return $withdraw;
         });
+
+        UserWithdrawWechatPay::dispatch($withdraw);
 
         return $this->response->created();
     }
