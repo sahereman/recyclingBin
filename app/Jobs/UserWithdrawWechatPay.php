@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\UserMoneyBill;
 use App\Models\UserWithdraw;
+use App\Notifications\Client\UserWithdrawWechatSuccessNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -64,6 +66,16 @@ class UserWithdrawWechatPay implements ShouldQueue
                 if ($trace['result_code'] == 'SUCCESS')
                 {
                     $withdraw->status = UserWithdraw::STATUS_AGREE;
+
+                    $withdraw->update([
+                        'status' => UserWithdraw::STATUS_AGREE,
+                        'checked_at' => now(),
+                    ]);
+                    $user->update([
+                        'frozen_money' => bcsub($user->frozen_money, $withdraw->money, 2),
+                    ]);
+                    UserMoneyBill::change($user, UserMoneyBill::TYPE_USER_WITHDRAW, $withdraw->money, $withdraw);
+                    $withdraw->user->notify(new UserWithdrawWechatSuccessNotification($withdraw));
                 }
                 $withdraw->trace = $trace;
                 $withdraw->save();
