@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Requests\Client\BindPhoneRequest;
 use App\Http\Requests\Client\UserRequest;
 use App\Http\Requests\Client\WithdrawUnionPayRequest;
+use App\Http\Requests\Client\WithdrawWechatPayRequest;
 use App\Http\Requests\Request;
 use App\Models\ClientOrder;
 use App\Models\User;
@@ -42,10 +43,10 @@ class UsersController extends Controller
     {
         $user = Auth::guard('client')->user();
 
-        if($user != null)
+        if ($user != null)
         {
             return $this->response->item($user, new UserTransformer());
-        }else
+        } else
         {
             info($user);
             throw new RateLimitExceededException();
@@ -104,26 +105,26 @@ class UsersController extends Controller
 
         $user = Auth::guard('client')->user();
 
-        $unauthorized_user = User::where('phone', $verify_data['phone'])->where('wx_openid',null)->first();
+        $unauthorized_user = User::where('phone', $verify_data['phone'])->where('wx_openid', null)->first();
 
         // 如果有相同手机的未授权用户,将未授权用户数据合并,删除未授权用户
-        if($unauthorized_user)
+        if ($unauthorized_user)
         {
             // 同步订单
-            $unauthorized_user->orders->each(function ($order) use ($user){
+            $unauthorized_user->orders->each(function ($order) use ($user) {
                 $order->user()->associate($user);
                 $order->save();
             });
 
             // 同步账单
-            $unauthorized_user->moneyBills->each(function ($bill) use ($user){
+            $unauthorized_user->moneyBills->each(function ($bill) use ($user) {
                 $bill->user()->associate($user);
                 $bill->save();
             });
 
             // 合并用户信息
             $user->update([
-                'money' => bcadd($user->money,$unauthorized_user->money,2),
+                'money' => bcadd($user->money, $unauthorized_user->money, 2),
                 'total_client_order_money' => bcadd($user->total_client_order_money, $unauthorized_user->total_client_order_money, 2),
                 'total_client_order_count' => bcadd($user->total_client_order_count, $unauthorized_user->total_client_order_count),
                 'total_client_order_number' => bcadd($user->total_client_order_number, $unauthorized_user->total_client_order_number, 2),
@@ -241,6 +242,56 @@ class UsersController extends Controller
             $user->frozen_money = bcadd($user->frozen_money, $withdraw->money, 2);
             $user->money = bcsub($user->money, $withdraw->money, 2);
             $user->save();
+        });
+
+        return $this->response->created();
+    }
+
+    /**
+     * showdoc
+     * @catalog 客户端/用户相关
+     * @title POST 用户微信钱包提现
+     * @method POST
+     * @url users/withdraw/wechatPay
+     * @param Headers.Authorization 必选 headers 用户凭证
+     * @param money 必选 string 金额
+     * @return []
+     * @return_param HTTP.Status int 成功时HTTP状态码:201
+     * @number 80
+     * @throws \Exception
+     */
+    public function WithdrawWechatPay(WithdrawWechatPayRequest $request)
+    {
+        $user = User::find(Auth::guard('client')->user()->id);
+
+        if ($user->money < $request->input('money'))
+        {
+            throw new StoreResourceFailedException(null, [
+                'money' => '余额不足'
+            ]);
+        }
+
+
+        $withdraw = DB::transaction(function () use ($user, $request) {
+
+            $withdraw = UserWithdraw::create([
+                'user_id' => $user->id,
+                'type' => UserWithdraw::TYPE_WECHAT,
+                'status' => UserWithdraw::STATUS_WAIT,
+                'money' => $request->input('money'),
+                'info' => [
+                    'name' => $request->input('name'),
+                    'bank' => $request->input('bank'),
+                    'account' => $request->input('account'),
+                    'bank_name' => $request->input('bank_name')
+                ]
+            ]);
+
+            $user->frozen_money = bcadd($user->frozen_money, $withdraw->money, 2);
+            $user->money = bcsub($user->money, $withdraw->money, 2);
+            $user->save();
+
+            return $withdraw;
         });
 
         return $this->response->created();

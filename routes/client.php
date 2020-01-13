@@ -64,6 +64,7 @@ $api->version('v1', [
             $api->put('users/bindPhone', 'UsersController@bindPhone')->name('client.users.bindPhone');/*用户绑定手机*/
             $api->get('users/moneyBill', 'UsersController@moneyBill')->name('client.users.moneyBill');/*获取金钱账单列表*/
             $api->post('users/withdraw/unionPay', 'UsersController@WithdrawUnionPay')->name('client.users.withdraw.unionPay');/*用户银联提现*/
+            $api->post('users/withdraw/wechatPay', 'UsersController@WithdrawWechatPay')->name('client.users.withdraw.wechatPay');/*用户微信钱包提现*/
 
 
             // 回收箱

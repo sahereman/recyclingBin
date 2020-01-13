@@ -49,8 +49,8 @@ class UserWithdrawsController extends AdminController
             });
 
             $filter->column(1 / 2, function ($filter) {
-                $filter->equal('status','状态')->select(UserWithdraw::$StatusMap);
-                $filter->equal('type','到账方式')->select(UserWithdraw::$TypeMap);
+                $filter->equal('status', '状态')->select(UserWithdraw::$StatusMap);
+                $filter->equal('type', '到账方式')->select(UserWithdraw::$TypeMap);
                 $filter->between('checked_at', '审核时间')->datetime();
             });
         });
@@ -76,10 +76,13 @@ class UserWithdrawsController extends AdminController
         $grid->reason('拒绝原因');
         $grid->column('manage', '管理')->display(function () {
             $buttons = '';
-            if ($this->status == UserWithdraw::STATUS_WAIT)
+            if ($this->type == UserWithdraw::TYPE_UNION_PAY)
             {
-                $buttons .= new Ajax_Button(route('admin.user_withdraws.agree', $this->id), [], '同意');
-                $buttons .= new Ajax_Input_Text_Button(route('admin.user_withdraws.deny', $this->id), [], '拒绝', '请输入拒绝原因');
+                if ($this->status == UserWithdraw::STATUS_WAIT)
+                {
+                    $buttons .= new Ajax_Button(route('admin.user_withdraws.agree', $this->id), [], '同意');
+                    $buttons .= new Ajax_Input_Text_Button(route('admin.user_withdraws.deny', $this->id), [], '拒绝', '请输入拒绝原因');
+                }
             }
             return $buttons;
         });
