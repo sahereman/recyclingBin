@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Extensions\Ajax\Ajax_Button;
 use App\Admin\Extensions\Ajax\Ajax_Input_Text_Button;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
+use App\Jobs\UserWithdrawWechatPay;
 use App\Models\UserMoneyBill;
 use App\Models\UserWithdraw;
 use App\Notifications\Client\UserWithdrawAgreeNotification;
@@ -76,13 +77,10 @@ class UserWithdrawsController extends AdminController
         $grid->reason('拒绝原因');
         $grid->column('manage', '管理')->display(function () {
             $buttons = '';
-            if ($this->type == UserWithdraw::TYPE_UNION_PAY)
+            if ($this->status == UserWithdraw::STATUS_WAIT)
             {
-                if ($this->status == UserWithdraw::STATUS_WAIT)
-                {
-                    $buttons .= new Ajax_Button(route('admin.user_withdraws.agree', $this->id), [], '同意');
-                    $buttons .= new Ajax_Input_Text_Button(route('admin.user_withdraws.deny', $this->id), [], '拒绝', '请输入拒绝原因');
-                }
+                $buttons .= new Ajax_Button(route('admin.user_withdraws.agree', $this->id), [], '同意');
+                $buttons .= new Ajax_Input_Text_Button(route('admin.user_withdraws.deny', $this->id), [], '拒绝', '请输入拒绝原因');
             }
             return $buttons;
         });
@@ -100,17 +98,25 @@ class UserWithdrawsController extends AdminController
             ]);
         }
 
-        // 提现成功,修改用户冻结金额,修改提现状态,通知用户,改变账单
-        $user = $withdraw->user;
-        $withdraw->update([
-            'status' => UserWithdraw::STATUS_AGREE,
-            'checked_at' => now(),
-        ]);
-        $user->update([
-            'frozen_money' => bcsub($user->frozen_money, $withdraw->money, 2),
-        ]);
-        UserMoneyBill::change($user, UserMoneyBill::TYPE_USER_WITHDRAW, $withdraw->money, $withdraw);
-        $withdraw->user->notify(new UserWithdrawAgreeNotification($withdraw));
+        switch ($withdraw->type)
+        {
+            case UserWithdraw::TYPE_UNION_PAY:
+                // 提现成功,修改用户冻结金额,修改提现状态,通知用户,改变账单
+                $user = $withdraw->user;
+                $withdraw->update([
+                    'status' => UserWithdraw::STATUS_AGREE,
+                    'checked_at' => now(),
+                ]);
+                $user->update([
+                    'frozen_money' => bcsub($user->frozen_money, $withdraw->money, 2),
+                ]);
+                UserMoneyBill::change($user, UserMoneyBill::TYPE_USER_WITHDRAW, $withdraw->money, $withdraw);
+                $withdraw->user->notify(new UserWithdrawAgreeNotification($withdraw));
+                break;
+            case UserWithdraw::TYPE_WECHAT:
+                UserWithdrawWechatPay::dispatch($withdraw);
+                break;
+        }
 
 
         return response()->json([
