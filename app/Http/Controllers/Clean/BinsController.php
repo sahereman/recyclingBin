@@ -82,6 +82,8 @@ class BinsController extends Controller
             'money' => bcmul($recycler->money, 100),
             'paper_money' => bcmul($type_paper_money, 100),
             'cloth _money' => bcmul($type_fabric_money, 100),
+            'paper_weight' => bcmul($bin->type_paper->number, 100),
+            'cloth_weight' => bcmul($bin->type_fabric->number, 100),
         ]));
 
 

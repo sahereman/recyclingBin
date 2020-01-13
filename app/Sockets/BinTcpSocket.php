@@ -199,6 +199,8 @@ class BinTcpSocket extends TcpSocket
                     'money' => '0',
                     'paper_money' => '0',
                     'cloth _money' => '0',
+                    'paper_weight' => '0',
+                    'cloth_weight' => '0',
                 ]));
                 return false;
             } // 已通过微信授权用户,登录成功
@@ -229,6 +231,8 @@ class BinTcpSocket extends TcpSocket
                     'money' => bcmul($user->money, 100),
                     'paper_money' => '0',
                     'cloth _money' => '0',
+                    'paper_weight' => bcmul($bin->type_paper->number, 100),
+                    'cloth_weight' => bcmul($bin->type_fabric->number, 100),
                 ]));
                 return false;
             } // 未微信授权用户,检查验证码,正确=>登录成功, 错误=>重新发送验证码
@@ -264,6 +268,8 @@ class BinTcpSocket extends TcpSocket
                         'money' => bcmul($user->money, 100),
                         'paper_money' => '0',
                         'cloth _money' => '0',
+                        'paper_weight' => bcmul($bin->type_paper->number, 100),
+                        'cloth_weight' => bcmul($bin->type_fabric->number, 100),
                     ]));
                     return false;
                 } else
@@ -291,6 +297,8 @@ class BinTcpSocket extends TcpSocket
                         'money' => '0',
                         'paper_money' => '0',
                         'cloth _money' => '0',
+                        'paper_weight' => '0',
+                        'cloth_weight' => '0',
                     ]));
                     return false;
                 }
@@ -352,6 +360,8 @@ class BinTcpSocket extends TcpSocket
                     'money' => bcmul($recycler->money, 100),
                     'paper_money' => bcmul($type_paper_money, 100),
                     'cloth _money' => bcmul($type_fabric_money, 100),
+                    'paper_weight' => bcmul($bin->type_paper->number, 100),
+                    'cloth_weight' => bcmul($bin->type_fabric->number, 100),
                 ]));
                 return false;
             }

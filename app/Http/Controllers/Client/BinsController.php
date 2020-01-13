@@ -131,6 +131,7 @@ class BinsController extends Controller
         $user = Auth::guard('client')->user();
         $swoole = app('swoole');
         $client_prices = ClientPrice::all();
+        $bin = $token->bin;
 
         $token->related_model = null;
         $token->related_id = null;
@@ -140,7 +141,7 @@ class BinsController extends Controller
 
 
         info(json_encode([
-            '__action'=> 'user qrLogin',
+            '__action' => 'user qrLogin',
             '__fd' => $token->fd,
             'static_no' => BinTcpSocket::CLIENT_LOGIN,
             'result_code' => '200',
@@ -162,6 +163,8 @@ class BinsController extends Controller
             'money' => bcmul($user->money, 100),
             'paper_money' => 0,
             'cloth _money' => 0,
+            'paper_weight' => bcmul($bin->type_paper->number, 100),
+            'cloth_weight' => bcmul($bin->type_fabric->number, 100),
         ]));
 
 
