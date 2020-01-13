@@ -290,8 +290,6 @@ class UsersController extends Controller
             return $withdraw;
         });
 
-        UserWithdrawWechatPay::dispatch($withdraw);
-
         return $this->response->created();
     }
 
