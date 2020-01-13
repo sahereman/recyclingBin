@@ -34,8 +34,11 @@ class UserWithdrawAgreeNotification extends Notification implements ShouldQueue
 
         switch ($this->withdraw->type)
         {
-            case UserWithdraw::TYPE_UNION_PAY;
+            case UserWithdraw::TYPE_UNION_PAY:
                 $info = '恭喜您提现成功,提现金额' . $this->withdraw->money . '元已转入银行卡,银行账号:' . $this->withdraw->info['account'] . ',请注意查收';
+                break;
+            case UserWithdraw::TYPE_WECHAT:
+                $info = '恭喜您提现成功,提现金额' . $this->withdraw->money . '元已转入您的微信钱包,请注意查收';
                 break;
         }
 
