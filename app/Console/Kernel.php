@@ -29,37 +29,37 @@ class Kernel extends ConsoleKernel
             info("Schedule Laravel-s reload");
         });
 
-        $schedule->call(function () {
-
-            if (app()->environment('production'))
-            {
-                $phones = [
-                    '18600982820',
-                    '18363928677',//李飞
-                    '18561386786',//郎丰江
-                    '15550809002',//李千千
-                    '15154152876',//周金芳
-                    '18366268341',//李俊
-                ];
-                $r_payment = RecyclerPayment::whereBetween('paid_at', [
-                    now()->startOfDay(),// start
-                    now()->endOfDay(),// end
-                ])->get();
-
-                if ($r_payment->isEmpty())
-                {
-                    $date = now()->toDateTimeString();
-                    $content = "今天截止到 {$date},还未进行微信支付充值,收到短信后前往小黑点回收员充值";
-                    foreach ($phones as $v)
-                    {
-                        SendSms::dispatch($v, 'SMS_180961787', $content, [
-                            'date' => $date
-                        ]);
-                    }
-
-                }
-            }
-        })->dailyAt('19:00');
+        //        $schedule->call(function () {
+        //
+        //            if (app()->environment('production'))
+        //            {
+        //                $phones = [
+        //                    '18600982820',
+        //                    '18363928677',//李飞
+        //                    '18561386786',//郎丰江
+        //                    '15550809002',//李千千
+        //                    '15154152876',//周金芳
+        //                    '18366268341',//李俊
+        //                ];
+        //                $r_payment = RecyclerPayment::whereBetween('paid_at', [
+        //                    now()->startOfDay(),// start
+        //                    now()->endOfDay(),// end
+        //                ])->get();
+        //
+        //                if ($r_payment->isEmpty())
+        //                {
+        //                    $date = now()->toDateTimeString();
+        //                    $content = "今天截止到 {$date},还未进行微信支付充值,收到短信后前往小黑点回收员充值";
+        //                    foreach ($phones as $v)
+        //                    {
+        //                        SendSms::dispatch($v, 'SMS_180961787', $content, [
+        //                            'date' => $date
+        //                        ]);
+        //                    }
+        //
+        //                }
+        //            }
+        //        })->dailyAt('19:00');
     }
 
     /**
