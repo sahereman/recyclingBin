@@ -77,6 +77,8 @@ class BoxOrdersController extends AdminController
                         $query->where('phone', 'like', "%{$this->input}%");
                     });
                 }, '手机号');
+                $filter->equal('status', '状态')->select(BoxOrder::$StatusMap);
+
             });
 
             $filter->column(1 / 2, function ($filter) {
