@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\BinsExcelExporter;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Jobs\GenerateBinTypeSnapshot;
 use App\Models\Bin;
@@ -42,7 +43,7 @@ class BinsController extends AdminController
             // $grid->model()->recyclers()->where('recycler_id', $recycler->id);
         }*/
 
-        $grid->exporter(new ExcelExporter());
+        $grid->exporter(new BinsExcelExporter());
         /*筛选*/
         $grid->filter(function ($filter) {
             $filter->column(1 / 2, function ($filter) {
@@ -54,7 +55,8 @@ class BinsController extends AdminController
                 $filter->like('no', '设备编号');
                 $filter->like('address', '地址');
                 $filter->where(function ($query) {
-                    switch ($this->input) {
+                    switch ($this->input)
+                    {
                         case 'yes':
                             $query->where('is_run', true);
                             break;
@@ -201,7 +203,8 @@ class BinsController extends AdminController
         $form->select('type_paper.clean_price_id', '回收端价格')->options($paper_clean_prices)->default(array_keys($paper_clean_prices)[0])->required();
 
         $form->saving(function (Form $form) {
-            if (!$form->model()->types_snapshot) {
+            if (!$form->model()->types_snapshot)
+            {
                 $form->model()->types_snapshot = [];
             }
         });

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\ClientOrdersExcelExporter;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Bin;
 use App\Models\ClientOrder;
@@ -40,7 +41,7 @@ class ClientOrdersController extends AdminController
             $grid->model()->where('bin_id', $bin->id);
         }
 
-        $grid->exporter(new ExcelExporter());
+        $grid->exporter(new ClientOrdersExcelExporter());
         /*禁用*/
         $grid->disableCreateButton();
         $grid->actions(function ($actions) {

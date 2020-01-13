@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\BoxsExcelExporter;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Box;
 use App\Models\BoxOrder;
@@ -40,7 +41,7 @@ class BoxesController extends AdminController
         }
 
 
-        $grid->exporter(new ExcelExporter());
+        $grid->exporter(new BoxsExcelExporter());
 
         /*筛选*/
         $grid->filter(function ($filter) {

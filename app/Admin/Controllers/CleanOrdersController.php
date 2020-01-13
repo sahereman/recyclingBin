@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelExporters\CleanOrdersExcelExporter;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Models\Bin;
 use App\Models\CleanOrder;
@@ -32,7 +33,7 @@ class CleanOrdersController extends AdminController
             $grid->model()->where('bin_id', $bin->id);
         }
 
-        $grid->exporter(new ExcelExporter());
+        $grid->exporter(new CleanOrdersExcelExporter());
 
         /*禁用*/
         $grid->disableCreateButton();

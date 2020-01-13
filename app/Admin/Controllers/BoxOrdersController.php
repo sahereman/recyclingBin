@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax\Ajax_Button;
 use App\Admin\Extensions\Ajax\Ajax_Input_Text_Button;
+use App\Admin\Extensions\ExcelExporters\BoxOrdersExcelExporter;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Http\Requests\Request;
 use App\Models\Box;
@@ -54,7 +55,7 @@ class BoxOrdersController extends AdminController
             $grid->model()->where('box_id', $box->id);
         }
 
-        $grid->exporter(new ExcelExporter());
+        $grid->exporter(new BoxOrdersExcelExporter());
 
         /*禁用*/
         $grid->disableCreateButton();
@@ -111,7 +112,7 @@ class BoxOrdersController extends AdminController
             $buttons .= '<a target="_blank" class="btn btn-xs btn-primary" style="margin-right:6px" href="' . $this->image_proof_url . '">查看图片凭证</a>';
             if ($this->status == BoxOrder::STATUS_WAIT)
             {
-                if($admin_user->can('box_orders.check'))
+                if ($admin_user->can('box_orders.check'))
                 {
                     $buttons .= new Ajax_Input_Text_Button(route('admin.box_orders.agree', $this->id), [], '审核通过', '请输入奖励金额', Config::config('box_order_profit_money'));
                     $buttons .= new Ajax_Button(route('admin.box_orders.deny', $this->id), [], '奖励限制');

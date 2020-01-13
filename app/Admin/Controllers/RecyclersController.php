@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax\Ajax_Button;
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
+use App\Admin\Extensions\ExcelExporters\RecyclersExcelExporter;
 use App\Models\Bin;
 use App\Models\Recycler;
 use App\Http\Requests\Request;
@@ -36,7 +37,7 @@ class RecyclersController extends AdminController
         $grid = new Grid(new Recycler);
         // $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
 
-        $grid->exporter(new ExcelExporter());
+        $grid->exporter(new RecyclersExcelExporter());
         /*筛选*/
         $grid->filter(function ($filter) {
             $filter->column(1 / 2, function ($filter) {
@@ -48,7 +49,8 @@ class RecyclersController extends AdminController
                 $filter->between('created_at', '创建时间')->datetime();
                 $filter->between('money', '余额');
                 $filter->where(function ($query) {
-                    switch ($this->input) {
+                    switch ($this->input)
+                    {
                         case 'yes':
                             $query->where('disabled_at', '!=', null);
                             break;
@@ -84,9 +86,11 @@ class RecyclersController extends AdminController
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.recyclers.assignment.show', $this->id) . '">分配回收箱</a>';
             $buttons .= '<a class="btn btn-xs btn-primary" style="margin-right:6px" href="' . route('admin.bin_recyclers.index', ['recycler_id' => $this->id]) . '">回收箱权限</a>';
 
-            if ($this->disabled_at == null) {
+            if ($this->disabled_at == null)
+            {
                 $buttons .= new Ajax_Button(route('admin.recyclers.disable', $this->id), [], '加入黑名单');
-            } else {
+            } else
+            {
                 $buttons .= new Ajax_Button(route('admin.recyclers.enable', $this->id), [], '移除黑名单');
             }
 

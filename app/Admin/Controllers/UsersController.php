@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\ExcelExporters\ExcelExporter;
 use App\Admin\Extensions\Ajax\Ajax_Button;
+use App\Admin\Extensions\ExcelExporters\UsersExcelExporter;
 use App\Models\User;
 use App\Models\UserWithdraw;
 use App\Notifications\Client\AdminCustomNotification;
@@ -35,7 +36,7 @@ class UsersController extends AdminController
         $grid = new Grid(new User);
         // $grid->model()->orderBy('created_at', 'desc'); // 设置初始排序条件
         $grid->disableCreateButton();
-        $grid->exporter(new ExcelExporter());
+        $grid->exporter(new UsersExcelExporter());
 
         /*筛选*/
         $grid->filter(function ($filter) {
