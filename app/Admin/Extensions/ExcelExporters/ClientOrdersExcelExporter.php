@@ -11,15 +11,10 @@ class ClientOrdersExcelExporter extends BaseExcelExporter implements WithMapping
 {
     protected $fileName = '.xlsx';
     protected $headings = ['投递时间', '智能箱编号', '智能箱名称', '用户名',
-        '状态', '合计金额', '订单号', '投递物详情'];
+        '状态', '合计金额', '订单号', '纺织物重量', '纺织物金额', '可回收物重量', '可回收物金额'];
 
     public function map($data): array
     {
-        $items_str = '';
-        foreach ($data->items as $item)
-        {
-            $items_str .= "$item[type_name]:$item[number]$item[unit] / $item[subtotal]元  ";
-        }
         return [
             $data->created_at,
             data_get($data, 'bin.no'),
@@ -28,7 +23,10 @@ class ClientOrdersExcelExporter extends BaseExcelExporter implements WithMapping
             $data->status_text,
             $data->total,
             $data->sn,
-            $items_str
+            $data->items->where('type_slug', 'fabric')->sum('number'),
+            $data->items->where('type_slug', 'fabric')->sum('subtotal'),
+            $data->items->where('type_slug', 'paper')->sum('number'),
+            $data->items->where('type_slug', 'paper')->sum('subtotal'),
         ];
     }
 
