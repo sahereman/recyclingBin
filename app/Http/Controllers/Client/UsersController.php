@@ -10,6 +10,7 @@ use App\Http\Requests\Client\WithdrawWechatPayRequest;
 use App\Http\Requests\Request;
 use App\Jobs\UserWithdrawWechatPay;
 use App\Models\ClientOrder;
+use App\Models\Config;
 use App\Models\User;
 use App\Models\UserMoneyBill;
 use App\Models\UserWithdraw;
@@ -223,7 +224,15 @@ class UsersController extends Controller
                 'money' => '余额不足'
             ]);
         }
-
+        
+        $check_condition = $user->withdraws()->whereIn('status', [UserWithdraw::STATUS_AGREE, UserWithdraw::STATUS_WAIT])
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()])->get();
+        if ($check_condition->count() >= Config::config('user_withdraw_max_count_from_week'))
+        {
+            throw new StoreResourceFailedException(null, [
+                'money' => '每周最多可提现' . Config::config('user_withdraw_max_count_from_week') . '笔'
+            ]);
+        }
 
         DB::transaction(function () use ($user, $request) {
 
@@ -272,7 +281,16 @@ class UsersController extends Controller
             ]);
         }
 
-        $withdraw = DB::transaction(function () use ($user, $request) {
+        $check_condition = $user->withdraws()->whereIn('status', [UserWithdraw::STATUS_AGREE, UserWithdraw::STATUS_WAIT])
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()])->get();
+        if ($check_condition->count() >= Config::config('user_withdraw_max_count_from_week'))
+        {
+            throw new StoreResourceFailedException(null, [
+                'money' => '每周最多可提现' . Config::config('user_withdraw_max_count_from_week') . '笔'
+            ]);
+        }
+
+        DB::transaction(function () use ($user, $request) {
 
             $withdraw = UserWithdraw::create([
                 'user_id' => $user->id,
@@ -286,8 +304,6 @@ class UsersController extends Controller
             $user->frozen_money = bcadd($user->frozen_money, $withdraw->money, 2);
             $user->money = bcsub($user->money, $withdraw->money, 2);
             $user->save();
-
-            return $withdraw;
         });
 
         return $this->response->created();

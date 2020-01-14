@@ -15,7 +15,7 @@ class ConfigsSeeder extends Seeder
                 'sort' => 1000,
                 'configs' =>
                     [
-                        // ['name' => '网站标题', 'code' => 'title', 'type' => "text", 'sort' => 10, 'value' => '网站标题', 'help' => '默认的网站SEO标题',],
+                        ['name' => '客户端最大提现次数(每周)', 'code' => 'user_withdraw_max_count_from_week', 'type' => "text", 'sort' => 10, 'value' => '2', 'help' => '每周最多可提现次数(以申请成功为准)',],
                         // ['name' => '网站关键字', 'code' => 'keywords', 'type' => "text", 'sort' => 20],
                         // ['name' => '网站描述', 'code' => 'description', 'type' => "text", 'sort' => 30],
                         // ['name' => '司机端 Android Apk', 'code' => 'driver_android_apk', 'type' => "file", 'sort' => 40],
