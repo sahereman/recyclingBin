@@ -161,52 +161,52 @@ class PagesController extends Controller
             $grouped_bin_ids[$serviceSite->name] = $serviceSite->bins->pluck('id')->toArray();
         });
 
-        $data5 = [];
-        $fabric_number = 0;
-        foreach ($grouped_bin_ids as $site => $bin_ids) {
-            $fabric = BinTypeFabric::whereIn('bin_id', $bin_ids)->sum('number');
-            $fabric_number += $fabric;
-            $data5[] = ['name' => $site, 'value' => number_format($fabric, 2, '.', '')];
-        }
-        $header5 = [
-            'name' => '回收站点',
-            'value' => BinTypeFabric::NAME . '重量/kg'
-        ];
-        $echarts5 = (new Echarts())
-            ->setSeriesType('pie')
-            ->setSeries([
-                ['type' => 'pie', 'name' => '回收站点'],
-            ])
-            // ->setShowShadow(true)
-            ->setData($data5);
-        // ->bindLegend($header1);
-        $box5 = new Box(BinTypeFabric::NAME . '根据站点分类统计【总重 ' . number_format($fabric_number, 2, '.', ',') . ' kg】', $echarts5);
-
-        $data6 = [];
-        $paper_number = 0;
-        foreach ($grouped_bin_ids as $site => $bin_ids) {
-            $paper = BinTypePaper::whereIn('bin_id', $bin_ids)->sum('number');
-            $paper_number += $paper;
-            $data6[] = ['name' => $site, 'value' => number_format($paper, 2, '.', '')];
-        }
-        $header6 = [
-            'name' => '回收站点',
-            'value' => BinTypePaper::NAME . '重量/kg'
-        ];
-        $echarts6 = (new Echarts())
-            ->setSeriesType('pie')
-            ->setSeries([
-                ['type' => 'pie', 'name' => '回收站点'],
-            ])
-            // ->setShowShadow(true)
-            ->setData($data6);
-        // ->bindLegend($header1);
-        $box6 = new Box(BinTypePaper::NAME . '根据站点分类统计【总重 ' . number_format($paper_number, 2, '.', ',') . ' kg】', $echarts6);
+//        $data5 = [];
+//        $fabric_number = 0;
+//        foreach ($grouped_bin_ids as $site => $bin_ids) {
+//            $fabric = BinTypeFabric::whereIn('bin_id', $bin_ids)->sum('number');
+//            $fabric_number += $fabric;
+//            $data5[] = ['name' => $site, 'value' => number_format($fabric, 2, '.', '')];
+//        }
+//        $header5 = [
+//            'name' => '回收站点',
+//            'value' => BinTypeFabric::NAME . '重量/kg'
+//        ];
+//        $echarts5 = (new Echarts())
+//            ->setSeriesType('pie')
+//            ->setSeries([
+//                ['type' => 'pie', 'name' => '回收站点'],
+//            ])
+//            // ->setShowShadow(true)
+//            ->setData($data5);
+//        // ->bindLegend($header1);
+//        $box5 = new Box(BinTypeFabric::NAME . '根据站点分类统计【总重 ' . number_format($fabric_number, 2, '.', ',') . ' kg】', $echarts5);
+//
+//        $data6 = [];
+//        $paper_number = 0;
+//        foreach ($grouped_bin_ids as $site => $bin_ids) {
+//            $paper = BinTypePaper::whereIn('bin_id', $bin_ids)->sum('number');
+//            $paper_number += $paper;
+//            $data6[] = ['name' => $site, 'value' => number_format($paper, 2, '.', '')];
+//        }
+//        $header6 = [
+//            'name' => '回收站点',
+//            'value' => BinTypePaper::NAME . '重量/kg'
+//        ];
+//        $echarts6 = (new Echarts())
+//            ->setSeriesType('pie')
+//            ->setSeries([
+//                ['type' => 'pie', 'name' => '回收站点'],
+//            ])
+//            // ->setShowShadow(true)
+//            ->setData($data6);
+//        // ->bindLegend($header1);
+//        $box6 = new Box(BinTypePaper::NAME . '根据站点分类统计【总重 ' . number_format($paper_number, 2, '.', ',') . ' kg】', $echarts6);
 
         return $content
             ->header($title = '首页')
             ->description('数据统计')
-            ->row(function (Row $row) use ($box1, $box2, $box3, $box4, $box5, $box6, $grouped_bin_ids) {
+            ->row(function (Row $row) use ($box1, $box2, $box3, $box4, $grouped_bin_ids) {
                 $row->column(6, function (Column $column) use ($box1) {
                     $column->append($box1);
                 });
@@ -219,42 +219,44 @@ class PagesController extends Controller
                 $row->column(6, function (Column $column) use ($box4) {
                     $column->append($box4);
                 });
-                $row->column(6, function (Column $column) use ($box5) {
-                    $column->append($box5);
-                });
-                $row->column(6, function (Column $column) use ($box6) {
-                    $column->append($box6);
-                });
-                foreach ($grouped_bin_ids as $site => $bin_ids) {
-                    $data = [];
-                    foreach ($bin_ids as $bin_id) {
-                        $bin = Bin::find($bin_id);
-                        $data[] = [
-                            'name' => $bin->name,
-                            'fabric' => number_format($bin->type_fabric->number, 2, '.', ','),
-                            'paper' => number_format($bin->type_paper->number, 2, '.', ',')
-                        ];
-                    }
-                    $header = [
-                        'name' => '垃圾箱',
-                        'fabric' => BinTypeFabric::NAME . '重量/kg',
-                        'paper' => BinTypePaper::NAME . '重量/kg',
-                    ];
-                    $echarts = (new Echarts())
-                        ->setSeriesType('bar')
-                        /*->setSeries([
-                            ['type' => 'bar', 'name' => '垃圾箱'],
-                        ])*/
-                        // ->setShowShadow(true)
-                        ->setData($data)
-                        ->bindLegend($header)
-                        ->setDataZoom(1)
-                        ->setShowToolbox(1);
-                    $box = new Box($site . ' - 垃圾箱分类统计', $echarts);
-                    $row->column(6, function (Column $column) use ($box) {
-                        $column->append($box);
-                    });
-                }
+                // 站点分类统计
+//                $row->column(6, function (Column $column) use ($box5) {
+//                    $column->append($box5);
+//                });
+//                $row->column(6, function (Column $column) use ($box6) {
+//                    $column->append($box6);
+//                });
+                // 垃圾箱分类统计
+//                foreach ($grouped_bin_ids as $site => $bin_ids) {
+//                    $data = [];
+//                    foreach ($bin_ids as $bin_id) {
+//                        $bin = Bin::find($bin_id);
+//                        $data[] = [
+//                            'name' => $bin->name,
+//                            'fabric' => number_format($bin->type_fabric->number, 2, '.', ','),
+//                            'paper' => number_format($bin->type_paper->number, 2, '.', ',')
+//                        ];
+//                    }
+//                    $header = [
+//                        'name' => '垃圾箱',
+//                        'fabric' => BinTypeFabric::NAME . '重量/kg',
+//                        'paper' => BinTypePaper::NAME . '重量/kg',
+//                    ];
+//                    $echarts = (new Echarts())
+//                        ->setSeriesType('bar')
+//                        /*->setSeries([
+//                            ['type' => 'bar', 'name' => '垃圾箱'],
+//                        ])*/
+//                        // ->setShowShadow(true)
+//                        ->setData($data)
+//                        ->bindLegend($header)
+//                        ->setDataZoom(1)
+//                        ->setShowToolbox(1);
+//                    $box = new Box($site . ' - 垃圾箱分类统计', $echarts);
+//                    $row->column(6, function (Column $column) use ($box) {
+//                        $column->append($box);
+//                    });
+//                }
             });
     }
 
