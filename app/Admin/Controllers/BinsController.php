@@ -167,7 +167,8 @@ class BinsController extends AdminController
         $form->text('name', '设备名称')->rules('required|string');
         $form->text('no', '设备编号')->rules('required|string');
         $form->text('address', '地址')->rules('required|string');
-        $form->latlong('lat', 'lng', '经纬度选择器')->default(['lat' => 36.093187, 'lng' => 120.381310])->required();
+        $form->latlong('lat', 'lng', '经纬度选择器')->default(['lat' => 36.093187, 'lng' => 120.381310])
+            ->rules('required|numeric|between:-180,180')->required();
         $form->switch('is_run', '正在运行')->states([
             'on' => ['value' => 1, 'text' => '开', 'color' => 'primary'],
             'off' => ['value' => 0, 'text' => '关', 'color' => 'default'],

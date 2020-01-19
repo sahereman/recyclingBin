@@ -114,7 +114,8 @@ class BoxesController extends AdminController
         $form->hidden('status', '满箱状态')->value(Box::STATUS_NORMAL);
         //        $form->text('no', '箱体编号')->rules('required|string');
         $form->text('address', '地址')->rules('required|string');
-        $form->latlong('lat', 'lng', '经纬度选择器')->default(['lat' => 36.093187, 'lng' => 120.381310])->required();
+        $form->latlong('lat', 'lng', '经纬度选择器')->default(['lat' => 36.093187, 'lng' => 120.381310])
+            ->rules('required|numeric|between:-180,180')->required();
 
         return $form;
     }
