@@ -87,6 +87,9 @@ class BinTcpSocket extends TcpSocket
             if ($data['static_no'] != self::BEAT)
             {
                 Log::info($fd, $data);
+            } else
+            {
+                Log::debug($fd, $data);
             }
 
             switch ($data['static_no'])
@@ -622,7 +625,7 @@ class BinTcpSocket extends TcpSocket
 
         if (!$bin || !$bin->token || $bin->token->auth_model != User::class || !isset($data['admin']))
         {
-            if(!isset($data['admin']))
+            if (!isset($data['admin']))
             {
                 info('$data[admin] not find');
             }
