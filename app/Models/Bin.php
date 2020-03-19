@@ -18,7 +18,8 @@ class Bin extends Model
         'lat',
         'lng',
         'address',
-        'types_snapshot'
+        'types_snapshot',
+        'weight_warning_lock',
     ];
 
     /**
@@ -26,6 +27,7 @@ class Bin extends Model
      * @var array
      */
     protected $casts = [
+        'weight_warning_lock' => 'boolean',
         'is_run' => 'boolean',
         'types_snapshot' => 'json',
     ];

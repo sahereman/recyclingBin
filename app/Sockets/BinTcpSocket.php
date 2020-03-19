@@ -5,11 +5,14 @@ namespace App\Sockets;
 use App\Handlers\SocketJsonHandler;
 use App\Http\Controllers\Client\SmsController;
 use App\Jobs\ClearBinToken;
+use App\Jobs\GenerateBinTypeSnapshot;
 use App\Jobs\GenerateCleanOrderSnapshot;
 use App\Jobs\GenerateClientOrderSnapshot;
 use App\Jobs\SendSms;
+use App\Jobs\UnlockBinWeightLock;
 use App\Models\Bin;
 use App\Models\BinToken;
+use App\Models\BinWeightWarning;
 use App\Models\CleanOrder;
 use App\Models\CleanPrice;
 use App\Models\ClientOrder;
@@ -476,6 +479,12 @@ class BinTcpSocket extends TcpSocket
             return false;
         }
 
+        // 增加重量异常锁 , 10分钟后解锁
+        $bin->update([
+            'weight_warning_lock' => true
+        ]);
+        UnlockBinWeightLock::dispatch($bin)->delay(now()->addMinutes(10));
+
 
         // 创建订单
         $order = CleanOrder::create([
@@ -508,6 +517,7 @@ class BinTcpSocket extends TcpSocket
         GenerateCleanOrderSnapshot::dispatch($order, $bin);
         RecyclerMoneyBill::change($recycler, RecyclerMoneyBill::TYPE_CLEAN_ORDER, $order->total, $order);
         Notification::send($recycler, new CleanOrderCompletedNotification($order));
+        GenerateBinTypeSnapshot::dispatch($bin);
 
         // 更新bin_token
         $bin->token->update([
@@ -730,8 +740,8 @@ class BinTcpSocket extends TcpSocket
         // 分配任务
         GenerateClientOrderSnapshot::dispatchNow($order, $bin);
         UserMoneyBill::change($user, UserMoneyBill::TYPE_CLIENT_ORDER, $order->total, $order);
-        //$user->notify(new ClientOrderCompletedNotification($order));
         Notification::send($user, new ClientOrderCompletedNotification($order));
+        GenerateBinTypeSnapshot::dispatch($bin);
         $server->send($fd, new SocketJsonHandler([
             'static_no' => self::CLIENT_LOGOUT,
             'result_code' => '200',
@@ -740,8 +750,8 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-    {"static_no":"yzs003","equipment_no":"00020","equipment_all_paper":false,"equipment_all_cloth":false,"paper_weight":0,"cloth_weight":0,"send_time":"19700101000324"}
-     */
+    {"static_no":"yzs003","equipment_no":"00020","equipment_all_paper":false,"equipment_all_cloth":true,"paper_weight":0,"cloth_weight":25600,"send_time":"19700227004631"}
+    */
     public function beatAction($server, $fd, $data)
     {
         $bin = Bin::where('no', $data['equipment_no'])->first();
@@ -751,6 +761,56 @@ class BinTcpSocket extends TcpSocket
                 'result_code' => '400' // 用户未注册/json格式字段错误
             ]));
             return false;
+        }
+
+
+        /*重量异常警告*/
+        if (!$bin->weight_warning_lock && isset($data['cloth_weight']) && $data['cloth_weight'] > 0)
+        {
+            $fabric = $bin->type_fabric;
+            $cloth_weight = bcdiv($data['cloth_weight'], 100, 2);
+            $exception_weight = bcsub($fabric->number, $cloth_weight, 2);
+            if (floatval($exception_weight) > 0.5) // 如果异常重量超过500克,生成警告
+            {
+                $bin_weight_warning = new BinWeightWarning();
+                $bin_weight_warning->bin_id = $bin->id;
+                $bin_weight_warning->type_slug = $fabric::SLUG;
+                $bin_weight_warning->type_name = $fabric::NAME;
+                $bin_weight_warning->normal_weight = $fabric->numner;
+                $bin_weight_warning->measure_weight = $cloth_weight;
+                $bin_weight_warning->exception_weight = $exception_weight;
+                $bin_weight_warning->unit = $fabric->unit;
+                $bin_weight_warning->save();
+
+                $fabric->number = $cloth_weight;
+                $fabric->save();
+
+                GenerateBinTypeSnapshot::dispatchNow($bin);
+            }
+        }
+
+        if (!$bin->weight_warning_lock && isset($data['paper_weight']) && $data['paper_weight'] > 0)
+        {
+            $paper = $bin->type_paper;
+            $paper_weight = bcdiv($data['paper_weight'], 100, 2);
+            $exception_weight = bcsub($paper->number, $paper_weight, 2);
+            if (floatval($exception_weight) > 0.5) // 如果异常重量超过500克,生成警告
+            {
+                $bin_weight_warning = new BinWeightWarning();
+                $bin_weight_warning->bin_id = $bin->id;
+                $bin_weight_warning->type_slug = $paper::SLUG;
+                $bin_weight_warning->type_name = $paper::NAME;
+                $bin_weight_warning->normal_weight = $paper->numner;
+                $bin_weight_warning->measure_weight = $paper_weight;
+                $bin_weight_warning->exception_weight = $exception_weight;
+                $bin_weight_warning->unit = $paper->unit;
+                $bin_weight_warning->save();
+
+                $paper->number = $paper_weight;
+                $paper->save();
+
+                GenerateBinTypeSnapshot::dispatchNow($bin);
+            }
         }
 
 

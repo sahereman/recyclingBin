@@ -247,6 +247,14 @@ class AdminTablesSeeder extends Seeder
             ],
             [
                 'parent_id' => 16,
+                'order' => 15,
+                'title' => '重量异常警告',
+                'icon' => 'fa-bitbucket',
+                'uri' => 'bin_weight_warnings',
+                'permission' => null,
+            ],
+            [
+                'parent_id' => 16,
                 'order' => 20,
                 'title' => '客户端价格',
                 'icon' => 'fa-yen',
@@ -305,7 +313,6 @@ class AdminTablesSeeder extends Seeder
                 'uri' => 'topics',
                 'permission' => null,
             ],
-
 
 
         ];

@@ -45,6 +45,7 @@ Route::group([
 
     /*回收箱*/
     $router->resource('bins', 'BinsController')->names('admin.bins');
+    $router->resource('bin_weight_warnings', BinWeightWarningsController::class);//重量异常警告
 
     /*回收箱权限*/
     $router->resource('bin_recyclers', 'BinRecyclersController')->names('admin.bin_recyclers');
@@ -93,7 +94,6 @@ Route::group([
     $router->resource('box_admin_users', 'BoxAdminUsersController')->names('admin.box_admin_users');
     $router->get('box_admin_users/{id}/assignment', 'BoxAdminUsersController@assignmentShow')->name('admin.box_admin_users.assignment.show'); /*分配传统箱 页面*/
     $router->put('box_admin_users/{id}/assignment', 'BoxAdminUsersController@assignmentStore')->name('admin.box_admin_users.assignment.store'); /*分配传统箱 请求处理*/
-
 
 
     // $router->resource('example', ExampleController::class)->names('admin.example');
