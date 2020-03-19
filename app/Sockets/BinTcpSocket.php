@@ -377,7 +377,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-     {"static_no":"yzs006","equipment_no":"00020","user_card":"7","admin":true,"type":"1","weight":"3000"}
+     {"static_no":"yzs006","equipment_no":"00020","user_card":"1","admin":true,"type":"1","weight":"3000"}
      */
     public function cleanTransactionAction($server, $fd, $data)
     {
@@ -750,7 +750,7 @@ class BinTcpSocket extends TcpSocket
     }
 
     /*
-    {"static_no":"yzs003","equipment_no":"00020","equipment_all_paper":false,"equipment_all_cloth":true,"paper_weight":0,"cloth_weight":25600,"send_time":"19700227004631"}
+    {"static_no":"yzs003","equipment_no":"00020","equipment_all_paper":false,"equipment_all_cloth":true,"paper_weight":19000,"cloth_weight":12320,"send_time":"19700227004631"}
     */
     public function beatAction($server, $fd, $data)
     {
@@ -768,7 +768,7 @@ class BinTcpSocket extends TcpSocket
         if (!$bin->weight_warning_lock && isset($data['cloth_weight']) && $data['cloth_weight'] > 0)
         {
             $fabric = $bin->type_fabric;
-            $cloth_weight = bcdiv($data['cloth_weight'], 100, 2);
+            $cloth_weight = bcdiv($data['cloth_weight'], 1000, 2);
             $exception_weight = bcsub($fabric->number, $cloth_weight, 2);
             if (floatval($exception_weight) > 0.5) // 如果异常重量超过500克,生成警告
             {
@@ -776,7 +776,7 @@ class BinTcpSocket extends TcpSocket
                 $bin_weight_warning->bin_id = $bin->id;
                 $bin_weight_warning->type_slug = $fabric::SLUG;
                 $bin_weight_warning->type_name = $fabric::NAME;
-                $bin_weight_warning->normal_weight = $fabric->numner;
+                $bin_weight_warning->normal_weight = $fabric->number;
                 $bin_weight_warning->measure_weight = $cloth_weight;
                 $bin_weight_warning->exception_weight = $exception_weight;
                 $bin_weight_warning->unit = $fabric->unit;
@@ -792,7 +792,7 @@ class BinTcpSocket extends TcpSocket
         if (!$bin->weight_warning_lock && isset($data['paper_weight']) && $data['paper_weight'] > 0)
         {
             $paper = $bin->type_paper;
-            $paper_weight = bcdiv($data['paper_weight'], 100, 2);
+            $paper_weight = bcdiv($data['paper_weight'], 1000, 2);
             $exception_weight = bcsub($paper->number, $paper_weight, 2);
             if (floatval($exception_weight) > 0.5) // 如果异常重量超过500克,生成警告
             {
@@ -800,7 +800,7 @@ class BinTcpSocket extends TcpSocket
                 $bin_weight_warning->bin_id = $bin->id;
                 $bin_weight_warning->type_slug = $paper::SLUG;
                 $bin_weight_warning->type_name = $paper::NAME;
-                $bin_weight_warning->normal_weight = $paper->numner;
+                $bin_weight_warning->normal_weight = $paper->number;
                 $bin_weight_warning->measure_weight = $paper_weight;
                 $bin_weight_warning->exception_weight = $exception_weight;
                 $bin_weight_warning->unit = $paper->unit;
