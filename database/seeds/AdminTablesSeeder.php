@@ -36,7 +36,7 @@ class AdminTablesSeeder extends Seeder
                 'name' => '回收箱管理',
                 'slug' => 'bins',
                 'http_method' => '',
-                'http_path' => "/bins*",
+                'http_path' => "/bins*\r\n/full_fabrics*\r\n/full_papers*",
             ],
             [
                 'name' => '客户端价格管理',
@@ -251,6 +251,22 @@ class AdminTablesSeeder extends Seeder
                 'title' => '重量异常警告',
                 'icon' => 'fa-bitbucket',
                 'uri' => 'bin_weight_warnings',
+                'permission' => null,
+            ],
+            [
+                'parent_id' => 16,
+                'order' => 17,
+                'title' => '可回收物-满箱预警',
+                'icon' => 'fa-bitbucket',
+                'uri' => 'full_papers',
+                'permission' => null,
+            ],
+            [
+                'parent_id' => 16,
+                'order' => 17,
+                'title' => '纺织物-满箱预警',
+                'icon' => 'fa-bitbucket',
+                'uri' => 'full_fabrics',
                 'permission' => null,
             ],
             [

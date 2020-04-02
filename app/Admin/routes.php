@@ -46,6 +46,8 @@ Route::group([
     /*回收箱*/
     $router->resource('bins', 'BinsController')->names('admin.bins');
     $router->resource('bin_weight_warnings', BinWeightWarningsController::class);//重量异常警告
+    $router->resource('full_fabrics', FullFabricsController::class);//纺织物-满箱预警
+    $router->resource('full_papers', FullPapersController::class);//可回收物-满箱预警
 
     /*回收箱权限*/
     $router->resource('bin_recyclers', 'BinRecyclersController')->names('admin.bin_recyclers');

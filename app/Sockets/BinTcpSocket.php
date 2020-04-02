@@ -41,6 +41,7 @@ class BinTcpSocket extends TcpSocket
     const QRCODE = 'yzs004';
     const CLEAN_TRANSACTION = 'yzs006';
     const PASSWORD_LOGIN = 'yzs007';
+    const INIT = 'yzs008';
 
     private $actions = [
         self::CLIENT_LOGIN,
@@ -50,6 +51,7 @@ class BinTcpSocket extends TcpSocket
         self::QRCODE,
         self::CLEAN_TRANSACTION,
         self::PASSWORD_LOGIN,
+        self::INIT,
     ];
 
     public function onConnect(Server $server, $fd, $reactorId)
@@ -115,6 +117,9 @@ class BinTcpSocket extends TcpSocket
                 case self::PASSWORD_LOGIN:
                     $this->passwordLoginAction($server, $fd, $data);
                     break;
+                case self::INIT:
+                    $this->initAction($server, $fd, $data);
+                    break;
                 default:
                     $server->send($fd, new SocketJsonHandler([
                         'result_code' => '401' // static_no 错误/未找到
@@ -125,6 +130,41 @@ class BinTcpSocket extends TcpSocket
             return false;
         }
 
+    }
+
+    /*
+    {"static_no":"yzs008","equipment_no":"00020"}
+     */
+    public function initAction($server, $fd, $data)
+    {
+        $bin = Bin::where('no', $data['equipment_no'])->first();
+        if (!$bin) // 校验手机号正确性
+        {
+            if (!$bin)
+            {
+                info('$bin not find');
+            }
+            $server->send($fd, new SocketJsonHandler([
+                'result_code' => '400' // 用户未注册/json格式字段错误
+            ]));
+            return false;
+        }
+
+        $token = $bin->token;
+        if ($token)
+        {
+            if ($token->fd != $fd)
+            {
+                $token->fd = $fd;
+                $token->save();
+            }
+        }
+
+        $server->send($fd, new SocketJsonHandler([
+            'static_no' => self::INIT,
+            'equipment_no' => $bin->no,
+            'result_code' => '200',
+        ]));
     }
 
     /*
@@ -705,9 +745,13 @@ class BinTcpSocket extends TcpSocket
                     $type = $bin->type_fabric;
                     break;
             }
-            $type->update([
-                'number' => bcadd($type->number, $item->number, 2),
-            ]);
+            $new_number = bcadd($type->number, $item->number, 2); //交易后重量
+            if ($new_number >= $type->threshold)
+            {
+                $type->status = $type::STATUS_FULL;
+            }
+            $type->number = $new_number;
+            $type->save();
         });
 
         // 更新订单总金额
